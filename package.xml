@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>robot_arm_workcell_manager</name>
+  <version>1.0.0</version>
+  <description>
+    Drivers, description, and utilities for Robot Arm Workcell Manipulation, Using moveit 
+  </description>
+  <maintainer email="tan_you_liang@hotmail.com">Tan You Liang</maintainer>
+  <license>BSD</license>
+
+  <depend>ur_gazebo</depend>
+  <depend>ur_description</depend>
+
+  <exec_depend>python-rospkg</exec_depend>
+  <depend>roscpp</depend>
+  <depend>std_msgs</depend>
+  <depend>pluginlib</depend>
+  <depend>eigen</depend>
+  <depend>moveit_core</depend>
+  <depend>moveit_ros_planning</depend>
+  <depend>moveit_ros_planning_interface</depend>
+  <depend>moveit_ros_perception</depend>
+  <depend>interactive_markers</depend>
+  <depend>geometric_shapes</depend>
+  <depend>moveit_visual_tools</depend>
+  <depend>rosbag</depend>
+  <depend>tf2_ros</depend>
+  <depend>tf2_eigen</depend>
+  <depend>tf2_geometry_msgs</depend>
+  <depend>gazebo_ros</depend>
+  <depend>gazebo</depend>
+  <depend>geometry_msgs</depend>
+  <!-- <depend>rmf_msgs</depend> -->
+
+  <buildtool_depend>catkin</buildtool_depend>
+</package>

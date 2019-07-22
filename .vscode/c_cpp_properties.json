@@ -1,0 +1,28 @@
+{
+    "configurations": [
+        {
+            "browse": {
+                "databaseFilename": "",
+                "limitSymbolsToIncludedHeaders": true
+            },
+            "includePath": [
+                "/home/youliang/catkin_ws/devel/include",
+                "/opt/ros/melodic/include",
+                "/home/youliang/catkin_ws/src/aruco_ros/aruco/include",
+                "/home/youliang/catkin_ws/src/aruco_ros/aruco_ros/include",
+                "/home/youliang/catkin_ws/src/CSSD-WM/cssd_wm/include",
+                "/home/youliang/catkin_ws/src/fiducials/fiducial_slam/include",
+                "/home/youliang/catkin_ws/src/ros_marvelmind_package/include",
+                "/home/youliang/catkin_ws/src/object_pose_estimation/include",
+                "/home/youliang/catkin_ws/src/universal_robot/ur_kinematics/include",
+                "/usr/include"
+            ],
+            "name": "Linux",
+            "intelliSenseMode": "gcc-x64",
+            "compilerPath": "/usr/bin/gcc",
+            "cStandard": "c11",
+            "cppStandard": "c++17"
+        }
+    ],
+    "version": 4
+}
