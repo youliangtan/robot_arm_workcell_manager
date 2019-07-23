@@ -91,9 +91,8 @@ include_directories(
 #   ${YAML_CPP_INCLUDE_DIRS}
 )
 
-
-add_executable( robot_arm_workcell_manager src/robot_arm_workcell_manager.cpp )
-target_link_libraries(  robot_arm_workcell_manager  ${catkin_LIBRARIES} ) #${GAZEBO_INCLUDE_DIRS}  ${catkin_INCLUDE_DIRS} )
+add_executable( robot_arm_controller src/robot_arm_controller.cpp )
+target_link_libraries(  robot_arm_controller  ${catkin_LIBRARIES} ) #${GAZEBO_INCLUDE_DIRS}  ${catkin_INCLUDE_DIRS} )
 
 
 # set(Executables

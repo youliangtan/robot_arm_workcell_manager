@@ -12,3 +12,6 @@ Install:
 ```
 
 # Run the Code
+```
+rosrun robot_arm_workcell_manager robot_arm_controller __config_yaml_path:="hihi"
+```
