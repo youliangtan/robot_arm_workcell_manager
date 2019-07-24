@@ -32,10 +32,10 @@ class RobotArmController{
         std::unique_ptr<moveit::planning_interface::MoveGroupInterface> move_group_;
         std::string current_state_name_; // TBC
         bool load_complete_ = false;  //TBC
-        moveit::planning_interface::MoveGroupInterface::Plan motion_plan;
+        moveit::planning_interface::MoveGroupInterface::Plan motion_plan_;
 
         ros::NodeHandle nh;
-        YAML::Node NAMED_TARGET_CONFIG;
+        YAML::Node NAMED_TARGET_CONFIG_;
 
     protected:
         bool loadMotionTargetConfig();
@@ -124,7 +124,7 @@ bool RobotArmController::loadMotionTargetConfig(){
     std::cout<<"[PARAM] YAML Path: "<<_yaml_path<<std::endl;
 
     try {
-        NAMED_TARGET_CONFIG = YAML::LoadFile(_yaml_path);
+        NAMED_TARGET_CONFIG_ = YAML::LoadFile(_yaml_path);
     } 
     catch (std::exception& err){
         ROS_ERROR("exception in YAML LOADER: %s", err.what());
@@ -143,9 +143,9 @@ bool RobotArmController::moveToNamedTarget(const std::string& _target_name){
     std::vector<double> goal_values;
 
     try {
-        goal_type = NAMED_TARGET_CONFIG["named_target"][_target_name]["type"].as<std::string>();
-        goal_values = NAMED_TARGET_CONFIG["named_target"][_target_name]["values"].as<std::vector<double>>();
-        vel_factor = NAMED_TARGET_CONFIG["named_target"][_target_name]["velFactor"].as<double>();
+        goal_type = NAMED_TARGET_CONFIG_["named_target"][_target_name]["type"].as<std::string>();
+        goal_values = NAMED_TARGET_CONFIG_["named_target"][_target_name]["values"].as<std::vector<double>>();
+        vel_factor = NAMED_TARGET_CONFIG_["named_target"][_target_name]["velFactor"].as<double>();
     } 
     catch (std::exception& err){
         ROS_ERROR("Exception in YAML LOADER: %s", err.what());
@@ -185,13 +185,13 @@ bool RobotArmController::moveToJointsTarget(const std::vector<double>& joints_ta
     move_group_->setStartStateToCurrentState();
     move_group_->setJointValueTarget(joints_target_values);
     
-    if (move_group_->plan(motion_plan) != moveit::planning_interface::MoveItErrorCode::SUCCESS){
+    if (move_group_->plan(motion_plan_) != moveit::planning_interface::MoveItErrorCode::SUCCESS){
         ROS_ERROR("Joints Target motion planning: FAILED");
         return false;
     }
 
     ROS_INFO(" Executing Joint Space Motion...");
-    move_group_->execute(motion_plan);
+    move_group_->execute(motion_plan_);
     return true;
 }
 
@@ -215,9 +215,9 @@ bool RobotArmController::moveToEefTarget(const geometry_msgs::Pose _eef_target_p
 
     // TODO: solve trajectory vs plan
     // motion_plan.start_state_ = *(move_group_->getCurrentState());
-    motion_plan.trajectory_ = trajectory;
+    motion_plan_.trajectory_ = trajectory;
     ROS_INFO(" Executing Cartesian Space Motion...");   
-    move_group_->execute(motion_plan);
+    move_group_->execute(motion_plan_);
 
     return true;
 }

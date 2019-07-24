@@ -2,6 +2,9 @@
  * Fiducial Markers Handler
  *   Objective: Manage storing of all markers poses, deal with all the tf stuffs
  *   Author: Tan You Liang
+ * 
+ *  Markers Naming Convention: aruco_0001
+ *
  */
 
 #include <iostream>
@@ -10,8 +13,13 @@
 
 // ros stuffs
 #include <ros/ros.h>
+#include <geometry_msgs/Pose.h>
 #include <tf/transform_broadcaster.h>
 #include <tf/transform_listener.h>
+
+// dependecies
+#include <fiducial_msgs/FiducialArray.h>
+
 
 // TODO
 struct marker{
@@ -24,8 +32,14 @@ struct marker{
 
 class FiducialMarkersHandler{
     private:
-        std::string marker_type;
+        std::string marker_type; // TBC
         std::vector<marker> markers_array;
+
+        // ros stuffs
+        ros::NodeHandle nh;
+        ros::Subscriber markers_sub_;
+        tf::TransformBroadcaster br;  
+        tf::TransformListener listener;
 
     public:
         FiducialMarkersHandler();
@@ -34,19 +48,21 @@ class FiducialMarkersHandler{
 
         // ------ Execution -----
 
-        void markerCallback();        
+        void updateMarkerListCallback(const fiducial_msgs::FiducialArrayConstPtr& msg);        
 
         // provide marker's pose respective to requested frame_id
-        bool getMarkerPose(std::string marker_id, std::string frame_id);
+        geometry_msgs::Pose getMarkerPose(std::string marker_id, std::string frame_id);
 
-    
 };
 
 
 //-----------------------------------------------------------------------------
 
 
-FiducialMarkersHandler::FiducialMarkersHandler(){
+FiducialMarkersHandler::FiducialMarkersHandler(): nh("~"){
+
+    markers_sub_ = nh.subscribe ("/fiducial_transforms", 10 ,&FiducialMarkersHandler::updateMarkerListCallback,this);
+
     ROS_INFO("FiducialMarkersHandler::FiducialMarkersHandler() completed!! \n");
 }
 
@@ -57,10 +73,22 @@ FiducialMarkersHandler::~FiducialMarkersHandler(){
 //-----------------------------------------------------------------------------
 
 
-void FiducialMarkersHandler::markerCallback(){
+void FiducialMarkersHandler::updateMarkerListCallback(const fiducial_msgs::FiducialArrayConstPtr& msg){
     ros::Time detected_time = ros::Time::now();
+
+    //publish to sub to /tf
 }
 
+
+geometry_msgs::Pose getMarkerPose(std::string marker_id, std::string frame_id){
+    ROS_INFO("Providing marker's pose");
+    geometry_msgs::Pose target_marker_pose;
+
+    // lookup to transform?? maybe 
+
+
+    return target_marker_pose;
+}
 
 
 //-----------------------------------------------------------------------------

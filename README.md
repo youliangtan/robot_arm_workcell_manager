@@ -12,6 +12,10 @@ Installation
 # Gazebo Stuffs
 ```
 
+Dependencies
+- Fiducial Marker Detector: [here](https://github.com/UbiquityRobotics/fiducials)
+- rmf_msgs: [here](null)
+
 Make and Build
 ```
 catkin_make --pkg robot_arm_workcell_manager -j4
