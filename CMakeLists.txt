@@ -23,9 +23,12 @@ find_package(catkin REQUIRED COMPONENTS
   ur_description
   ur_gazebo
 )
+
+find_package(YAML-CPP REQUIRED yaml-cpp)
 find_package(Eigen3 REQUIRED)
 find_package(Boost REQUIRED system filesystem date_time thread)
 find_package(gazebo 9 REQUIRED)
+
 
 
 catkin_package(
@@ -87,12 +90,15 @@ include_directories(
   include
   ${catkin_INCLUDE_DIRS} 
   ${EIGEN3_INCLUDE_DIR}
-#   ${PCL_INCLUDE_DIRS}
-#   ${YAML_CPP_INCLUDE_DIRS}
+  ${YAML_CPP_INCLUDE_DIRS}
 )
 
 add_executable( robot_arm_controller src/robot_arm_controller.cpp )
-target_link_libraries(  robot_arm_controller  ${catkin_LIBRARIES} ) #${GAZEBO_INCLUDE_DIRS}  ${catkin_INCLUDE_DIRS} )
+target_link_libraries(  robot_arm_controller  ${catkin_LIBRARIES} ${YAML_CPP_LIBRARIES} ) #${GAZEBO_INCLUDE_DIRS}  ${catkin_INCLUDE_DIRS} )
+
+
+add_executable( fiducial_markers_handler src/fiducial_markers_handler.cpp )
+target_link_libraries( fiducial_markers_handler  ${catkin_LIBRARIES} ) #${GAZEBO_INCLUDE_DIRS}  ${catkin_INCLUDE_DIRS} )
 
 
 # set(Executables

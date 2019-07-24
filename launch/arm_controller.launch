@@ -1,0 +1,10 @@
+<launch>
+    <arg name="file"  default="$(find robot_arm_workcell_manager)/config/motion_target.yaml" />
+    <arg name="run" default="true" />  <!-- run the node??-->
+    <group if="$(arg run)">
+        <node pkg="robot_arm_workcell_manager" type="robot_arm_controller" name="robot_arm_workcell_manager" respawn="true">
+            <!-- Note: param cant use ${pkg}, thus use arg to solve this prob -->
+            <param name="config_yaml_path" value="$(arg file)" />
+        </node>
+    </group>
+</launch>

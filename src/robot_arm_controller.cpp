@@ -1,13 +1,16 @@
 /*
- * Robot Arm Workcell Manager
+ * Robot Arm Controller
  * Objective: Motion Task accoriding to input string or pose set request
  * Author: Tan You Liang
-*/
+ */
 
 
 #include <iostream>
 #include <memory>
 #include <thread>
+#include <yaml-cpp/yaml.h>
+#include <exception>
+
 
 // MoveIt!
 #include <moveit/move_group_interface/move_group_interface.h>
@@ -32,7 +35,9 @@ class RobotArmController{
         bool load_complete_ = false;  //TBC
         moveit::planning_interface::MoveGroupInterface::Plan motion_plan;
 
+        YAML::Node NAMED_TARGET_CONFIG;
 
+    
     public:
         RobotArmController(const std::string& _group_name);
         
@@ -40,11 +45,9 @@ class RobotArmController{
 
         // ------ Member Functions -----
 
-        bool loadMotionConfig(const std::string& yaml_path);
+        bool loadMotionTargetConfig(const std::string& _yaml_path);
 
-        bool moveToNamedJointsTarget(const std::string& _joints_target_name);
-
-        bool moveToNamedEefTarget(const std::string& _eef_target_name);
+        bool moveToNamedTarget(const std::string& _target_name);
 
         bool moveToJointsTarget(const std::vector<double>& joints_target_values, double vel_factor);
 
@@ -103,16 +106,58 @@ RobotArmController::~RobotArmController(){
 //* ------------------------------- Functions -------------------------------------
 //*
 
-
-bool RobotArmController::moveToNamedEefTarget(const std::string& _eef_target_name){
-    // TODO
-    return true;
+bool RobotArmController::loadMotionTargetConfig(const std::string& _yaml_path){
+    std::cout<<"YAML Path: "<<_yaml_path<<std::endl;
+    try {
+        NAMED_TARGET_CONFIG = YAML::LoadFile(_yaml_path);
+    } 
+    catch (std::exception& err){
+        ROS_ERROR("exception in YAML LOADER: %s", err.what());
+    }
+    ROS_INFO(" Motion Target YAML: Loading Completed! ");
 }
 
 
-bool RobotArmController::moveToNamedJointsTarget(const std::string& _joints_target_name){
-    // TODO
-    return true;
+bool RobotArmController::moveToNamedTarget(const std::string& _target_name){
+    
+    std::string goal_type;
+    double vel_factor;
+    std::vector<double> goal_values;
+
+    try {
+        goal_type = NAMED_TARGET_CONFIG["named_target"][_target_name]["type"].as<std::string>();
+        goal_values = NAMED_TARGET_CONFIG["named_target"][_target_name]["values"].as<std::vector<double>>();
+        vel_factor = NAMED_TARGET_CONFIG["named_target"][_target_name]["velFactor"].as<double>();
+    } 
+    catch (std::exception& err){
+        ROS_ERROR("Exception in YAML LOADER: %s", err.what());
+        return false;
+    }
+    
+    ROS_INFO("Loaded Named Target: %s, type: %s, velFactor: %f, values: [ %f %f %f %f %f %f ]",  
+        _target_name.c_str(), goal_type.c_str(), vel_factor,
+        goal_values[0], goal_values[1], goal_values[2], goal_values[3], goal_values[4], goal_values[5]);
+
+    // Joint Space Goal Mode
+    if (goal_type.compare("joint_space_goal") == 0){
+        std::vector<double> joints_target = {goal_values[0], goal_values[1], goal_values[2], goal_values[3], goal_values[4], goal_values[5]};
+        return moveToJointsTarget(joints_target, vel_factor );
+    }
+
+    // Eef Pose Goal Mode
+    if (goal_type.compare("eef_pose_goal") == 0){
+        tf2::Quaternion quat;
+        quat.setRPY( goal_values[3], goal_values[4], goal_values[5] );
+        geometry_msgs::Pose target_pose;
+        target_pose.position.x = goal_values[0];
+        target_pose.position.y = goal_values[1];
+        target_pose.position.z = goal_values[2];
+        target_pose.orientation = tf2::toMsg(quat);
+        return moveToEefTarget(target_pose, vel_factor);
+    }
+
+    ROS_ERROR("Invalid Motion Target, Please checked specified target in YAML");
+    return false;
 }
 
 
@@ -140,7 +185,7 @@ bool RobotArmController::moveToEefTarget(const geometry_msgs::Pose _eef_target_p
 
     move_group_->setMaxVelocityScalingFactor(vel_factor);
     
-    // TODO: now only support cartesian
+    // TODO: now only support cartesian, assume only one waypoint
     std::vector<geometry_msgs::Pose> waypoints;
     waypoints.push_back(_eef_target_pose);
     moveit_msgs::RobotTrajectory trajectory;
@@ -160,6 +205,8 @@ bool RobotArmController::moveToEefTarget(const geometry_msgs::Pose _eef_target_p
 }
 
 
+
+
 // ----------------------------------------------- MAIN ------------------------------------------------------
 // -----------------------------------------------------------------------------------------------------------
 
@@ -170,22 +217,36 @@ int main(int argc, char** argv){
     ros::init(argc, argv, "ur10_bot_controller", ros::init_options::NoSigintHandler);
     ros::NodeHandle nh("~");
     
-    std::string config_yaml_path = "null";
-    if (nh.getParam("config_yaml_path", config_yaml_path)){
-      ROS_INFO("Got path param: %s", config_yaml_path.c_str());
+    // TODO: move to load param
+    std::string config_yaml_path = "";
+    if (nh.getParam("motion_target_yaml_path", config_yaml_path)){
+      ROS_INFO(" [PARAM] Got path param: %s", config_yaml_path.c_str());
     }
     else{
-      ROS_ERROR("Failed to get param 'config_yaml_path'");
+      ROS_ERROR(" [PARAM] Failed to get param 'motion_target_yaml_path'");
     }
 
     RobotArmController ur10_controller("manipulator");
+    
+    ur10_controller.loadMotionTargetConfig(config_yaml_path);
+    
     ros::AsyncSpinner ros_async_spinner(1);
     ros_async_spinner.start();
 
-    // *********************************************************************
-    // Starting of testing code
+
+
+    // *********************************************************************************
+    // *************************** Starting of testing code ****************************
 
     std::cout<<" ---- Starting to execute arm motion -------" << std::endl;
+
+
+    // NAMED!!!
+    ur10_controller.moveToNamedTarget("home_position");
+    std::cout<<" ---- Done Named Joint motion 1 -------" << std::endl;
+
+    ur10_controller.moveToNamedTarget("pre_place_pose");
+    std::cout<<" ---- Done Named Cartesian motion 1 -------" << std::endl;
 
     // test code!!!!!!!!!!!
     std::vector<double> joints_target_1 = {1, -1.7, 1.8, -0.1, 2.5, 0};
@@ -213,5 +274,6 @@ int main(int argc, char** argv){
     std::cout<<" ---- Done Cartesian motion 2 -------" << std::endl;
 
     ros::waitForShutdown();
+    
     return 0;
 }

@@ -1,0 +1,8 @@
+# Storing all named motion target
+# Check YAML: http://www.yamllint.com/
+
+named_target:
+  home_position:        {type: "joint_space_goal", values: [0.3,-0.5,1.4,0.2,0.2,0], velFactor: 0.4}
+  pre_pick_position:    {type: "joint_space_goal", values: [0,0,0,0,0,0], velFactor: 0.4}
+  pre_place_pose:       {type: "eef_pose_goal", values: [0.3,0.3,1,0,0,1.5], velFactor: 0.4}
+  
