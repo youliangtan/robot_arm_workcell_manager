@@ -1,6 +1,7 @@
 /*
  * Fiducial Markers Handler
- * => Manage storing of all markers poses, an
+ *   Objective: Manage storing of all markers poses, deal with all the tf stuffs
+ *   Author: Tan You Liang
  */
 
 #include <iostream>
@@ -12,7 +13,7 @@
 #include <tf/transform_broadcaster.h>
 #include <tf/transform_listener.h>
 
-
+// TODO
 struct marker{
     std::string marker_id;
     std::string frame_id;
@@ -21,32 +22,42 @@ struct marker{
 };
 
 
-class FiduciallMarkersHandler{
+class FiducialMarkersHandler{
     private:
         std::string marker_type;
         std::vector<marker> markers_array;
 
     public:
-        FiduciallMarkersHandler(const std::string& _group_name);
+        FiducialMarkersHandler();
         
-        ~FiduciallMarkersHandler();
+        ~FiducialMarkersHandler();
 
         // ------ Execution -----
 
         void markerCallback();        
 
-        bool getMarkerPose(std::string marker_id);
+        // provide marker's pose respective to requested frame_id
+        bool getMarkerPose(std::string marker_id, std::string frame_id);
 
-        
-
+    
 };
 
 
 //-----------------------------------------------------------------------------
 
 
+FiducialMarkersHandler::FiducialMarkersHandler(){
+    ROS_INFO("FiducialMarkersHandler::FiducialMarkersHandler() completed!! \n");
+}
 
-void markerCallback(){
+FiducialMarkersHandler::~FiducialMarkersHandler(){
+    std::cout << "Called Fiducial Markers Handler " << " destructor" << std::endl;
+}
+
+//-----------------------------------------------------------------------------
+
+
+void FiducialMarkersHandler::markerCallback(){
     ros::Time detected_time = ros::Time::now();
 }
 
@@ -56,7 +67,10 @@ void markerCallback(){
 
 
 int main(int argc, char** argv){
-    std::cout<<"fiducial markers handler is alive!!!"<< std::endl;
-
+    std::cout<<" YoYoYo!, Fiducial Markers Handler is alive!!!"<< std::endl;
+    
+    ros::init(argc, argv, "fiducial_markers_handler", ros::init_options::NoSigintHandler);
+    
+    FiducialMarkersHandler aruco_markers();
 
 }

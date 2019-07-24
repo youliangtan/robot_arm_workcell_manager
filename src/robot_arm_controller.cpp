@@ -11,7 +11,6 @@
 #include <yaml-cpp/yaml.h>
 #include <exception>
 
-
 // MoveIt!
 #include <moveit/move_group_interface/move_group_interface.h>
 #include <moveit/planning_scene_interface/planning_scene_interface.h>
@@ -35,17 +34,18 @@ class RobotArmController{
         bool load_complete_ = false;  //TBC
         moveit::planning_interface::MoveGroupInterface::Plan motion_plan;
 
+        ros::NodeHandle nh;
         YAML::Node NAMED_TARGET_CONFIG;
 
-    
+    protected:
+        bool loadMotionTargetConfig();
+
     public:
         RobotArmController(const std::string& _group_name);
         
         ~RobotArmController();
 
-        // ------ Member Functions -----
-
-        bool loadMotionTargetConfig(const std::string& _yaml_path);
+        // ----------- Member Functions --------------
 
         bool moveToNamedTarget(const std::string& _target_name);
 
@@ -53,15 +53,16 @@ class RobotArmController{
 
         bool moveToEefTarget(const geometry_msgs::Pose _eef_target_pose, double vel_factor);
 
-        // TODO: Sub IO from UR10
+        // TODO: Sub IO from UR10, Stop all motion
 };
+
 
 
 //* -----------------------------------------------------------------------------------------------------------------------
 
 
 
-RobotArmController::RobotArmController(const std::string& _group_name){
+RobotArmController::RobotArmController(const std::string& _group_name): nh("~"){
 
     std::cout << std::endl << "RobotArmController::RobotArmController() enter with dispenser: " << _group_name << std::endl;
     group_name_ = _group_name;
@@ -90,10 +91,13 @@ RobotArmController::RobotArmController(const std::string& _group_name){
 
     move_group_->setNumPlanningAttempts(5);
     move_group_->setPlanningTime(20.0);
+    std::cout << "ControlGroup::ControlGroup(" << group_name_ << ") completed." << std::endl;
+
+    // Load yaml path via ros param
+    loadMotionTargetConfig();
     load_complete_ = true;
     
-    std::cout << "ControlGroup::ControlGroup(" << group_name_ << ") completed." << std::endl;
-    std::cout << "RobotArmController::RobotArmController() completed" << std::endl;
+    ROS_INFO("RobotArmController::RobotArmController() completed!! \n");
 }
 
 
@@ -106,15 +110,29 @@ RobotArmController::~RobotArmController(){
 //* ------------------------------- Functions -------------------------------------
 //*
 
-bool RobotArmController::loadMotionTargetConfig(const std::string& _yaml_path){
-    std::cout<<"YAML Path: "<<_yaml_path<<std::endl;
+// Get yaml path from ros param server, then load content via yaml-cpp
+bool RobotArmController::loadMotionTargetConfig(){
+
+    std::string _yaml_path = "";
+    if (nh.getParam("motion_target_yaml_path", _yaml_path)){
+      ROS_INFO(" [PARAM] Got path param: %s", _yaml_path.c_str());
+    }
+    else{
+      ROS_ERROR(" [PARAM] Failed to get param 'motion_target_yaml_path'");
+      return false;
+    }
+    std::cout<<"[PARAM] YAML Path: "<<_yaml_path<<std::endl;
+
     try {
         NAMED_TARGET_CONFIG = YAML::LoadFile(_yaml_path);
     } 
     catch (std::exception& err){
         ROS_ERROR("exception in YAML LOADER: %s", err.what());
+        return false;
     }
     ROS_INFO(" Motion Target YAML: Loading Completed! ");
+
+    return true;
 }
 
 
@@ -212,35 +230,21 @@ bool RobotArmController::moveToEefTarget(const geometry_msgs::Pose _eef_target_p
 
 
 int main(int argc, char** argv){
-    std::cout << " RAWM is alive!!! =) " << std::endl;
+    std::cout << " YoYoYo, Robot Arm Controller is alive!!! =) " << std::endl;
     
     ros::init(argc, argv, "ur10_bot_controller", ros::init_options::NoSigintHandler);
-    ros::NodeHandle nh("~");
     
-    // TODO: move to load param
-    std::string config_yaml_path = "";
-    if (nh.getParam("motion_target_yaml_path", config_yaml_path)){
-      ROS_INFO(" [PARAM] Got path param: %s", config_yaml_path.c_str());
-    }
-    else{
-      ROS_ERROR(" [PARAM] Failed to get param 'motion_target_yaml_path'");
-    }
-
     RobotArmController ur10_controller("manipulator");
-    
-    ur10_controller.loadMotionTargetConfig(config_yaml_path);
-    
     ros::AsyncSpinner ros_async_spinner(1);
     ros_async_spinner.start();
+
 
 
 
     // *********************************************************************************
     // *************************** Starting of testing code ****************************
 
-    std::cout<<" ---- Starting to execute arm motion -------" << std::endl;
-
-
+    std::cout<<" *************************** Starting to execute arm motion ***************************" << std::endl;
     // NAMED!!!
     ur10_controller.moveToNamedTarget("home_position");
     std::cout<<" ---- Done Named Joint motion 1 -------" << std::endl;
@@ -274,6 +278,8 @@ int main(int argc, char** argv){
     std::cout<<" ---- Done Cartesian motion 2 -------" << std::endl;
 
     ros::waitForShutdown();
-    
+
     return 0;
+
+
 }

@@ -1,6 +1,6 @@
 /*
  * Robot Arm Workcell Manager
- * Objective: Motion Task accoriding to input string or pose set request
+ * Objective: Handle Robot Arm's work sequences and logic
  * Author: Tan You Liang
 */
 
