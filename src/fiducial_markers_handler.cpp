@@ -64,6 +64,9 @@ class FiducialMarkersHandler{
         bool getMarkerTransformPose(tf::Transform *target_marker_transform, std::string marker_id, std::string frame_id);
         // geometry_msgs::Pose getMarkerPose(std::string marker_id, std::string frame_id);
 
+        // TODO
+        // bool getTfTransform(std::string marker_id );
+
         bool getAllSpottedMarkersID();
 
 };
