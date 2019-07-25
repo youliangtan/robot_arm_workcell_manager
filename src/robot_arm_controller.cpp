@@ -45,6 +45,8 @@ class RobotArmController{
         
         ~RobotArmController();
 
+        // TODO: Collision
+
         // ----------- Member Functions --------------
 
         bool moveToNamedTarget(const std::string& _target_name);

@@ -4,7 +4,7 @@
     <group if="$(arg run)">
         <node pkg="robot_arm_workcell_manager" type="robot_arm_controller" name="robot_arm_workcell_manager" respawn="true">
             <!-- Note: param cant use ${pkg}, thus use arg to solve this prob -->
-            <param name="config_yaml_path" value="$(arg file)" />
+            <param name="config_yaml_path" type="string" value="$(arg file)" />
         </node>
     </group>
 </launch>
