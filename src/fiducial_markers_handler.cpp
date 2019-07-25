@@ -36,7 +36,7 @@ class FiducialMarkersHandler{
         std::vector<marker> markers_array;
 
         // ros stuffs
-        ros::NodeHandle nh;
+        ros::NodeHandle nh_;
         ros::Subscriber markers_sub_;
         tf::TransformBroadcaster br;  
         tf::TransformListener listener;
@@ -48,7 +48,7 @@ class FiducialMarkersHandler{
 
         // ------ Execution -----
 
-        void updateMarkerListCallback(const fiducial_msgs::FiducialArrayConstPtr& msg);        
+        void updateFiducialArrayCallback(const fiducial_msgs::FiducialArrayConstPtr& msg);        
 
         // provide marker's pose respective to requested frame_id
         geometry_msgs::Pose getMarkerPose(std::string marker_id, std::string frame_id);
@@ -59,9 +59,9 @@ class FiducialMarkersHandler{
 //-----------------------------------------------------------------------------
 
 
-FiducialMarkersHandler::FiducialMarkersHandler(): nh("~"){
+FiducialMarkersHandler::FiducialMarkersHandler(): nh_("~"){
 
-    markers_sub_ = nh.subscribe ("/fiducial_transforms", 10 ,&FiducialMarkersHandler::updateMarkerListCallback,this);
+    markers_sub_ = nh_.subscribe ("/fiducial_transforms", 10 ,&FiducialMarkersHandler::updateFiducialArrayCallback,this);
 
     ROS_INFO("FiducialMarkersHandler::FiducialMarkersHandler() completed!! \n");
 }
@@ -73,7 +73,7 @@ FiducialMarkersHandler::~FiducialMarkersHandler(){
 //-----------------------------------------------------------------------------
 
 
-void FiducialMarkersHandler::updateMarkerListCallback(const fiducial_msgs::FiducialArrayConstPtr& msg){
+void FiducialMarkersHandler::updateFiducialArrayCallback(const fiducial_msgs::FiducialArrayConstPtr& msg){
     ros::Time detected_time = ros::Time::now();
 
     //publish to sub to /tf

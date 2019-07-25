@@ -25,10 +25,15 @@ catkin_make --pkg robot_arm_workcell_manager -j4
 ```
 # Absolute Path
 rosrun robot_arm_workcell_manager robot_arm_controller _motion_target_yaml_path:="/home/youliang/catkin_ws/src/robot_arm_workcell_manager/config/motion_target.yaml"
-# OR
+## OR
 roslaunch robot_arm_workcell_manager arm_controller.launch
 
 rosrun robot_arm_workcell_manager fiducial_markers_handler 
+```
+
+Overall roslaunch
+```
+roslaunch robot_arm_workcell_manager demo.launch
 ```
 
 # Notes

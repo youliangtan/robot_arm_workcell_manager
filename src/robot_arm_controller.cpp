@@ -34,7 +34,7 @@ class RobotArmController{
         bool load_complete_ = false;  //TBC
         moveit::planning_interface::MoveGroupInterface::Plan motion_plan_;
 
-        ros::NodeHandle nh;
+        ros::NodeHandle nh_;
         YAML::Node NAMED_TARGET_CONFIG_;
 
     protected:
@@ -62,7 +62,7 @@ class RobotArmController{
 
 
 
-RobotArmController::RobotArmController(const std::string& _group_name): nh("~"){
+RobotArmController::RobotArmController(const std::string& _group_name): nh_("~"){
 
     std::cout << std::endl << "RobotArmController::RobotArmController() enter with dispenser: " << _group_name << std::endl;
     group_name_ = _group_name;
@@ -114,7 +114,7 @@ RobotArmController::~RobotArmController(){
 bool RobotArmController::loadMotionTargetConfig(){
 
     std::string _yaml_path = "";
-    if (nh.getParam("motion_target_yaml_path", _yaml_path)){
+    if (nh_.getParam("motion_target_yaml_path", _yaml_path)){
       ROS_INFO(" [PARAM] Got path param: %s", _yaml_path.c_str());
     }
     else{

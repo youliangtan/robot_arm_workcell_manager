@@ -19,9 +19,12 @@ find_package(catkin REQUIRED COMPONENTS
   tf2_geometry_msgs
   gazebo_ros
   geometry_msgs
-#   rmf_msgs
   ur_description
   ur_gazebo
+  
+  fiducial_msgs
+  aruco_detect
+  rmf_msgs
 )
 
 find_package(YAML-CPP REQUIRED yaml-cpp)
@@ -96,9 +99,14 @@ include_directories(
 add_executable( robot_arm_controller src/robot_arm_controller.cpp )
 target_link_libraries(  robot_arm_controller  ${catkin_LIBRARIES} ${YAML_CPP_LIBRARIES} ) #${GAZEBO_INCLUDE_DIRS}  ${catkin_INCLUDE_DIRS} )
 
-
 add_executable( fiducial_markers_handler src/fiducial_markers_handler.cpp )
 target_link_libraries( fiducial_markers_handler  ${catkin_LIBRARIES} ) #${GAZEBO_INCLUDE_DIRS}  ${catkin_INCLUDE_DIRS} )
+
+
+# TODO create lib for above dependencies
+add_executable( robot_arm_workcell_manager src/robot_arm_workcell_manager.cpp )
+target_link_libraries( robot_arm_workcell_manager  ${catkin_LIBRARIES} ) #${GAZEBO_INCLUDE_DIRS}  ${catkin_INCLUDE_DIRS} )
+
 
 
 # set(Executables

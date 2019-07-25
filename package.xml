@@ -30,7 +30,11 @@
   <depend>gazebo_ros</depend>
   <depend>gazebo</depend>
   <depend>geometry_msgs</depend>
-  <!-- <depend>rmf_msgs</depend> -->
+  
+  <depend>aruco_detect</depend>
+  <depend>fiducial_msgs</depend>
+  
+  <depend>rmf_msgs</depend>
 
   <buildtool_depend>catkin</buildtool_depend>
 </package>
