@@ -49,7 +49,7 @@ rosrun robot_arm_workcell_manager fiducial_markers_handler
 rosrun robot_arm_workcell_manager robot_arm_workcell_manager _camera_frame_id:="camera"
 ```
 
-# Notes
+## Notes
 - 3 executables are used in this application, namely: `robot_arm_workcell_manager` (MAIN), `robot_arm_controller`, `fiducial_markers_handler`.
 - "Named Motion Target" can be used to name then request each "joint/pose goal" of the robot arm. Edit `motion_config.yaml` accordingly.
 - Camera calib is tuned, and written here: `/config/usb_cam.yaml`

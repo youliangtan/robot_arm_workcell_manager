@@ -98,6 +98,7 @@ void RobotArmWorkcellManager::dispenserRequestCallback(const rmf_msgs::Dispenser
     }
 
     //Check if quantity and item size number
+    // compartment_name , TBC
     if (_msg->items.size() != 1 || _msg->items[0].quantity != 1 || _msg->items[0].compartment_name != "default")  {
         std::cout << "    Currently only supports 1 item request of quantity 1 " << "in 'default' compartment, ignoring." << std::endl;
         dispenser_result_msg_.dispenser_time = ros::Time::now();
@@ -179,7 +180,8 @@ void RobotArmWorkcellManager::dispenser_task_execution_thread_fn(){
 }
 
 
-// --------------------------------------------------------------- IDEA ------------------------------------------------------------------
+// --------------------------------------------------------------- IDEA: ROBOT_ARM_MISSION_CONTROL ------------------------------------------------------------------
+
 // // TODO: Mission sequences
 // bool mission(int item_type){
     
@@ -203,7 +205,7 @@ void RobotArmWorkcellManager::dispenser_task_execution_thread_fn(){
 //     pose = getMarkerTransformPose("baselink", "pick_pose", marker_id)
 //     moveToEefTarget()
 
-//     // lift
+//     // lift tray
 
 //     // marker's front rest point
 //     pose = getMarkerTransformPose("baselink", "pick_pose", marker_id)
@@ -216,20 +218,20 @@ void RobotArmWorkcellManager::dispenser_task_execution_thread_fn(){
 //     moveToNamedTarget("trolley_scan");
 
 //     if (no_marker)
-//         return false
+//         return false;
 
 //     // front of placing point
-//     pose = getMarkerTransformPoseWithOffset("baselink", "trolley_marker_front"+placement, marker_id);
+//     pose = getTransformPose("baselink", "trolley_marker_front"+placement);
 //     moveToEefTarget(pose)
 
 //     // insert
-//     pose = getMarkerTransformPoseWithOffset("baselink", "trolley_place"+placement, marker_id);
+//     pose = getTransformPose("baselink", "trolley_place"+placement);
 //     moveToEefTarget(pose)
 
-//     // place
+//     // place tray
 
 //     // front of placing point
-//     pose = getMarkerTransformPoseWithOffset("baselink", "trolley_marker_front"+placement, marker_id);
+//     pose = getTransformPoseWithOffset("baselink", "trolley_marker_front"+placement);
 //     moveToEefTarget(pose)
 
 //     // move to facing mobile trolley
