@@ -28,6 +28,21 @@
 
 
 class RobotArmWorkcellManager{
+
+    public:
+        RobotArmWorkcellManager(const std::string& _dispenser_name);
+
+        ~RobotArmWorkcellManager();
+
+        // ------ Execution -----
+
+        void dispenserRequestCallback(const rmf_msgs::DispenserRequestConstPtr& msg);
+
+        void dispenser_task_execution_thread_fn();
+
+    protected:
+        bool loadParameters();
+
     private:
         std::deque<rmf_msgs::DispenserRequest> dispenser_request_queue_;
         rmf_msgs::DispenserRequest dispenser_curr_task_;
@@ -42,18 +57,6 @@ class RobotArmWorkcellManager{
         ros::Publisher dispenser_result_pub_;
         tf::TransformBroadcaster br;  
         tf::TransformListener listener;
-
-    public:
-        RobotArmWorkcellManager(const std::string& _dispenser_name);
-        
-        ~RobotArmWorkcellManager();
-
-        // ------ Execution -----
-
-        void dispenserRequestCallback(const rmf_msgs::DispenserRequestConstPtr& msg);
-
-        void dispenser_task_execution_thread_fn();
-
 
 };
 
@@ -183,6 +186,8 @@ void RobotArmWorkcellManager::dispenser_task_execution_thread_fn(){
 // --------------------------------------------------------------- IDEA: ROBOT_ARM_MISSION_CONTROL ------------------------------------------------------------------
 
 // // TODO: Mission sequences
+// // Make it to a config file @_@
+
 // bool mission(int item_type){
     
 //     // move to home
@@ -197,19 +202,23 @@ void RobotArmWorkcellManager::dispenser_task_execution_thread_fn(){
 //         return false
 //     }
 
+//     setTargetMarker();
+
 //     // marker's front rest point
-//     pose = getMarkerTransformPoseWithOffset("baselink", "marker_front", marker_id);
+//     pose = getTransformPose("baselink", "pre-pick");
 //     moveToJointsTarget(pose)
     
 //     // insert
-//     pose = getMarkerTransformPose("baselink", "pick_pose", marker_id)
-//     moveToEefTarget()
+//     pose = getTransformPose("baselink", "insert")
+//     moveToEefTarget(pose)
 
 //     // lift tray
+//     pose = getTransformPose("baselink", "lift")
+//     moveToEefTarget(pose)
 
 //     // marker's front rest point
-//     pose = getMarkerTransformPose("baselink", "pick_pose", marker_id)
-//     moveToEefTarget()
+//     pose = getTransformPose("baselink", "pick_pose", marker_id)
+//     moveToEefTarget(pose)
 
 //     // move to home
 //     moveToNamedTarget("home_position_cartesian");
@@ -221,17 +230,19 @@ void RobotArmWorkcellManager::dispenser_task_execution_thread_fn(){
 //         return false;
 
 //     // front of placing point
-//     pose = getTransformPose("baselink", "trolley_marker_front"+placement);
+//     pose = getTransformPose("baselink", "pre-place");
 //     moveToEefTarget(pose)
 
 //     // insert
-//     pose = getTransformPose("baselink", "trolley_place"+placement);
+//     pose = getTransformPose("baselink", "insert");
 //     moveToEefTarget(pose)
 
 //     // place tray
+//     pose = getTransformPose("baselink", "drop");
+//     moveToEefTarget(pose)
 
 //     // front of placing point
-//     pose = getTransformPoseWithOffset("baselink", "trolley_marker_front"+placement);
+//     pose = getTransformPose("baselink", "post-place");
 //     moveToEefTarget(pose)
 
 //     // move to facing mobile trolley

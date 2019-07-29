@@ -27,18 +27,6 @@
 
 
 class RobotArmController{
-    private:
-        std::string group_name_;
-        std::unique_ptr<moveit::planning_interface::MoveGroupInterface> move_group_;
-        std::string current_state_name_; // TBC
-        bool load_complete_ = false;  //TBC
-        moveit::planning_interface::MoveGroupInterface::Plan motion_plan_;
-
-        ros::NodeHandle nh_;
-        YAML::Node NAMED_TARGET_CONFIG_;
-
-    protected:
-        bool loadMotionTargetConfig();
 
     public:
         RobotArmController(const std::string& _group_name);
@@ -56,6 +44,20 @@ class RobotArmController{
         bool moveToEefTarget(const geometry_msgs::Pose _eef_target_pose, double vel_factor);
 
         // TODO: Sub IO from UR10, Stop all motion
+    
+
+    protected:
+        bool loadMotionTargetConfig();
+    
+    private:
+        std::string group_name_;
+        std::unique_ptr<moveit::planning_interface::MoveGroupInterface> move_group_;
+        std::string current_state_name_; // TBC
+        bool load_complete_ = false;  //TBC
+        moveit::planning_interface::MoveGroupInterface::Plan motion_plan_;
+
+        ros::NodeHandle nh_;
+        YAML::Node NAMED_TARGET_CONFIG_;
 };
 
 
@@ -244,7 +246,7 @@ int main(int argc, char** argv){
     // *********************************************************************************
     // *************************** Starting of testing code ****************************
 
-    std::cout<<" *************************** Starting to execute arm motion ***************************" << std::endl;
+    std::cout<<" *********************** Starting to execute arm motion ********************" << std::endl;
     // NAMED!!!
     ur10_controller.moveToNamedTarget("home_position");
     std::cout<<" ---- Done Named Joint motion 1 -------" << std::endl;
