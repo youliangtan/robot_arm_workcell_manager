@@ -100,7 +100,7 @@ add_executable( robot_arm_controller src/robot_arm_controller.cpp )
 target_link_libraries(  robot_arm_controller  ${catkin_LIBRARIES} ${YAML_CPP_LIBRARIES} ) #${GAZEBO_INCLUDE_DIRS}  ${catkin_INCLUDE_DIRS} )
 
 add_executable( fiducial_markers_handler src/fiducial_markers_handler.cpp )
-target_link_libraries( fiducial_markers_handler  ${catkin_LIBRARIES} ) #${GAZEBO_INCLUDE_DIRS}  ${catkin_INCLUDE_DIRS} )
+target_link_libraries( fiducial_markers_handler  ${catkin_LIBRARIES}  ${YAML_CPP_LIBRARIES}  ) #${GAZEBO_INCLUDE_DIRS}  ${catkin_INCLUDE_DIRS} )
 
 
 # TODO create lib for above dependencies

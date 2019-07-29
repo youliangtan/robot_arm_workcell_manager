@@ -41,15 +41,16 @@ roslaunch robot_arm_workcell_manager demo.launch
 ### Fiducial Markers Testing
 ```
 roslaunch robot_arm_workcell_manager markers_detector.launch
-rosrun robot_arm_workcell_manager fiducial_markers_handler
+rosrun robot_arm_workcell_manager fiducial_markers_handler _camera_frame_id:="camera" _marker_tf_path:="/home/youliang/catkin_ws/src/robot_arm_workcell_manager/config/markers_tf.yaml"
 ```
 
 ### Overall Test with RAWM
 ```
-rosrun robot_arm_workcell_manager robot_arm_workcell_manager _camera_frame_id:="camera"
+rosrun robot_arm_workcell_manager robot_arm_workcell_manager
 ```
 
 ## Notes
 - 3 executables are used in this application, namely: `robot_arm_workcell_manager` (MAIN), `robot_arm_controller`, `fiducial_markers_handler`.
 - "Named Motion Target" can be used to name then request each "joint/pose goal" of the robot arm. Edit `motion_config.yaml` accordingly.
 - Camera calib is tuned, and written here: `/config/usb_cam.yaml`
+- Dispenser req will be received by RAWM, id: with convention of `marker_{$fiducial_id}`

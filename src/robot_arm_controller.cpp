@@ -167,7 +167,7 @@ bool RobotArmController::moveToNamedTarget(const std::string& _target_name){
     // Eef Pose Goal Mode
     if (goal_type.compare("eef_pose_goal") == 0){
         tf2::Quaternion quat;
-        quat.setRPY( goal_values[3], goal_values[4], goal_values[5] );
+        quat.setEuler( goal_values[3], goal_values[4], goal_values[5] );
         geometry_msgs::Pose target_pose;
         target_pose.position.x = goal_values[0];
         target_pose.position.y = goal_values[1];
@@ -226,9 +226,9 @@ bool RobotArmController::moveToEefTarget(const geometry_msgs::Pose _eef_target_p
 
 
 
-
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // ----------------------------------------------- MAIN ------------------------------------------------------
-// -----------------------------------------------------------------------------------------------------------
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 int main(int argc, char** argv){
@@ -239,8 +239,6 @@ int main(int argc, char** argv){
     RobotArmController ur10_controller("manipulator");
     ros::AsyncSpinner ros_async_spinner(1);
     ros_async_spinner.start();
-
-
 
 
     // *********************************************************************************

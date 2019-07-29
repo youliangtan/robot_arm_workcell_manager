@@ -5,11 +5,16 @@
  * 
  *  Markers Naming Convention: aruco_0001
  *
+ *  Notes:
+ *  1) `marker_id` is equilavent the `marker_frame_id`
+ *  2) 
  */
 
 #include <iostream>
 #include <memory>
 #include <thread>
+#include <chrono>
+#include <yaml-cpp/yaml.h>
 
 // ros stuffs
 #include <ros/ros.h>
@@ -21,7 +26,7 @@
 #include <fiducial_msgs/FiducialTransformArray.h>
 
 
-// TODO
+// TODO: not using nowwwww... 
 struct marker{
     std::string marker_id;
     std::string frame_id;
@@ -39,40 +44,39 @@ class FiducialMarkersHandler{
 
         // ------ Execution -----
 
-        void updateFiducialArrayCallback(const fiducial_msgs::FiducialTransformArrayConstPtr& msg);        
-
-        // provide marker's pose respective to requested frame_id, TODO
+        // provide marker's pose respective to requested frame_id, TODO, should i removed?? TBC
         bool getMarkerTransformPose(tf::Transform *target_marker_transform, std::string marker_id, std::string frame_id);
 
-        bool getTransformPose(tf::Transform *target_transform, std::string marker_frame_id, std::string frame_id);
+        bool getTransformPose(tf::Transform *target_transform, std::string target_frame_id, std::string frame_id);
         
-        // TODO
-        // @return: Marker's Type
+        // Set target marker and generate extended tf; @return: Marker's Type
         std::string setTargetMarker(std::string marker_id);
 
-        bool removeTargetMarker(std::string marker_id);
+        bool removeTargetMarker();
 
-
+        // TODO
         bool getAllSpottedMarkersID();
     
     
     protected:
+
+        
         bool loadParameters();
 
         tf::Quaternion pitching_up(tf::Quaternion quat, int marker_mode);
 
-        void MarkerExtendedTfTimerCallback(const ros::TimerEvent& event);
-        
         // TODO: to work on this
         // To make sure tf transform will not be depreciated?? or another method to change this.... 10s for tf now
         // void republishTfHandler(); // keep markers tf alive
 
-
     private:
         std::string marker_type; // TBC
         std::vector<marker> markers_array_; //tbc
+
+        std::vector<tf::StampedTransform> markers_extended_tf_array_;
         
         // param
+        YAML::Node MARKERS_TF_CONFIG_;
         std::string camera_frame_id_;
 
         // ros stuffs
@@ -81,6 +85,10 @@ class FiducialMarkersHandler{
         tf::TransformBroadcaster tf_broadcaster_;  
         tf::TransformListener tf_listener_;
         ros::Timer marker_extended_tf_timer_;
+
+        void updateFiducialArrayCallback(const fiducial_msgs::FiducialTransformArrayConstPtr& msg);        
+
+        void MarkerExtendedTfTimerCallback(const ros::TimerEvent& event);
 
 };
 
@@ -114,8 +122,24 @@ bool FiducialMarkersHandler::loadParameters(){
       ROS_ERROR(" [PARAM] Failed to get param 'camera_frame_id'");
       return false;
     }
-    std::cout<<"[PARAM] Camera Frame ID Path: "<< camera_frame_id_<<std::endl;
 
+    std::string _yaml_path = "";
+    if (nh_.getParam("marker_tf_path", _yaml_path)){
+      ROS_INFO(" [PARAM] Got path param: %s", _yaml_path.c_str());
+    }
+    else{
+      ROS_ERROR(" [PARAM] Failed to get param 'marker_tf_path'");
+      return false;
+    }
+
+    try {
+        MARKERS_TF_CONFIG_ = YAML::LoadFile(_yaml_path);
+    } 
+    catch (std::exception& err){
+        ROS_ERROR("exception in YAML LOADER: %s", err.what());
+        return false;
+    }
+    ROS_INFO(" Markers TF Config YAML: Loading Completed! ");
 
     return true;
 }
@@ -147,14 +171,121 @@ tf::Quaternion FiducialMarkersHandler::pitching_up(tf::Quaternion quat, int mark
 //--------------------------------------------------------------------------------
 
 
-// Update all fiducial arrays to tf, and name markers according to their marker's id
+
+
+// Get transform 
+bool FiducialMarkersHandler::getTransformPose(tf::Transform *target_transform, std::string target_frame_id, std::string frame_id){
+    ROS_INFO("Looking up TF between frame: %s and %s", target_frame_id.c_str(), frame_id.c_str());
+
+    //get transform of marker relative to base link
+  	tf::StampedTransform stamped_transform;
+  	try{
+	  	tf_listener_.waitForTransform(target_frame_id, frame_id, ros::Time(0), ros::Duration(2) );
+	  	tf_listener_.lookupTransform(target_frame_id, frame_id, ros::Time(0), stamped_transform);
+    }
+    catch (tf::TransformException ex) {
+        ROS_ERROR(" Get Transform Error!! Most likely tf is not existed between 2 input frames. error:%s",ex.what());
+        return false;
+    }
+
+  	target_transform->setRotation(stamped_transform.getRotation());
+  	target_transform->setOrigin(stamped_transform.getOrigin());
+
+    return true;
+}
+
+
+// Get Markers's transfrom the tf between 2 frames
+bool FiducialMarkersHandler::getMarkerTransformPose( tf::Transform *target_marker_transform, std::string marker_id, std::string frame_id="base_link"){    
+    ROS_INFO("Providing marker's pose");
+    return getTransformPose( target_marker_transform, marker_id, frame_id);
+}
+
+
+
+
+// @ return marker type, failed then return ""
+std::string FiducialMarkersHandler::setTargetMarker(std::string marker_id ){
+    
+    ROS_INFO("Selected target marker! Start publishing TFs");
+    std::vector<std::string> marker_extended_frame_array;
+    std::string marker_type, extended_frame;
+
+    try {
+        // TODO: lookup to rosparam for the mathching
+        marker_type = MARKERS_TF_CONFIG_["marker_id"][marker_id]["type"].as<std::string>();
+        marker_extended_frame_array = MARKERS_TF_CONFIG_["marker_extended_frames"][marker_type].as<std::vector<std::string>>();
+    }
+    catch (std::exception& err){
+        ROS_ERROR("YAML ERROR!! Unable to get marker type from marker ID, or unable to get Extended Frame array");
+        return "";
+    }
+
+
+    try {
+        // Create and array of extended_markers tf, and stored in under member func
+        for( std::size_t i=0;i< marker_extended_frame_array.size() ;i++) {
+            
+            extended_frame = marker_extended_frame_array[i];
+            std::vector<double> pose_array = MARKERS_TF_CONFIG_["markers_extended_tf"][marker_type][extended_frame].as<std::vector<double>>();
+        
+            tf::Transform transform;    
+            transform.setOrigin(tf::Vector3(pose_array[0],pose_array[1],pose_array[2]));
+            tf::Quaternion quat;
+            quat.setEuler( pose_array[3], pose_array[4], pose_array[5] );
+            transform.setRotation(quat);
+
+            tf::StampedTransform extended_tf(transform, ros::Time::now(), marker_id, extended_frame);
+
+            markers_extended_tf_array_.push_back(extended_tf);
+        }
+        
+        std::cout << " Done with creating Markers Extended TFs " << std::endl;
+        marker_extended_tf_timer_ = nh_.createTimer(ros::Duration(0.4), &FiducialMarkersHandler::MarkerExtendedTfTimerCallback, this);
+        return marker_type;
+    
+    }
+    catch (std::exception& err){
+        ROS_ERROR("YAML ERROR!! Exception Raise while reading  '%s frame' in YAML config:  %s", extended_frame.c_str(), err.what());
+        return "";
+    }
+
+}
+
+
+bool FiducialMarkersHandler::removeTargetMarker(){
+    ROS_INFO("Removed target marker!");
+    marker_extended_tf_timer_.stop();
+    return true;
+}
+
+
+
+
+// ------------------------------------------- ROS Callback Zone ------------------------------------------------
+
+
+
+// Periodic callback to pub marker extended tfs to /tf
+void FiducialMarkersHandler::MarkerExtendedTfTimerCallback(const ros::TimerEvent& event) {
+    
+    for( std::size_t i=0;i< markers_extended_tf_array_.size() ;i++) {
+        markers_extended_tf_array_[i].stamp_ = ros::Time::now();
+        tf_broadcaster_.sendTransform( markers_extended_tf_array_[i] );
+    }
+
+}
+
+
+
+// Update all fiducial arrays to /tf, and name markers according to their marker's id
 void FiducialMarkersHandler::updateFiducialArrayCallback(const fiducial_msgs::FiducialTransformArrayConstPtr& _msg){
     
     int size_of_array = (_msg->transforms).size();
     if (size_of_array < 1)
         return;
 
-    ROS_INFO(" [Callback]::Markers Being detected! ");
+    ROS_DEBUG(" [Callback]::Markers Being detected! ");
     geometry_msgs::Transform pose;
     tf::Transform transform;
 
@@ -177,74 +308,11 @@ void FiducialMarkersHandler::updateFiducialArrayCallback(const fiducial_msgs::Fi
 }
 
 
-bool FiducialMarkersHandler::getTransformPose(tf::Transform *target_transform, std::string marker_frame_id, std::string frame_id){
-    ROS_INFO("Looking up TF between frame: %s and %s", marker_frame_id.c_str(), frame_id.c_str());
 
-    //get transform of marker relative to base link
-  	tf::StampedTransform stamped_transform;
-  	try{
-	  	tf_listener_.waitForTransform(marker_frame_id, frame_id, ros::Time(0), ros::Duration(2) );
-	  	tf_listener_.lookupTransform(marker_frame_id, frame_id, ros::Time(0), stamped_transform);
-    }
-    catch (tf::TransformException ex) {
-        ROS_ERROR("storing transform error. Function:get_transform. error:%s",ex.what());
-        return false;
-    }
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// ----------------------------------------------- MAIN ------------------------------------------------------
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  	target_transform->setRotation(stamped_transform.getRotation());
-  	target_transform->setOrigin(stamped_transform.getOrigin());
-
-    return true;
-}
-
-
-bool FiducialMarkersHandler::getMarkerTransformPose( tf::Transform *target_marker_transform, std::string marker_id, std::string frame_id="base_link"){    
-    ROS_INFO("Providing marker's pose");
-    std::string marker_frame_id = "marker_" + marker_id;
-    return getTransformPose( target_marker_transform, marker_frame_id, frame_id);
-}
-
-
-//------------------------------ Advance Feature on creating offset from marker-----------------------------------
-
-// // TODOOOOOOO!!!!!!!!!!!
-void FiducialMarkersHandler::MarkerExtendedTfTimerCallback(const ros::TimerEvent& event) {
-    
-    geometry_msgs::Transform pose;
-    tf::Transform transform;
-    std::string marker_frame_id = "TODO";
-    // pose = ""_msg->transforms[i].transform"";
-
-    transform.setOrigin(tf::Vector3(pose.translation.x,pose.translation.y,pose.translation.z));
-    transform.setRotation(tf::Quaternion(pose.rotation.x,pose.rotation.y,pose.rotation.z,pose.rotation.w));
-
-    tf_broadcaster_.sendTransform(tf::StampedTransform(transform, ros::Time::now(), camera_frame_id_, marker_frame_id));
-}
-
-
-// @ return marker type
-std::string FiducialMarkersHandler::setTargetMarker(std::string marker_id ){
-    ROS_INFO("Selected target marker! Start publishing TFs");
-
-    // TODO: lookup to rosparam for the mathching
-    
-    marker_extended_tf_timer_ = nh_.createTimer(ros::Duration(0.3), &FiducialMarkersHandler::MarkerExtendedTfTimerCallback, this);
-
-    
-    return "something";
-}
-
-
-
-bool FiducialMarkersHandler::removeTargetMarker(std::string marker_id){
-    ROS_INFO("Removed target marker!");
-    marker_extended_tf_timer_.stop();
-    return true;
-}
-
-
-
-//-----------------------------------------------------------------------------
 
 
 int main(int argc, char** argv){
@@ -252,6 +320,34 @@ int main(int argc, char** argv){
     std::cout<<" YoYoYo!, Fiducial Markers Handler is alive!!!"<< std::endl;
     ros::init(argc, argv, "fiducial_markers_handler", ros::init_options::NoSigintHandler);    
     FiducialMarkersHandler aruco_markers;
-    ros::spin();
+    
+    // can only set one target marker 
+    
+    ros::AsyncSpinner ros_async_spinner(1);
+    ros_async_spinner.start();
+
+    std::cout<<"\n ********************* Set and Remove target marker every 10s ******************" << std::endl;
+    
+    while(1){
+        aruco_markers.setTargetMarker("marker_0");
+        std::this_thread::sleep_for (std::chrono::seconds(5));
+        
+        std::cout << "************ Check target Pose [insert, marker_0]************" << std::endl;
+        tf::Transform *target_transform (new tf::Transform);
+        if ( aruco_markers.getTransformPose(target_transform, "insert", "camera") == true ){
+            std::cout <<    std::to_string(target_transform->getOrigin().x() ) << " " << 
+                            std::to_string(target_transform->getOrigin().y() ) << " " <<   
+                            std::to_string(target_transform->getOrigin().z() ) << std::endl;
+        }
+        else{
+            ROS_ERROR("Failed to find the requested frame");
+        }
+
+        std::this_thread::sleep_for (std::chrono::seconds(5));
+
+
+        aruco_markers.removeTargetMarker();
+        std::this_thread::sleep_for (std::chrono::seconds(10));
+    }
 
 }
