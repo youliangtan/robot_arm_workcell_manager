@@ -46,6 +46,12 @@ rosrun robot_arm_workcell_manager fiducial_markers_handler _camera_frame_id:="ca
 
 ### Overall Test with RAWM
 ```
+# Load Param
+roscd robot_arm_workcell_manager
+cd src/config
+rosparam load rawm_param.yaml
+
+# Run Exec
 rosrun robot_arm_workcell_manager robot_arm_workcell_manager
 ```
 
@@ -54,3 +60,6 @@ rosrun robot_arm_workcell_manager robot_arm_workcell_manager
 - "Named Motion Target" can be used to name then request each "joint/pose goal" of the robot arm. Edit `motion_config.yaml` accordingly.
 - Camera calib is tuned, and written here: `/config/usb_cam.yaml`
 - Dispenser req will be received by RAWM, id: with convention of `marker_{$fiducial_id}`
+
+## TODO
+- Namespace for rosparam (senario of runnin multiple robot arms)

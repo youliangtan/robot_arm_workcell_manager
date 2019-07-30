@@ -5,6 +5,10 @@
  */
 
 
+#ifndef __ROBOT_ARM_CONTROLLER_HPP__
+#define __ROBOT_ARM_CONTROLLER_HPP__
+
+
 #include <iostream>
 #include <memory>
 #include <thread>
@@ -61,3 +65,4 @@ class RobotArmController{
 };
 
 
+#endif 

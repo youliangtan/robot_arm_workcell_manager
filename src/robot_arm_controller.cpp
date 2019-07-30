@@ -58,8 +58,8 @@ RobotArmController::~RobotArmController(){
 // Get yaml path from ros param server, then load content via yaml-cpp
 bool RobotArmController::loadParameters(){
 
-    if (nh_.getParam("group_name", group_name_)){
-      ROS_INFO(" [PARAM] Got path param: %s", group_name_.c_str());
+    if (nh_.getParam("/group_name", group_name_)){
+      ROS_INFO(" [PARAM] Got group_name param: %s", group_name_.c_str());
     }
     else{
       ROS_ERROR(" [PARAM] Failed to get param 'group_name'");
@@ -67,7 +67,7 @@ bool RobotArmController::loadParameters(){
     }
 
     std::string _yaml_path = "";
-    if (nh_.getParam("motion_target_yaml_path", _yaml_path)){
+    if (nh_.getParam("/motion_target_yaml_path", _yaml_path)){
       ROS_INFO(" [PARAM] Got path param: %s", _yaml_path.c_str());
     }
     else{

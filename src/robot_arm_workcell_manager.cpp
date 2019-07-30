@@ -6,92 +6,19 @@
  *
  */
 
-
-#include <iostream>
-#include <memory>
-#include <thread>
-#include <vector>
-#include <deque>
-#include <unordered_map>
-#include <mutex>
-
-// ros stuffs
-#include <ros/ros.h>
-#include <geometry_msgs/Pose.h>
-#include <tf/transform_broadcaster.h>
-#include <tf/transform_listener.h>
-
-// rmf dependencies
-#include <rmf_msgs/DispenserRequest.h>
-#include <rmf_msgs/DispenserState.h>
-#include <rmf_msgs/DispenserResult.h>
-
-// local dependecies
-#include "fiducial_markers_handler.hpp"
-#include "robot_arm_controller.hpp"
-
-
-class RobotArmWorkcellManager{
-
-    public:
-        RobotArmWorkcellManager(const std::string& _dispenser_name);
-
-        ~RobotArmWorkcellManager();
-
-        // ------ Execution -----
-
-        void dispenserRequestCallback(const rmf_msgs::DispenserRequestConstPtr& msg);
-
-        bool updateCurrentTask();
-
-        bool executeRobotArmMission();
-
-    protected:
-        bool loadParameters();
-
-        void dispenserTaskExecutionThread();
-
-        void spinRosThread();
-
-    private:
-        std::string dispenser_name_;   //TODO load with ros param        
-
-        // Thread Stuffs
-        std::thread dispenser_task_execution_thread_;
-        std::thread spin_ros_thread_;
-        double dispenser_pub_rate_= 1;
-        std::mutex dispenser_task_queue_mutex_;
-
-        // Task Stuffs
-        std::deque<rmf_msgs::DispenserRequest> dispenser_task_queue_;
-        rmf_msgs::DispenserRequest dispenser_curr_task_;
-        rmf_msgs::DispenserResult dispenser_result_msg_;
-        rmf_msgs::DispenserState dispenser_state_msg_;
-        std::unordered_map<std::string, bool> dispenser_completed_request_ids_; //TODO
-
-        // ros stuffs
-        ros::NodeHandle nh_;
-        ros::Subscriber dispenser_request_sub_;
-        ros::Publisher dispenser_state_pub_;
-        ros::Publisher dispenser_result_pub_;
-        tf::TransformBroadcaster br;  
-        tf::TransformListener listener;
-
-        // local lib stuffs
-        RobotArmController arm_controller;
-        FiducialMarkersHandler markers_detector;
-
-
-};
+#include "robot_arm_workcell_manager.hpp"
 
 
 RobotArmWorkcellManager::RobotArmWorkcellManager(const std::string& _dispenser_name): nh_("~"){
+
 
     dispenser_request_sub_ = nh_.subscribe ("/dispenser_request", 10 ,&RobotArmWorkcellManager::dispenserRequestCallback,this);
     dispenser_state_pub_   = nh_.advertise<rmf_msgs::DispenserState>("/dispenser_state", 10);
     dispenser_result_pub_  = nh_.advertise<rmf_msgs::DispenserResult>("/dispenser_result", 10);
 
     dispenser_name_ = _dispenser_name;
+
+    loadParameters();
 
     // start spinning moveit and ros threads
     spin_ros_thread_ = std::thread(std::bind(&RobotArmWorkcellManager::spinRosThread, this));
@@ -105,10 +32,9 @@ RobotArmWorkcellManager::~RobotArmWorkcellManager(){
 }
 
 
-
 bool RobotArmWorkcellManager::loadParameters(){
 
-    if (nh_.getParam("dispenser_state_pub_rate", dispenser_pub_rate_)){
+    if (nh_.getParam("/dispenser_state_pub_rate", dispenser_pub_rate_)){
         ROS_INFO(" [PARAM] Got path param: %f", dispenser_pub_rate_);
     }
     else{
@@ -117,7 +43,7 @@ bool RobotArmWorkcellManager::loadParameters(){
     }
 
     std::string _yaml_path = "";
-    if (nh_.getParam("arm_mission_path", _yaml_path)){
+    if (nh_.getParam("/arm_mission_path", _yaml_path)){
         ROS_INFO(" [PARAM] Got path param: %s", _yaml_path.c_str());
     }
     else{
@@ -127,11 +53,6 @@ bool RobotArmWorkcellManager::loadParameters(){
     
     return true;
 }
-
-
-
-
-
 
 
 
@@ -213,32 +134,45 @@ void RobotArmWorkcellManager::dispenserRequestCallback(const rmf_msgs::Dispenser
 // TODO!!!!!
 bool RobotArmWorkcellManager::updateCurrentTask(){
 
+    std::cout<< "Update current task"<<std::endl;
+
     std::unique_lock<std::mutex> queue_lock(dispenser_task_queue_mutex_, std::defer_lock);
     if (!queue_lock.try_lock())
         return false;
     
+    // If no more queuing task
     if (dispenser_task_queue_.empty()) {
         dispenser_state_msg_.dispenser_mode = dispenser_state_msg_.DISPENSER_MODE_IDLE;
         rmf_msgs::DispenserRequest empty_request;  // TODO, use a properway
         dispenser_curr_task_ = empty_request;
+        return false;
     }
+    // If there's queuing task
     else {
         dispenser_state_msg_.dispenser_mode = dispenser_state_msg_.DISPENSER_MODE_BUSY;
         dispenser_curr_task_ = dispenser_task_queue_.front();
         dispenser_task_queue_.pop_front();
+        return true;
     }
-    return true;
+
 }
 
 
 void RobotArmWorkcellManager::dispenserTaskExecutionThread(){
+
+    ros::Rate loop_rate(0.5); //TODO
+
     while (nh_.ok()){
         // getting the next task
-        if (!updateCurrentTask())
+        if (!updateCurrentTask()){
+            loop_rate.sleep();
             continue;
+        }
 
         bool mission_success;
         mission_success = executeRobotArmMission();
+        loop_rate.sleep();
+
 
         // // if task was successful, move on, otherwise try again
         // if (mission_success){
@@ -262,25 +196,30 @@ void RobotArmWorkcellManager::dispenserTaskExecutionThread(){
 }
 
 
+
 // Seperate Thread, mainly to pub Dispenser State
 // TBC: move this under timer???
 void RobotArmWorkcellManager::spinRosThread(){
 
+    ROS_INFO(" Initialize Publishing Dispenser State");
     ros::Rate loop_rate(dispenser_pub_rate_);
 
     while(nh_.ok()){
         dispenser_state_msg_.dispenser_time = ros::Time::now();
         dispenser_state_msg_.seconds_remaining = 10.0; // TODO: arbitrary value for now
         dispenser_state_msg_.request_ids.clear();
+        
         if (dispenser_curr_task_.request_id != "")
             dispenser_state_msg_.request_ids.push_back(dispenser_curr_task_.request_id);
         for (const auto& task : dispenser_task_queue_){
             dispenser_state_msg_.request_ids.push_back(task.request_id);
         }
         dispenser_state_pub_.publish(dispenser_state_msg_);
+        ROS_INFO("- Publishing Dispenser State");
         loop_rate.sleep();
-        ROS_DEBUG("- Publishing Dispenser State");
     }
+    ROS_ERROR("Nodehandler is Not Okay =(");
+
 }
 
 
@@ -291,6 +230,9 @@ void RobotArmWorkcellManager::spinRosThread(){
 // // Make it to a config file @_@
 bool RobotArmWorkcellManager::executeRobotArmMission(){
     ROS_INFO("\n *** Starting To Execute task, request_id: %s ***", dispenser_curr_task_.request_id.c_str());
+    
+
+    
     return true;
 }
     
@@ -359,6 +301,8 @@ bool RobotArmWorkcellManager::executeRobotArmMission(){
 // }
 
 
+
+
 //-----------------------------------------------------------------------------
 
 
@@ -368,6 +312,8 @@ int main(int argc, char** argv){
     ros::init(argc, argv, "robot_arm_workcell_manager", ros::init_options::NoSigintHandler);
     
     RobotArmWorkcellManager ur10_workcell("ur10_0001");
+
+    std::cout<< "running...."<<std::endl;
     ros::AsyncSpinner ros_async_spinner(1);
     ros_async_spinner.start();
     ros::waitForShutdown();

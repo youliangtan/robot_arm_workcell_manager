@@ -1,3 +1,10 @@
+/*
+ * Fiducial Markers Handler
+ * Author: Tan You Liang
+ */
+
+#ifndef __FIDUCIAL_MARKERS_HANDLER_HPP__
+#define __FIDUCIAL_MARKERS_HANDLER_HPP__
 
 #include <iostream>
 #include <memory>
@@ -69,3 +76,5 @@ class FiducialMarkersHandler{
         void MarkerExtendedTfTimerCallback(const ros::TimerEvent& event);
 
 };
+
+#endif 

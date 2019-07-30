@@ -30,10 +30,9 @@ FiducialMarkersHandler::~FiducialMarkersHandler(){
 }
 
 
-
 bool FiducialMarkersHandler::loadParameters(){
 
-    if (nh_.getParam("camera_frame_id", camera_frame_id_)){
+    if (nh_.getParam("/camera_frame_id", camera_frame_id_)){
       ROS_INFO(" [PARAM] Got path param: %s", camera_frame_id_.c_str());
     }
     else{
@@ -42,7 +41,7 @@ bool FiducialMarkersHandler::loadParameters(){
     }
 
     std::string _yaml_path = "";
-    if (nh_.getParam("marker_tf_path", _yaml_path)){
+    if (nh_.getParam("/marker_tf_path", _yaml_path)){
       ROS_INFO(" [PARAM] Got path param: %s", _yaml_path.c_str());
     }
     else{
