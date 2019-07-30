@@ -5,72 +5,16 @@
  */
 
 
-#include <iostream>
-#include <memory>
-#include <thread>
-#include <yaml-cpp/yaml.h>
-#include <exception>
-
-// MoveIt!
-#include <moveit/move_group_interface/move_group_interface.h>
-#include <moveit/planning_scene_interface/planning_scene_interface.h>
-#include <moveit_msgs/DisplayRobotState.h>
-#include <moveit_msgs/DisplayTrajectory.h>
-#include <moveit_msgs/AttachedCollisionObject.h>
-#include <moveit_msgs/CollisionObject.h>
-#include <moveit_visual_tools/moveit_visual_tools.h>
-#include "geometric_shapes/shapes.h"
-#include "geometric_shapes/mesh_operations.h"
-#include "geometric_shapes/shape_operations.h"
-#include "tf2/LinearMath/Quaternion.h"
-#include "tf2_geometry_msgs/tf2_geometry_msgs.h"
+#include "robot_arm_controller.hpp"
 
 
-class RobotArmController{
+RobotArmController::RobotArmController(): nh_("~"){
 
-    public:
-        RobotArmController(const std::string& _group_name);
-        
-        ~RobotArmController();
+    std::cout << std::endl << " Starting RobotArmController::RobotArmController() "<< std::endl;
 
-        // TODO: Collision
-
-        // ----------- Member Functions --------------
-
-        bool moveToNamedTarget(const std::string& _target_name);
-
-        bool moveToJointsTarget(const std::vector<double>& joints_target_values, double vel_factor);
-
-        bool moveToEefTarget(const geometry_msgs::Pose _eef_target_pose, double vel_factor);
-
-        // TODO: Sub IO from UR10, Stop all motion
+    // Load yaml path via ros param
+    loadParameters();
     
-
-    protected:
-        bool loadMotionTargetConfig();
-    
-    private:
-        std::string group_name_;
-        std::unique_ptr<moveit::planning_interface::MoveGroupInterface> move_group_;
-        std::string current_state_name_; // TBC
-        bool load_complete_ = false;  //TBC
-        moveit::planning_interface::MoveGroupInterface::Plan motion_plan_;
-
-        ros::NodeHandle nh_;
-        YAML::Node NAMED_TARGET_CONFIG_;
-};
-
-
-
-//* -----------------------------------------------------------------------------------------------------------------------
-
-
-
-RobotArmController::RobotArmController(const std::string& _group_name): nh_("~"){
-
-    std::cout << std::endl << "RobotArmController::RobotArmController() enter with dispenser: " << _group_name << std::endl;
-    group_name_ = _group_name;
-
     std::cout << "ControlGroup::ControlGroup(" << group_name_ << ") enter" << std::endl;
     move_group_.reset( new moveit::planning_interface::MoveGroupInterface(group_name_));
     current_state_name_ = "";
@@ -80,14 +24,14 @@ RobotArmController::RobotArmController(const std::string& _group_name): nh_("~")
     double timeout = 10.0;
     
     while (dt < timeout){
-        if (move_group_ && move_group_->getName() == _group_name)
+        if (move_group_ && move_group_->getName() == group_name_)
             break;
         else
             move_group_.reset(new moveit::planning_interface::MoveGroupInterface(group_name_));  
     }
 
-    if (!move_group_ || move_group_->getName() != _group_name){
-        std::cout << "    initializing move_group failed for: " << _group_name 
+    if (!move_group_ || move_group_->getName() != group_name_){
+        std::cout << "    initializing move_group failed for: " << group_name_ 
             << std::endl;
         load_complete_ = false;
         return;
@@ -96,9 +40,6 @@ RobotArmController::RobotArmController(const std::string& _group_name): nh_("~")
     move_group_->setNumPlanningAttempts(5);
     move_group_->setPlanningTime(20.0);
     std::cout << "ControlGroup::ControlGroup(" << group_name_ << ") completed." << std::endl;
-
-    // Load yaml path via ros param
-    loadMotionTargetConfig();
     load_complete_ = true;
     
     ROS_INFO("RobotArmController::RobotArmController() completed!! \n");
@@ -115,7 +56,15 @@ RobotArmController::~RobotArmController(){
 //*
 
 // Get yaml path from ros param server, then load content via yaml-cpp
-bool RobotArmController::loadMotionTargetConfig(){
+bool RobotArmController::loadParameters(){
+
+    if (nh_.getParam("group_name", group_name_)){
+      ROS_INFO(" [PARAM] Got path param: %s", group_name_.c_str());
+    }
+    else{
+      ROS_ERROR(" [PARAM] Failed to get param 'group_name'");
+      return false;
+    }
 
     std::string _yaml_path = "";
     if (nh_.getParam("motion_target_yaml_path", _yaml_path)){
@@ -126,6 +75,7 @@ bool RobotArmController::loadMotionTargetConfig(){
       return false;
     }
     std::cout<<"[PARAM] YAML Path: "<<_yaml_path<<std::endl;
+
 
     try {
         NAMED_TARGET_CONFIG_ = YAML::LoadFile(_yaml_path);
@@ -238,7 +188,7 @@ int main(int argc, char** argv){
     
     ros::init(argc, argv, "ur10_bot_controller", ros::init_options::NoSigintHandler);
     
-    RobotArmController ur10_controller("manipulator");
+    RobotArmController ur10_controller;
     ros::AsyncSpinner ros_async_spinner(1);
     ros_async_spinner.start();
 

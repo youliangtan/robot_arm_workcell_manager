@@ -26,6 +26,10 @@
 #include <rmf_msgs/DispenserState.h>
 #include <rmf_msgs/DispenserResult.h>
 
+// local dependecies
+#include "fiducial_markers_handler.hpp"
+#include "robot_arm_controller.hpp"
+
 
 class RobotArmWorkcellManager{
 
@@ -72,6 +76,11 @@ class RobotArmWorkcellManager{
         ros::Publisher dispenser_result_pub_;
         tf::TransformBroadcaster br;  
         tf::TransformListener listener;
+
+        // local lib stuffs
+        RobotArmController arm_controller;
+        FiducialMarkersHandler markers_detector;
+
 
 };
 

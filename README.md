@@ -31,7 +31,7 @@ catkin_make --pkg robot_arm_workcell_manager -j4
 ### Robot Arm Controller Testing
 ```
 # Absolute Path
-rosrun robot_arm_workcell_manager robot_arm_controller _motion_target_yaml_path:="/home/youliang/catkin_ws/src/robot_arm_workcell_manager/config/motion_target.yaml"
+rosrun robot_arm_workcell_manager robot_arm_controller _motion_target_yaml_path:="/home/youliang/catkin_ws/src/robot_arm_workcell_manager/config/motion_target.yaml" _group_name:="manipulator"
 ## OR
 roslaunch robot_arm_workcell_manager arm_controller.launch
 

@@ -96,17 +96,23 @@ include_directories(
   ${YAML_CPP_INCLUDE_DIRS}
 )
 
-add_executable( robot_arm_controller src/robot_arm_controller.cpp )
+# add_executable( robot_arm_controller src/robot_arm_controller.cpp )
+add_library( robot_arm_controller src/robot_arm_controller.cpp )
 target_link_libraries(  robot_arm_controller  ${catkin_LIBRARIES} ${YAML_CPP_LIBRARIES} ) #${GAZEBO_INCLUDE_DIRS}  ${catkin_INCLUDE_DIRS} )
 
-add_executable( fiducial_markers_handler src/fiducial_markers_handler.cpp )
+
+# add_executable( fiducial_markers_handler src/fiducial_markers_handler.cpp )
+add_library( fiducial_markers_handler src/fiducial_markers_handler.cpp )
 target_link_libraries( fiducial_markers_handler  ${catkin_LIBRARIES}  ${YAML_CPP_LIBRARIES}  ) #${GAZEBO_INCLUDE_DIRS}  ${catkin_INCLUDE_DIRS} )
 
 
 # TODO create lib for above dependencies
 add_executable( robot_arm_workcell_manager src/robot_arm_workcell_manager.cpp )
-target_link_libraries( robot_arm_workcell_manager  ${catkin_LIBRARIES} ) #${GAZEBO_INCLUDE_DIRS}  ${catkin_INCLUDE_DIRS} )
-
+target_link_libraries(  robot_arm_workcell_manager  
+                        ${catkin_LIBRARIES} 
+                        robot_arm_controller 
+                        fiducial_markers_handler
+                      ) #${GAZEBO_INCLUDE_DIRS}  ${catkin_INCLUDE_DIRS} )
 
 
 # set(Executables
