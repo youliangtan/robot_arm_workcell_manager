@@ -20,6 +20,9 @@ sudo apt-get install ros-melodic-fiducial-msgs
 ```
 - rmf_msgs: [here](null)
 
+- robot_manipulator_manager: [here](https://github.com/tanyouliang95/robot_manipulator_control)
+   "This will eventually be unnessasary"
+
 
 ### Make and Build
 ```
@@ -29,6 +32,9 @@ catkin_make --pkg robot_arm_workcell_manager -j4
 ## Run the Code
 
 ### Robot Arm Controller Testing
+
+To individually test the robot arm control. To test this, rmb to uncomment line 99 `add_executable(XXX)` and comment line 100 `add_library(XXX)`, only a executable will be generated.
+
 ```
 # Absolute Path
 rosrun robot_arm_workcell_manager robot_arm_controller _motion_target_yaml_path:="/home/youliang/catkin_ws/src/robot_arm_workcell_manager/config/motion_target.yaml" _group_name:="manipulator"
@@ -39,6 +45,9 @@ roslaunch robot_arm_workcell_manager demo.launch
 ```
 
 ### Fiducial Markers Testing
+
+To individually test fiducial marker detection. If testing this, rmb to uncomment line 1.4 `add_executable(XXX)` and comment line 105 `add_library(XXX)`, only a executable will be generated.
+
 ```
 # Check Camera and configure path
 vlc v4l2:///dev/video{$NUM}
@@ -50,15 +59,15 @@ rosrun robot_arm_workcell_manager fiducial_markers_handler _camera_frame_id:="ca
 
 ### Overall Test with RAWM
 ```
-# Run Rviz and Moveit
+## Run Rviz and Moveit
 roslaunch robot_arm_workcell_manager demo.launch
 
-# Load Param
+## Load Param
 roscd robot_arm_workcell_manager
 cd config
 rosparam load rawm_param.yaml
 
-# Run Exec
+## Run Exec
 rosrun robot_arm_workcell_manager robot_arm_workcell_manager
 
 # Pub Dispenser Request
