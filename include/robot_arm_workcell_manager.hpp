@@ -49,7 +49,7 @@ class RobotArmWorkcellManager{
 
         void dispenserRequestCallback(const rmf_msgs::DispenserRequestConstPtr& msg);
 
-        bool updateCurrentTask();
+        bool getNextTaskFromQueue();
 
         bool executeRobotArmMission();
 
@@ -85,8 +85,8 @@ class RobotArmWorkcellManager{
         tf::TransformListener listener;
 
         // local lib stuffs
-        // RobotArmController arm_controller;
-        // FiducialMarkersHandler markers_detector;
+        RobotArmController arm_controller_;
+        FiducialMarkersHandler markers_detector_;
 
 };
 

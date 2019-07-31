@@ -40,6 +40,10 @@ roslaunch robot_arm_workcell_manager demo.launch
 
 ### Fiducial Markers Testing
 ```
+# Check Camera and configure path
+vlc v4l2:///dev/video{$NUM}
+
+# Run Test Code
 roslaunch robot_arm_workcell_manager markers_detector.launch
 rosrun robot_arm_workcell_manager fiducial_markers_handler _camera_frame_id:="camera" _marker_tf_path:="/home/youliang/catkin_ws/src/robot_arm_workcell_manager/config/markers_tf.yaml"
 ```
@@ -48,11 +52,14 @@ rosrun robot_arm_workcell_manager fiducial_markers_handler _camera_frame_id:="ca
 ```
 # Load Param
 roscd robot_arm_workcell_manager
-cd src/config
+cd config
 rosparam load rawm_param.yaml
 
 # Run Exec
 rosrun robot_arm_workcell_manager robot_arm_workcell_manager
+
+# Pub Dispenser Request
+rostopic pub /dispenser_request rmf_msgs/DispenserRequest '{request_id: test_reqeust, dispenser_name: ur10_001, items:[{item_type: marker_0, quantity: 1}] }' --once
 ```
 
 ## Notes

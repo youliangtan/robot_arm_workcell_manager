@@ -65,15 +65,23 @@ void RobotArmWorkcellManager::dispenserRequestCallback(const rmf_msgs::Dispenser
     
     ROS_INFO(" \n --------- Received 1 Job request with id: %s -----------\n", _msg->request_id.c_str() );
 
-    if (_msg->dispenser_name != dispenser_name_)
+
+    if (_msg->dispenser_name != dispenser_name_){
+        std::cout << " Invalid Dispenser Name..." << std::endl;
         return;
+    }
+
+    std::cout << "Here" << std::endl;
 
     // already performing this request
-    if (_msg->request_id == dispenser_curr_task_.request_id)
+    if (_msg->request_id == dispenser_curr_task_.request_id){
+        std::cout << " Task Request has been performed" << std::endl;
         return;
+    }
 
     // already completed this request, publish results, TODO
     if (dispenser_completed_request_ids_.find(_msg->request_id) != dispenser_completed_request_ids_.end()) {
+        std::cout << " Task Request is completed previously" << std::endl;
         dispenser_result_msg_.dispenser_time = ros::Time::now();
         dispenser_result_msg_.request_id = _msg->request_id;
         dispenser_result_msg_.success = dispenser_completed_request_ids_[_msg->request_id];
@@ -81,10 +89,10 @@ void RobotArmWorkcellManager::dispenserRequestCallback(const rmf_msgs::Dispenser
         return;
     }
 
-    //Check if quantity and item size number
-    // compartment_name , TBC
-    if (_msg->items.size() != 1 || _msg->items[0].quantity != 1 || _msg->items[0].compartment_name != "default")  {
-        std::cout << "    Currently only supports 1 item request of quantity 1 " << "in 'default' compartment, ignoring." << std::endl;
+    // Check if quantity and item size number
+    // TODO, Check Compartment_ID
+    if (_msg->items.size() != 1 || _msg->items[0].quantity != 1 )  {
+        std::cout << "    Currently only supports 1 item request of quantity 1 " << std::endl;
         dispenser_result_msg_.dispenser_time = ros::Time::now();
         dispenser_result_msg_.request_id = _msg->request_id;
         dispenser_result_msg_.success = false;
@@ -114,8 +122,9 @@ void RobotArmWorkcellManager::dispenserRequestCallback(const rmf_msgs::Dispenser
         }
     }
 
-    // expand request queue
+    // All Valid!! Expand request queue
     dispenser_task_queue_.push_back(*_msg);
+    ROS_INFO("  --------- Successfully added request task: %s  to queue -----------\n", _msg->request_id.c_str() );
     
     return;
 }
@@ -132,9 +141,9 @@ void RobotArmWorkcellManager::dispenserRequestCallback(const rmf_msgs::Dispenser
 
 
 // TODO!!!!!
-bool RobotArmWorkcellManager::updateCurrentTask(){
+bool RobotArmWorkcellManager::getNextTaskFromQueue(){
 
-    std::cout<< "Update current task"<<std::endl;
+    std::cout<< "[TASK_EXECUTOR] Update current task from Queue" <<std::endl;
 
     std::unique_lock<std::mutex> queue_lock(dispenser_task_queue_mutex_, std::defer_lock);
     if (!queue_lock.try_lock())
@@ -158,21 +167,48 @@ bool RobotArmWorkcellManager::updateCurrentTask(){
 }
 
 
+// Seperate Thread, mainly to pub Dispenser State
+// TBC: move this under timer???
+void RobotArmWorkcellManager::spinRosThread(){
+
+    ROS_INFO(" Initialize Publishing Dispenser State");
+    ros::Rate loop_rate(dispenser_pub_rate_);
+
+    while(nh_.ok()){
+        dispenser_state_msg_.dispenser_time = ros::Time::now();
+        dispenser_state_msg_.seconds_remaining = 10.0; // TODO: arbitrary value for now
+        dispenser_state_msg_.request_ids.clear();
+        
+        if (dispenser_curr_task_.request_id != "")
+            dispenser_state_msg_.request_ids.push_back(dispenser_curr_task_.request_id);
+        for (const auto& task : dispenser_task_queue_){
+            dispenser_state_msg_.request_ids.push_back(task.request_id);
+        }
+        dispenser_state_pub_.publish(dispenser_state_msg_);
+        ROS_DEBUG("- Publishing Dispenser State");
+        loop_rate.sleep();
+    }
+    ROS_ERROR("Nodehandler is Not Okay =(");
+}
+
+
 void RobotArmWorkcellManager::dispenserTaskExecutionThread(){
 
     ros::Rate loop_rate(0.5); //TODO
 
     while (nh_.ok()){
+
         // getting the next task
-        if (!updateCurrentTask()){
+        if (!getNextTaskFromQueue()){
+            std::cout<< "[TASK_EXECUTOR] No Pending Task" << std::endl;
             loop_rate.sleep();
-            continue;
         }
-
-        bool mission_success;
-        mission_success = executeRobotArmMission();
-        loop_rate.sleep();
-
+        // if there's new task
+        else{
+            bool mission_success;
+            mission_success = executeRobotArmMission();
+            loop_rate.sleep();
+        }
 
         // // if task was successful, move on, otherwise try again
         // if (mission_success){
@@ -197,31 +233,6 @@ void RobotArmWorkcellManager::dispenserTaskExecutionThread(){
 
 
 
-// Seperate Thread, mainly to pub Dispenser State
-// TBC: move this under timer???
-void RobotArmWorkcellManager::spinRosThread(){
-
-    ROS_INFO(" Initialize Publishing Dispenser State");
-    ros::Rate loop_rate(dispenser_pub_rate_);
-
-    while(nh_.ok()){
-        dispenser_state_msg_.dispenser_time = ros::Time::now();
-        dispenser_state_msg_.seconds_remaining = 10.0; // TODO: arbitrary value for now
-        dispenser_state_msg_.request_ids.clear();
-        
-        if (dispenser_curr_task_.request_id != "")
-            dispenser_state_msg_.request_ids.push_back(dispenser_curr_task_.request_id);
-        for (const auto& task : dispenser_task_queue_){
-            dispenser_state_msg_.request_ids.push_back(task.request_id);
-        }
-        dispenser_state_pub_.publish(dispenser_state_msg_);
-        ROS_INFO("- Publishing Dispenser State");
-        loop_rate.sleep();
-    }
-    ROS_ERROR("Nodehandler is Not Okay =(");
-
-}
-
 
 
 // --------------------------------------------------------------- IDEA: ROBOT_ARM_MISSION_CONTROL ------------------------------------------------------------------
@@ -229,9 +240,29 @@ void RobotArmWorkcellManager::spinRosThread(){
 // // TODO: Mission sequences, TBC: name as Task
 // // Make it to a config file @_@
 bool RobotArmWorkcellManager::executeRobotArmMission(){
-    ROS_INFO("\n *** Starting To Execute task, request_id: %s ***", dispenser_curr_task_.request_id.c_str());
+    ROS_INFO("\n ***** Starting To Execute task, request_id: %s *****", dispenser_curr_task_.request_id.c_str());
     
+    bool motion_is_success, detection_is_success;
+    tf::Transform *marker_transform (new tf::Transform), *target_tf (new tf::Transform);
 
+    motion_is_success       = arm_controller_.moveToNamedTarget("home_position");
+    detection_is_success    = markers_detector_.getTransformPose( marker_transform, "base_link", "marker_0");       // TODO: create new function: checkMarkerExist()
+    
+    markers_detector_.setTargetMarker("marker_0");
+    std::this_thread::sleep_for (std::chrono::seconds(5));
+
+    detection_is_success    = markers_detector_.getTransformPose( target_tf, "base_link", "pre-pick");       // TODO: create new function: checkMarkerExist()
+    
+    geometry_msgs::Pose _eef_target_pose;
+    tf::poseTFToMsg(*target_tf, _eef_target_pose);
+
+    motion_is_success       = arm_controller_.moveToEefTarget(_eef_target_pose, 0.5);    
+    std::this_thread::sleep_for (std::chrono::seconds(5));
+
+    motion_is_success       = arm_controller_.moveToNamedTarget("low_home_position");
+
+
+    ROS_INFO("\n ***** Done with Task with request_id: %s *****", dispenser_curr_task_.request_id.c_str());
     
     return true;
 }
@@ -311,7 +342,7 @@ int main(int argc, char** argv){
     
     ros::init(argc, argv, "robot_arm_workcell_manager", ros::init_options::NoSigintHandler);
     
-    RobotArmWorkcellManager ur10_workcell("ur10_0001");
+    RobotArmWorkcellManager ur10_workcell("ur10_001");
 
     std::cout<< "running...."<<std::endl;
     ros::AsyncSpinner ros_async_spinner(1);
