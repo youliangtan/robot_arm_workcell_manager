@@ -50,6 +50,9 @@ rosrun robot_arm_workcell_manager fiducial_markers_handler _camera_frame_id:="ca
 
 ### Overall Test with RAWM
 ```
+# Run Rviz and Moveit
+roslaunch robot_arm_workcell_manager demo.launch
+
 # Load Param
 roscd robot_arm_workcell_manager
 cd config

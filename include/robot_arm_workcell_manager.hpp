@@ -51,6 +51,7 @@ class RobotArmWorkcellManager{
 
         bool getNextTaskFromQueue();
 
+        // main execution of robot arm motion 
         bool executeRobotArmMission();
 
     protected:
@@ -60,13 +61,14 @@ class RobotArmWorkcellManager{
 
         void spinRosThread();
 
+        bool executePickPlaceMotion( std::vector<std::string> frame_array, std::string marker_frame_id );
+
     private:
         std::string dispenser_name_;   //TODO load with ros param        
 
         // Thread Stuffs
         std::thread dispenser_task_execution_thread_;
         std::thread spin_ros_thread_;
-        double dispenser_pub_rate_;
         std::mutex dispenser_task_queue_mutex_;
 
         // Task Stuffs
@@ -83,6 +85,10 @@ class RobotArmWorkcellManager{
         ros::Publisher dispenser_result_pub_;
         tf::TransformBroadcaster br;  
         tf::TransformListener listener;
+
+        // ros param
+        double dispenser_pub_rate_;
+        int motion_pause_time_;
 
         // local lib stuffs
         RobotArmController arm_controller_;

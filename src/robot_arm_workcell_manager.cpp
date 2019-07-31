@@ -42,6 +42,16 @@ bool RobotArmWorkcellManager::loadParameters(){
         return false;
     }
 
+
+    if (nh_.getParam("/motion_pause_time", motion_pause_time_)){
+        ROS_INFO(" [PARAM] Got Motion Pause Time param: %d", motion_pause_time_);
+    }
+    else{
+        ROS_ERROR(" [PARAM] Failed to get param 'motion_pause_time'");
+        return false;
+    }
+
+
     std::string _yaml_path = "";
     if (nh_.getParam("/arm_mission_path", _yaml_path)){
         ROS_INFO(" [PARAM] Got path param: %s", _yaml_path.c_str());
@@ -143,7 +153,7 @@ void RobotArmWorkcellManager::dispenserRequestCallback(const rmf_msgs::Dispenser
 // TODO!!!!!
 bool RobotArmWorkcellManager::getNextTaskFromQueue(){
 
-    std::cout<< "[TASK_EXECUTOR] Update current task from Queue" <<std::endl;
+    // std::cout<< "[TASK_EXECUTOR] Update current task from Queue" <<std::endl;
 
     std::unique_lock<std::mutex> queue_lock(dispenser_task_queue_mutex_, std::defer_lock);
     if (!queue_lock.try_lock())
@@ -200,7 +210,7 @@ void RobotArmWorkcellManager::dispenserTaskExecutionThread(){
 
         // getting the next task
         if (!getNextTaskFromQueue()){
-            std::cout<< "[TASK_EXECUTOR] No Pending Task" << std::endl;
+            // std::cout<< "[TASK_EXECUTOR] No Pending Task" << std::endl;
             loop_rate.sleep();
         }
         // if there's new task
@@ -242,31 +252,94 @@ void RobotArmWorkcellManager::dispenserTaskExecutionThread(){
 bool RobotArmWorkcellManager::executeRobotArmMission(){
     ROS_INFO("\n ***** Starting To Execute task, request_id: %s *****", dispenser_curr_task_.request_id.c_str());
     
-    bool motion_is_success, detection_is_success;
-    tf::Transform *marker_transform (new tf::Transform), *target_tf (new tf::Transform);
+    bool motion_is_success;
+    std::vector<tf::Transform *> tf_array;
 
-    motion_is_success       = arm_controller_.moveToNamedTarget("home_position");
-    detection_is_success    = markers_detector_.getTransformPose( marker_transform, "base_link", "marker_0");       // TODO: create new function: checkMarkerExist()
+    // FOR NOW, TODO: No hard coding
+    std::vector<std::string> picking_frame_array = {"pre-pick", "insert", "lift", "post-pick"};
+    std::vector<std::string> placing_frame_array = {"pre-place", "insert", "drop", "post-place"};
+
+    // home
+    arm_controller_.moveToNamedTarget("home_position");
     
-    markers_detector_.setTargetMarker("marker_0");
-    std::this_thread::sleep_for (std::chrono::seconds(5));
+    // picking
+    executePickPlaceMotion(picking_frame_array ,"marker_0");
 
-    detection_is_success    = markers_detector_.getTransformPose( target_tf, "base_link", "pre-pick");       // TODO: create new function: checkMarkerExist()
-    
-    geometry_msgs::Pose _eef_target_pose;
-    tf::poseTFToMsg(*target_tf, _eef_target_pose);
+    // turn to face trolley
+    arm_controller_.moveToNamedTarget("pre_place_position");
 
-    motion_is_success       = arm_controller_.moveToEefTarget(_eef_target_pose, 0.5);    
-    std::this_thread::sleep_for (std::chrono::seconds(5));
+    // placing
+    executePickPlaceMotion(placing_frame_array ,"marker_100");
 
-    motion_is_success       = arm_controller_.moveToNamedTarget("low_home_position");
-
+    // back home (2nd)
+    arm_controller_.moveToNamedTarget("low_home_position");
 
     ROS_INFO("\n ***** Done with Task with request_id: %s *****", dispenser_curr_task_.request_id.c_str());
     
     return true;
 }
     
+
+
+// TODO: tidy and handle fail senario
+bool RobotArmWorkcellManager::executePickPlaceMotion( std::vector<std::string> frame_array, std::string marker_frame_id ){
+
+    std::vector<tf::Transform *> tf_array;
+    tf::Transform *marker_transform (new tf::Transform);
+    bool motion_is_success, detection_is_success ;
+
+    detection_is_success    = markers_detector_.getTransformPose( marker_transform, "base_link", marker_frame_id);       // TODO: create new function: checkMarkerExist()
+
+    markers_detector_.setTargetMarker(marker_frame_id);
+    std::this_thread::sleep_for (std::chrono::seconds(motion_pause_time_));
+ 
+    // Get transform from tf detection
+    for (std::string frame : frame_array){
+        tf::Transform *target_tf (new tf::Transform);
+        detection_is_success    = markers_detector_.getTransformPose( target_tf, "base_link", frame );
+        tf_array.push_back(target_tf);
+    }
+    markers_detector_.removeTargetMarker();
+
+    // Execute all motion
+    for (const auto& target_tf : tf_array){
+        geometry_msgs::Pose _eef_target_pose;
+        tf::poseTFToMsg(*target_tf, _eef_target_pose);
+        motion_is_success       = arm_controller_.moveToEefTarget(_eef_target_pose, 0.5);    
+        std::this_thread::sleep_for (std::chrono::seconds(motion_pause_time_));
+    }
+
+    return true;
+}
+
+
+
+
+//-----------------------------------------------------------------------------
+
+
+int main(int argc, char** argv){
+    std::cout<<" YoYoYo!, Arm Workcell Manager is alive!!!"<< std::endl;
+    
+    ros::init(argc, argv, "robot_arm_workcell_manager", ros::init_options::NoSigintHandler);
+    
+    RobotArmWorkcellManager ur10_workcell("ur10_001");
+
+    std::cout<< "running...."<<std::endl;
+    ros::AsyncSpinner ros_async_spinner(1);
+    ros_async_spinner.start();
+    ros::waitForShutdown();
+    
+}
+
+
+
+
+
+
+
+
+
 //     // move to home
 //     moveToNamedTarget("home_position");
 
@@ -330,23 +403,3 @@ bool RobotArmWorkcellManager::executeRobotArmMission(){
 
 
 // }
-
-
-
-
-//-----------------------------------------------------------------------------
-
-
-int main(int argc, char** argv){
-    std::cout<<" YoYoYo!, Arm Workcell Manager is alive!!!"<< std::endl;
-    
-    ros::init(argc, argv, "robot_arm_workcell_manager", ros::init_options::NoSigintHandler);
-    
-    RobotArmWorkcellManager ur10_workcell("ur10_001");
-
-    std::cout<< "running...."<<std::endl;
-    ros::AsyncSpinner ros_async_spinner(1);
-    ros_async_spinner.start();
-    ros::waitForShutdown();
-    
-}
