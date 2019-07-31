@@ -205,6 +205,7 @@ void RobotArmWorkcellManager::spinRosThread(){
 void RobotArmWorkcellManager::dispenserTaskExecutionThread(){
 
     ros::Rate loop_rate(0.5); //TODO
+    bool mission_success;
 
     while (nh_.ok()){
 
@@ -215,29 +216,28 @@ void RobotArmWorkcellManager::dispenserTaskExecutionThread(){
         }
         // if there's new task
         else{
-            bool mission_success;
             mission_success = executeRobotArmMission();
             loop_rate.sleep();
+
+            // if task was successful, move on, otherwise try again
+            if (mission_success){
+                dispenser_completed_request_ids_[dispenser_curr_task_.request_id] =  mission_success;
+            }
+            // else {
+            //     auto attempts_it = dispenser_request_ids_attempts_.insert( std::make_pair(dispenser_curr_task_.request_id, 0)).first;
+            //     attempts_it->second += 1;
+
+            //     if (dispenser_request_ids_attempts_[dispenser_curr_task_.request_id] >= 5){
+            //         std::cout << "    exceeded 5 attempts on task: " << dispenser_curr_task_.request_id << ", moving on." << std::endl;
+            //         dispenser_completed_request_ids_[dispenser_curr_task_.request_id] = false;
+            //     }
+            //     else {
+            //     std::cout << "    task failed, retrying, attempt: " << dispenser_request_ids_attempts_[dispenser_curr_task_.request_id] << std::endl;
+            //     std::unique_lock<std::mutex> queue_lock(dispenser_task_queue_mutex_);
+            //     dispenser_task_queue_.push_front(dispenser_curr_task_);
+            //     }
+            // }
         }
-
-        // // if task was successful, move on, otherwise try again
-        // if (mission_success){
-        //     dispenser_completed_request_ids_[dispenser_curr_task_.request_id] =  mission_success;
-        // }
-        // else {
-        //     auto attempts_it = dispenser_request_ids_attempts_.insert( std::make_pair(dispenser_curr_task_.request_id, 0)).first;
-        //     attempts_it->second += 1;
-
-        //     if (dispenser_request_ids_attempts_[dispenser_curr_task_.request_id] >= 5){
-        //         std::cout << "    exceeded 5 attempts on task: " << dispenser_curr_task_.request_id << ", moving on." << std::endl;
-        //         dispenser_completed_request_ids_[dispenser_curr_task_.request_id] = false;
-        //     }
-        //     else {
-        //     std::cout << "    task failed, retrying, attempt: " << dispenser_request_ids_attempts_[dispenser_curr_task_.request_id] << std::endl;
-        //     std::unique_lock<std::mutex> queue_lock(dispenser_task_queue_mutex_);
-        //     dispenser_task_queue_.push_front(dispenser_curr_task_);
-        //     }
-        // }
     }
 }
 
