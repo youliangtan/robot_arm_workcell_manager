@@ -1,11 +1,11 @@
 # robot_arm_workcell_manager (RAWM)
-robot arm manipulation with moveit and fiducial markers.  This package is developed and tested with ros-melodic. 
+Robot arm manipulation with moveit and fiducial markers. Package is developed and tested with ros-melodic. 
 
-**DEVELOPPING!!!**
+**PACKAGE IS IN DEVELOPMENT!!!**
 
 ## Getting Started
 
-Installation
+### Installation
 ```
 # ROS moveit stuffs
 # Robot Arm Dependencies
@@ -71,8 +71,12 @@ rosparam load rawm_param.yaml
 
 ## Run Exec
 rosrun robot_arm_workcell_manager robot_arm_workcell_manager
+```
 
-# Pub Dispenser Request
+### Pub Dispenser Request
+
+Pub a `DispenserRequest.msg` to start the pick and place motion.
+```
 rostopic pub /dispenser_request rmf_msgs/DispenserRequest '{request_id: test_reqeust, dispenser_name: ur10_001, items:[{item_type: marker_0, quantity: 1}] }' --once
 ```
 
