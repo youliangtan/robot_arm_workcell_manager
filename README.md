@@ -33,7 +33,8 @@ catkin_make --pkg robot_arm_workcell_manager -j4
 
 ### Robot Arm Controller Testing
 
-To individually test the robot arm control. To test this, rmb to uncomment line 99 `add_executable(XXX)` and comment line 100 `add_library(XXX)`, only a executable will be generated.
+To individually test the robot arm control. To test this, remember to edit `CMAKEList.txt` uncomment "line 99" `add_executable(XXX)` and comment "line 100" `add_library(XXX)`, a relevant executable will be generated. Also Comment out 
+`robot_arm_workcell_manager` exec generation.
 
 ```
 # Absolute Path
@@ -46,7 +47,8 @@ roslaunch robot_arm_workcell_manager demo.launch
 
 ### Fiducial Markers Testing
 
-To individually test fiducial marker detection. If testing this, rmb to uncomment line 1.4 `add_executable(XXX)` and comment line 105 `add_library(XXX)`, only a executable will be generated.
+To individually test fiducial marker detection. If testing this, remember to edit `CMAKEList.txt` to uncomment line 1.4 `add_executable(XXX)` and comment line 105 `add_library(XXX)`, a relevant executable will be generated. Also Comment out 
+`robot_arm_workcell_manager` exec generation.
 
 ```
 # Check Camera and configure path
@@ -82,3 +84,4 @@ rostopic pub /dispenser_request rmf_msgs/DispenserRequest '{request_id: test_req
 
 ## TODO
 - Namespace for rosparam (senario of runnin multiple robot arms)
+- config for `robot_arm_workcell_manager` exec
