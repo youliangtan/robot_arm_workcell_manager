@@ -1,14 +1,14 @@
 # robot_arm_workcell_manager (RAWM)
-robot arm manipulation with moveit and fiducial markers.  This package is developed and tested with ros-melodic. 
+Robot arm manipulation with moveit and fiducial markers. This Robot Arm manipulation will act as a individual standalone workcell, which user can interact with it by standard `rmf_msgs`. Robot arm will execute simple pick and place, which fiducial markers will be used to locate the target object's pose. Package is developed and tested with ros-melodic. 
 
-**IN DEVELOPMENT!!!**
+**PACKAGE IS STILL IN DEVELOPMENT!!!**
 
 ![alt text](/documentations/rviz_bot.png?)
 
 
 ## Getting Started
 
-Installation
+### Installation
 ```
 # ROS moveit stuffs
 # Robot Arm Dependencies
@@ -29,6 +29,7 @@ sudo apt-get install ros-melodic-fiducial-msgs
 
 ### Make and Build
 ```
+catkin_make --pkg cssdbot_moveit_config cssd_ur_description   # TODO: add it xml
 catkin_make --pkg robot_arm_workcell_manager -j4
 ```
 
@@ -36,7 +37,8 @@ catkin_make --pkg robot_arm_workcell_manager -j4
 
 ### Robot Arm Controller Testing
 
-To individually test the robot arm control. To test this, rmb to uncomment line 99 `add_executable(XXX)` and comment line 100 `add_library(XXX)`, only a executable will be generated.
+To individually test the robot arm control. To test this, remember to edit `CMAKEList.txt` uncomment "line 99" `add_executable(XXX)` and comment "line 100" `add_library(XXX)`, a relevant executable will be generated. Also Comment out 
+`robot_arm_workcell_manager` exec generation.
 
 ```
 # Absolute Path
@@ -49,7 +51,8 @@ roslaunch robot_arm_workcell_manager demo.launch
 
 ### Fiducial Markers Testing
 
-To individually test fiducial marker detection. If testing this, rmb to uncomment line 1.4 `add_executable(XXX)` and comment line 105 `add_library(XXX)`, only a executable will be generated.
+To individually test fiducial marker detection. If testing this, remember to edit `CMAKEList.txt` to uncomment line 1.4 `add_executable(XXX)` and comment line 105 `add_library(XXX)`, a relevant executable will be generated. Also Comment out 
+`robot_arm_workcell_manager` exec generation.
 
 ```
 # Check Camera and configure path
@@ -76,10 +79,17 @@ rosparam load rawm_param.yaml
 
 ## Run Exec
 rosrun robot_arm_workcell_manager robot_arm_workcell_manager
+```
 
-# Pub Dispenser Request
+### Request a Task 
+
+Pub a `DispenserRequest.msg` to start the pick and place motion.
+```
 rostopic pub /dispenser_request rmf_msgs/DispenserRequest '{request_id: test_reqeust, dispenser_name: ur10_001, items:[{item_type: marker_0, quantity: 1}] }' --once
 ```
+
+While the task is ongoing, user can check state of the arm_workcell by rostopic echo `/dispenser_state` and `dispenser_result` topic. 
+
 
 ## Notes
 - 3 executables are used in this application, namely: `robot_arm_workcell_manager` (MAIN), `robot_arm_controller`, `fiducial_markers_handler`.
@@ -90,3 +100,5 @@ rostopic pub /dispenser_request rmf_msgs/DispenserRequest '{request_id: test_req
 ## TODO
 - Namespace for rosparam (senario of runnin multiple robot arms)
 - Fix camera frame on `wrist_3_link` and sync with `camera_optical_frame`  (new tf tree)
+- config for `robot_arm_workcell_manager` exec
+- cmake list exec for `robot_arm_controller` and `fiducial_markers_handler`
