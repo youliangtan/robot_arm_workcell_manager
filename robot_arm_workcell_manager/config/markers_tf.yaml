@@ -10,19 +10,18 @@ marker_id:
   marker_102: {type: "compartment_marker" }
   marker_103: {type: "compartment_marker" }
 
-
 marker_extended_frames:
   tray_marker:        [pre-pick, insert, lift, post-pick]
   compartment_marker: [pre-place, insert, drop, post-place]
 
 markers_extended_tf:
   tray_marker:
-    pre-pick:   [0,   0.05,   0.15,   1.57,   0,    0]
-    insert:     [0,   0.05,   0,      1.57,   0,    0]
-    lift:       [0,   0,      0,      1.57,   0,    0]
-    post-pick:  [0,   0,      0.15,   1.57,   0,    0]
+    pre-pick:   [0,   0.05,   0.33,   1.57,   -1.57,    0]
+    insert:     [0,   0.05,   0,     1.57,   -1.57,    0]
+    lift:       [0,   0,      0,     1.57,   -1.57,    0]
+    post-pick:  [0,   0,      0.33,   1.57,   -1.57,    0]
   compartment_marker:     
-    pre-place:  [0,   -0.1,   0.15,   1.57,   0,    0]
-    insert:     [0,   -0.1,   0,      1.57,   0,    0]
-    drop:       [0,   -0.05,  0,      1.57,   0,    0]
-    post-place: [0,   -0.05,  0.15,   1.57,   0,    0]
+    pre-place:  [0,   -0.1,   0.33,   1.57,   -1.57,    0]
+    insert:     [0,   -0.1,   0,     1.57,   -1.57,    0]
+    drop:       [0,   -0.05,  0,     1.57,   -1.57,    0]
+    post-place: [0,   -0.05,  0.33,   1.57,   -1.57,    0]

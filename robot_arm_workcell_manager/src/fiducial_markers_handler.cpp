@@ -173,6 +173,7 @@ std::string FiducialMarkersHandler::setTargetMarker(std::string marker_id ){
 bool FiducialMarkersHandler::removeTargetMarker(){
     ROS_INFO("Removed target marker!");
     marker_extended_tf_timer_.stop();
+    markers_extended_tf_array_.clear();
     return true;
 }
 

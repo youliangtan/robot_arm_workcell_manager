@@ -93,6 +93,7 @@ void RobotArmWorkcellManager::dispenserRequestCallback(const rmf_msgs::Dispenser
     if (dispenser_completed_request_ids_.find(_msg->request_id) != dispenser_completed_request_ids_.end()) {
         std::cout << " Task Request is completed previously" << std::endl;
         dispenser_result_msg_.dispenser_time = ros::Time::now();
+        dispenser_result_msg_.dispenser_name = dispenser_name_;
         dispenser_result_msg_.request_id = _msg->request_id;
         dispenser_result_msg_.success = dispenser_completed_request_ids_[_msg->request_id];
         dispenser_result_pub_.publish(dispenser_result_msg_);
@@ -104,6 +105,7 @@ void RobotArmWorkcellManager::dispenserRequestCallback(const rmf_msgs::Dispenser
     if (_msg->items.size() != 1 || _msg->items[0].quantity != 1 )  {
         std::cout << "    Currently only supports 1 item request of quantity 1 " << std::endl;
         dispenser_result_msg_.dispenser_time = ros::Time::now();
+        dispenser_result_msg_.dispenser_name = dispenser_name_;
         dispenser_result_msg_.request_id = _msg->request_id;
         dispenser_result_msg_.success = false;
         dispenser_result_pub_.publish(dispenser_result_msg_);
@@ -186,6 +188,7 @@ void RobotArmWorkcellManager::spinRosThread(){
 
     while(nh_.ok()){
         dispenser_state_msg_.dispenser_time = ros::Time::now();
+        dispenser_state_msg_.dispenser_name = dispenser_name_;
         dispenser_state_msg_.seconds_remaining = 10.0; // TODO: arbitrary value for now
         dispenser_state_msg_.request_ids.clear();
         
@@ -200,6 +203,8 @@ void RobotArmWorkcellManager::spinRosThread(){
     }
     ROS_ERROR("Nodehandler is Not Okay =(");
 }
+
+// --------------------------------------------------------------- ROBOT_ARM_MISSION_CONTROL ------------------------------------------------------------------
 
 
 void RobotArmWorkcellManager::dispenserTaskExecutionThread(){
@@ -222,7 +227,15 @@ void RobotArmWorkcellManager::dispenserTaskExecutionThread(){
             // if task was successful, move on, otherwise try again
             if (mission_success){
                 dispenser_completed_request_ids_[dispenser_curr_task_.request_id] =  mission_success;
+
+                // Pub dispenser Result, TODO: write as function
+                dispenser_result_msg_.dispenser_time = ros::Time::now();
+                dispenser_result_msg_.dispenser_name = dispenser_name_;
+                dispenser_result_msg_.request_id = dispenser_curr_task_.request_id;
+                dispenser_result_msg_.success = true;
+                dispenser_result_pub_.publish(dispenser_result_msg_);
             }
+
             // else {
             //     auto attempts_it = dispenser_request_ids_attempts_.insert( std::make_pair(dispenser_curr_task_.request_id, 0)).first;
             //     attempts_it->second += 1;
@@ -243,9 +256,42 @@ void RobotArmWorkcellManager::dispenserTaskExecutionThread(){
 
 
 
+// TODO: tidy and handle fail senario
+bool RobotArmWorkcellManager::executePickPlaceMotion( std::vector<std::string> frame_array, std::string marker_frame_id ){
+
+    std::vector<tf::Transform *> tf_array;
+    tf::Transform *marker_transform (new tf::Transform);
+    bool motion_is_success, detection_is_success ;
+
+    detection_is_success    = markers_detector_.getTransformPose( marker_transform, "base_link", marker_frame_id);       // TODO: create new function: checkMarkerExist()
+
+    markers_detector_.setTargetMarker(marker_frame_id);
+    std::this_thread::sleep_for (std::chrono::seconds(motion_pause_time_));
+ 
+    // Get transform from tf detection
+    for (std::string frame : frame_array){
+        tf::Transform *target_tf (new tf::Transform);
+        detection_is_success    = markers_detector_.getTransformPose( target_tf, "base_link", frame );
+        tf_array.push_back(target_tf);
+    }
+
+    markers_detector_.removeTargetMarker();
+
+    // Execute all motion
+    for (const auto& target_tf : tf_array){
+        geometry_msgs::Pose _eef_target_pose;
+        tf::poseTFToMsg(*target_tf, _eef_target_pose);
+        motion_is_success       = arm_controller_.moveToEefTarget(_eef_target_pose, 0.5);    
+        std::this_thread::sleep_for (std::chrono::seconds(motion_pause_time_));
+    }
+
+    return true;
+}
 
 
-// --------------------------------------------------------------- IDEA: ROBOT_ARM_MISSION_CONTROL ------------------------------------------------------------------
+
+// --------------------------------------------------------------- ROBOT_ARM_MISSION_CONTROL: EXECUTION ------------------------------------------------------------------
+
 
 // // TODO: Mission sequences, TBC: name as Task
 // // Make it to a config file @_@
@@ -279,40 +325,6 @@ bool RobotArmWorkcellManager::executeRobotArmMission(){
     return true;
 }
     
-
-
-// TODO: tidy and handle fail senario
-bool RobotArmWorkcellManager::executePickPlaceMotion( std::vector<std::string> frame_array, std::string marker_frame_id ){
-
-    std::vector<tf::Transform *> tf_array;
-    tf::Transform *marker_transform (new tf::Transform);
-    bool motion_is_success, detection_is_success ;
-
-    detection_is_success    = markers_detector_.getTransformPose( marker_transform, "base_link", marker_frame_id);       // TODO: create new function: checkMarkerExist()
-
-    markers_detector_.setTargetMarker(marker_frame_id);
-    std::this_thread::sleep_for (std::chrono::seconds(motion_pause_time_));
- 
-    // Get transform from tf detection
-    for (std::string frame : frame_array){
-        tf::Transform *target_tf (new tf::Transform);
-        detection_is_success    = markers_detector_.getTransformPose( target_tf, "base_link", frame );
-        tf_array.push_back(target_tf);
-    }
-    markers_detector_.removeTargetMarker();
-
-    // Execute all motion
-    for (const auto& target_tf : tf_array){
-        geometry_msgs::Pose _eef_target_pose;
-        tf::poseTFToMsg(*target_tf, _eef_target_pose);
-        motion_is_success       = arm_controller_.moveToEefTarget(_eef_target_pose, 0.5);    
-        std::this_thread::sleep_for (std::chrono::seconds(motion_pause_time_));
-    }
-
-    return true;
-}
-
-
 
 
 //-----------------------------------------------------------------------------

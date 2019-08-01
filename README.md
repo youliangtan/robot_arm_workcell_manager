@@ -1,7 +1,10 @@
 # robot_arm_workcell_manager (RAWM)
 robot arm manipulation with moveit and fiducial markers.  This package is developed and tested with ros-melodic. 
 
-**DEVELOPPING!!!**
+**IN DEVELOPMENT!!!**
+
+![alt text](/documentations/rviz_bot.png?)
+
 
 ## Getting Started
 
@@ -57,6 +60,10 @@ roslaunch robot_arm_workcell_manager markers_detector.launch
 rosrun robot_arm_workcell_manager fiducial_markers_handler _camera_frame_id:="camera" _marker_tf_path:="/home/youliang/catkin_ws/src/robot_arm_workcell_manager/config/markers_tf.yaml"
 ```
 
+**Calibration**
+Follow OpenCV Checkers Bot Camera Calibration, then copy the camera & distortion matrix to `usb_cam.yaml`
+
+
 ### Overall Test with RAWM
 ```
 ## Run Rviz and Moveit
@@ -82,3 +89,4 @@ rostopic pub /dispenser_request rmf_msgs/DispenserRequest '{request_id: test_req
 
 ## TODO
 - Namespace for rosparam (senario of runnin multiple robot arms)
+- Fix camera frame on `wrist_3_link` and sync with `camera_optical_frame`  (new tf tree)

@@ -1,0 +1,15 @@
+<launch>
+  <arg name="sim" default="true"/>
+  <arg name="config" default="true"/>
+
+  <include file="$(find cssd_ur_description)/launch/ur10.launch"/>
+
+  <include file="$(find ur10_moveit_config)/launch/ur10_moveit_planning_execution.launch">
+    <arg name="sim" default="$(arg sim)"/>
+  </include>
+  
+  <include file="$(find ur10_moveit_config)/launch/moveit_rviz.launch">
+    <arg name="config" default="$(arg config)"/>
+  </include>
+
+</launch>

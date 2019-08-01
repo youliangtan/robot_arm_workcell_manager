@@ -1,0 +1,10 @@
+# ROSPARAM Yaml file
+# use rosparam load 
+
+motion_target_yaml_path: "/home/youliang/catkin_ws/src/robot_arm_workcell_manager/robot_arm_workcell_manager/config/motion_target.yaml" 
+group_name: "manipulator"
+camera_frame_id: "camera" 
+marker_tf_path: "/home/youliang/catkin_ws/src/robot_arm_workcell_manager/robot_arm_workcell_manager/config/markers_tf.yaml"
+dispenser_state_pub_rate: 0.5
+arm_mission_path: "pending"
+motion_pause_time: 1

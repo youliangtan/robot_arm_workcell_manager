@@ -8,4 +8,7 @@
             <param name="group_name" type="string" value="manipulator" />
         </node>
     </group>
+
+    <!-- TODO: add a ur10_launcher-->
+
 </launch>

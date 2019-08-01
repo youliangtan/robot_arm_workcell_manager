@@ -1,5 +1,10 @@
 <launch>
 
+  <!--              ************************************************************************************              -->
+  <!--              ******************************** Robot Arm Launcher ********************************              -->
+  <!--              ************************************************************************************              -->
+
+
   <!-- By default, we do not start a database (it can be large) -->
   <arg name="db" default="false" />
   <arg name="debug" default="false" />
@@ -7,7 +12,7 @@
   <!-- <param name="use_sim_time" value="true"/>   -->
 
   <!-- Load the URDF, SRDF and other .yaml configuration files on the param server -->
-  <include file="$(find ur10_rmf)/launch/planning_context.launch">
+  <include file="$(find cssdbot_moveit_config)/launch/planning_context.launch">
     <!-- <param name="use_sim_time" value="true"/>   -->
     <arg name="load_robot_description" value="true"/>
     <arg name="limited" value="$(arg limited)"/>
@@ -24,7 +29,7 @@
   <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="true" output="screen" />
 
   <!-- Run the main MoveIt executable without trajectory execution (we do not have controllers configured by default) -->
-  <include file="$(find ur10_rmf)/launch/move_group.launch">
+  <include file="$(find cssdbot_moveit_config)/launch/move_group.launch">
     <arg name="allow_trajectory_execution" value="true"/>  
     <arg name="fake_execution" value="true"/>
     <arg name="info" value="true"/>
@@ -34,7 +39,7 @@
 
 
   <!-- Run Rviz and load the default config to see the state of the move_group node -->
-  <include file="$(find ur10_rmf)/launch/moveit_rviz.launch">
+  <include file="$(find cssdbot_moveit_config)/launch/moveit_rviz.launch">
     <!-- <param name="use_sim_time" value="true"/>  -->
     <arg name="config" value="true"/>
     <arg name="debug" value="$(arg debug)"/>
@@ -42,7 +47,13 @@
 
 
 
-  <!--              Marker Detectors              -->
+
+
+  <!--              ************************************************************************************              -->
+  <!--              ********************************* Marker Detectors *********************************              -->
+  <!--              ************************************************************************************              -->
+
+
   <arg name="camSelect"       default="/dev/video0.original"/>
   <arg name="pixelFormat"     default="yuyv"/>    <!-- refer to usb_cam ros documentation -->
   <arg name="cameraConfig"    default="file://$(find robot_arm_workcell_manager)/config/usb_cam.yaml"/>
