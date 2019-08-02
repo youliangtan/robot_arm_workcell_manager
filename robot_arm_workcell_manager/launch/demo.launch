@@ -62,9 +62,7 @@
   <arg name="cam_frame"       default="camera"/>
   <arg name="ref_frame"       default=""/>  <!-- leave empty and the pose will be published wrt param parent_name -->
 
-  <node pkg="tf" type="static_transform_publisher" name="base_link_to_camera_tf" args="0 0.08 0.17 0 3.14 -1.57 wrist_2_link camera 10" />
-
-  <!-- rosrun usb_cam usb_cam_node _video_device:="/dev/video1" _pixel_format:="yuyv" -->
+  <node pkg="tf" type="static_transform_publisher" name="eef_to_camera_tf" args="0 0 0 1.57 0 1.57 camera_link_optical camera 15" />  
   <node pkg="usb_cam" type="usb_cam_node" name="usb_camera">
     <remap from="/usb_camera/camera_info"  to="/camera_info"/>
     <remap from="/usb_camera/image_raw"  to="/image" />

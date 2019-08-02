@@ -23,9 +23,6 @@ sudo apt-get install ros-melodic-fiducial-msgs
 ```
 - rmf_msgs: [here](null)
 
-- robot_manipulator_manager: [here](https://github.com/tanyouliang95/robot_manipulator_control)
-   "This will eventually be unnessasary"
-
 
 ### Make and Build
 ```
@@ -64,7 +61,7 @@ rosrun robot_arm_workcell_manager fiducial_markers_handler _camera_frame_id:="ca
 ```
 
 **Calibration**
-Follow OpenCV Checkers Bot Camera Calibration, then copy the camera & distortion matrix to `usb_cam.yaml`
+Refer to OpenCV Camera Calibration code ([here](https://docs.opencv.org/2.4/doc/tutorials/calib3d/camera_calibration/camera_calibration.html#results)). This tool has provided a chessboard.png for calibration. Once done, then copy the camera & distortion matrix from a .xml file to `/robot_arm_workcell_manager/config/usb_cam.yaml`.
 
 
 ### Overall Test with RAWM
@@ -81,17 +78,25 @@ rosparam load rawm_param.yaml
 rosrun robot_arm_workcell_manager robot_arm_workcell_manager
 ```
 
+### Robot Arm Controller Testing
+```
+roslaunch cssd_ur_description ur10_gazebo.launch
+```
+**IN THE PROCESS OF WORKING**
+
+
 ### Request a Task 
 
 Pub a `DispenserRequest.msg` to start the pick and place motion.
 ```
-rostopic pub /dispenser_request rmf_msgs/DispenserRequest '{request_id: test_reqeust, dispenser_name: ur10_001, items:[{item_type: marker_0, quantity: 1}] }' --once
+rostopic pub /cssd_workcell/dispenser_request rmf_msgs/DispenserRequest '{request_id: test_reqeust, dispenser_name: ur10_001, items:[{item_type: marker_0, quantity: 1}] }' --once
 ```
 
 While the task is ongoing, user can check state of the arm_workcell by rostopic echo `/dispenser_state` and `dispenser_result` topic. 
 
 
 ## Notes
+- A custom designed "fork-lift" end effector is used in this process
 - 3 executables are used in this application, namely: `robot_arm_workcell_manager` (MAIN), `robot_arm_controller`, `fiducial_markers_handler`.
 - "Named Motion Target" can be used to name then request each "joint/pose goal" of the robot arm. Edit `motion_config.yaml` accordingly.
 - Camera calib is tuned, and written here: `/config/usb_cam.yaml`
@@ -99,6 +104,7 @@ While the task is ongoing, user can check state of the arm_workcell by rostopic 
 
 ## TODO
 - Namespace for rosparam (senario of runnin multiple robot arms)
-- Fix camera frame on `wrist_3_link` and sync with `camera_optical_frame`  (new tf tree)
+- Fix camera frame between `camera_optical_frame` and `camera`  (and update new tf tree)
 - config for `robot_arm_workcell_manager` exec
 - cmake list exec for `robot_arm_controller` and `fiducial_markers_handler`
+- Gazebo simulation

@@ -63,6 +63,8 @@ class RobotArmWorkcellManager{
 
         bool executePickPlaceMotion( std::vector<std::string> frame_array, std::string marker_frame_id );
 
+        void publishDispenserResult(std::string request_id, bool success);
+
     private:
         std::string dispenser_name_;   //TODO load with ros param        
 

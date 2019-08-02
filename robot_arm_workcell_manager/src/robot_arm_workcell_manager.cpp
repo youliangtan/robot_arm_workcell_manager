@@ -12,9 +12,9 @@
 RobotArmWorkcellManager::RobotArmWorkcellManager(const std::string& _dispenser_name): nh_("~"){
 
 
-    dispenser_request_sub_ = nh_.subscribe ("/dispenser_request", 10 ,&RobotArmWorkcellManager::dispenserRequestCallback,this);
-    dispenser_state_pub_   = nh_.advertise<rmf_msgs::DispenserState>("/dispenser_state", 10);
-    dispenser_result_pub_  = nh_.advertise<rmf_msgs::DispenserResult>("/dispenser_result", 10);
+    dispenser_request_sub_ = nh_.subscribe ("/cssd_workcell/dispenser_request", 10 ,&RobotArmWorkcellManager::dispenserRequestCallback,this);
+    dispenser_state_pub_   = nh_.advertise<rmf_msgs::DispenserState>("/cssd_workcell/dispenser_state", 10);
+    dispenser_result_pub_  = nh_.advertise<rmf_msgs::DispenserResult>("/ssd_workcell/dispenser_result", 10);
 
     dispenser_name_ = _dispenser_name;
 
@@ -92,11 +92,7 @@ void RobotArmWorkcellManager::dispenserRequestCallback(const rmf_msgs::Dispenser
     // already completed this request, publish results, TODO
     if (dispenser_completed_request_ids_.find(_msg->request_id) != dispenser_completed_request_ids_.end()) {
         std::cout << " Task Request is completed previously" << std::endl;
-        dispenser_result_msg_.dispenser_time = ros::Time::now();
-        dispenser_result_msg_.dispenser_name = dispenser_name_;
-        dispenser_result_msg_.request_id = _msg->request_id;
-        dispenser_result_msg_.success = dispenser_completed_request_ids_[_msg->request_id];
-        dispenser_result_pub_.publish(dispenser_result_msg_);
+        publishDispenserResult(_msg->request_id, dispenser_completed_request_ids_[_msg->request_id]);
         return;
     }
 
@@ -104,11 +100,7 @@ void RobotArmWorkcellManager::dispenserRequestCallback(const rmf_msgs::Dispenser
     // TODO, Check Compartment_ID
     if (_msg->items.size() != 1 || _msg->items[0].quantity != 1 )  {
         std::cout << "    Currently only supports 1 item request of quantity 1 " << std::endl;
-        dispenser_result_msg_.dispenser_time = ros::Time::now();
-        dispenser_result_msg_.dispenser_name = dispenser_name_;
-        dispenser_result_msg_.request_id = _msg->request_id;
-        dispenser_result_msg_.success = false;
-        dispenser_result_pub_.publish(dispenser_result_msg_);
+        publishDispenserResult(_msg->request_id, false);
         return;
     }
     
@@ -219,39 +211,31 @@ void RobotArmWorkcellManager::dispenserTaskExecutionThread(){
             // std::cout<< "[TASK_EXECUTOR] No Pending Task" << std::endl;
             loop_rate.sleep();
         }
-        // if there's new task
+        // If there's new task, execute it!!
         else{
             mission_success = executeRobotArmMission();
             loop_rate.sleep();
 
-            // if task was successful, move on, otherwise try again
             if (mission_success){
-                dispenser_completed_request_ids_[dispenser_curr_task_.request_id] =  mission_success;
-
-                // Pub dispenser Result, TODO: write as function
-                dispenser_result_msg_.dispenser_time = ros::Time::now();
-                dispenser_result_msg_.dispenser_name = dispenser_name_;
-                dispenser_result_msg_.request_id = dispenser_curr_task_.request_id;
-                dispenser_result_msg_.success = true;
-                dispenser_result_pub_.publish(dispenser_result_msg_);
+                ROS_INFO("\n *************** Done with Task with Request ID: %s *************** \n", dispenser_curr_task_.request_id.c_str());
             }
-
-            // else {
-            //     auto attempts_it = dispenser_request_ids_attempts_.insert( std::make_pair(dispenser_curr_task_.request_id, 0)).first;
-            //     attempts_it->second += 1;
-
-            //     if (dispenser_request_ids_attempts_[dispenser_curr_task_.request_id] >= 5){
-            //         std::cout << "    exceeded 5 attempts on task: " << dispenser_curr_task_.request_id << ", moving on." << std::endl;
-            //         dispenser_completed_request_ids_[dispenser_curr_task_.request_id] = false;
-            //     }
-            //     else {
-            //     std::cout << "    task failed, retrying, attempt: " << dispenser_request_ids_attempts_[dispenser_curr_task_.request_id] << std::endl;
-            //     std::unique_lock<std::mutex> queue_lock(dispenser_task_queue_mutex_);
-            //     dispenser_task_queue_.push_front(dispenser_curr_task_);
-            //     }
-            // }
+            else{
+                ROS_ERROR("\n *************** Task Failed for Request ID: %s *************** \n", dispenser_curr_task_.request_id.c_str());
+            }
+            
+            dispenser_completed_request_ids_[dispenser_curr_task_.request_id] =  mission_success;
+            publishDispenserResult(dispenser_curr_task_.request_id, mission_success);
         }
     }
+}
+
+
+void RobotArmWorkcellManager::publishDispenserResult(std::string request_id, bool success){
+    dispenser_result_msg_.dispenser_time = ros::Time::now();
+    dispenser_result_msg_.dispenser_name = dispenser_name_;
+    dispenser_result_msg_.request_id = dispenser_curr_task_.request_id;
+    dispenser_result_msg_.success = true;
+    dispenser_result_pub_.publish(dispenser_result_msg_);
 }
 
 
@@ -306,19 +290,19 @@ bool RobotArmWorkcellManager::executeRobotArmMission(){
     std::vector<std::string> placing_frame_array = {"pre-place", "insert", "drop", "post-place"};
 
     // home
-    arm_controller_.moveToNamedTarget("home_position");
+    if (! arm_controller_.moveToNamedTarget("home_position") ) return false;
     
     // picking
-    executePickPlaceMotion(picking_frame_array ,"marker_0");
+    if (! executePickPlaceMotion(picking_frame_array ,"marker_0") ) return false;
 
     // turn to face trolley
-    arm_controller_.moveToNamedTarget("pre_place_position");
+    if (! arm_controller_.moveToNamedTarget("pre_place_position") ) return false;
 
     // placing
-    executePickPlaceMotion(placing_frame_array ,"marker_100");
+    if (! executePickPlaceMotion(placing_frame_array ,"marker_100") ) return false;
 
     // back home (2nd)
-    arm_controller_.moveToNamedTarget("low_home_position");
+    if (! arm_controller_.moveToNamedTarget("low_home_position") ) return false;
 
     ROS_INFO("\n ***** Done with Task with request_id: %s *****", dispenser_curr_task_.request_id.c_str());
     
