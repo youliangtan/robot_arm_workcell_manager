@@ -35,7 +35,7 @@ catkin_make --pkg robot_arm_workcell_manager -j4
 ### Robot Arm Controller Testing
 
 To individually test the robot arm control. To test this, remember to edit `CMAKEList.txt` uncomment "line 99" `add_executable(XXX)` and comment "line 100" `add_library(XXX)`, a relevant executable will be generated. Also Comment out 
-`robot_arm_workcell_manager` exec generation.
+`robot_arm_workcell_manager` exec generation. [ Depreciated ]
 
 ```
 # Absolute Path
@@ -49,13 +49,15 @@ roslaunch robot_arm_workcell_manager demo.launch
 ### Fiducial Markers Testing
 
 To individually test fiducial marker detection. If testing this, remember to edit `CMAKEList.txt` to uncomment line 1.4 `add_executable(XXX)` and comment line 105 `add_library(XXX)`, a relevant executable will be generated. Also Comment out 
-`robot_arm_workcell_manager` exec generation.
+`robot_arm_workcell_manager` exec generation. [ Depreciated ]
 
 ```
 # Check Camera and configure path
 vlc v4l2:///dev/video{$NUM}
 
 # Run Test Code
+roslaunch robot_arm_workcell_manager fiducial_markers_handler.launch
+## or
 roslaunch robot_arm_workcell_manager markers_detector.launch
 rosrun robot_arm_workcell_manager fiducial_markers_handler _camera_frame_id:="camera" _marker_tf_path:="/home/youliang/catkin_ws/src/robot_arm_workcell_manager/config/markers_tf.yaml"
 ```

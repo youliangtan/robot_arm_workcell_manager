@@ -1,66 +1,64 @@
 <launch>
 
+
+  <!--              ************************************************************************************              -->
+  <!--              ********************************* USB Camera Input *********************************              -->
+  <!--              ************************************************************************************              -->
+
+  <arg name="enable_usb_cam"  default="true"/>
+
+  <group if="$(arg enable_usb_cam)">
+    
     <arg name="camSelect"       default="/dev/video1"/>
     <arg name="pixelFormat"     default="yuyv"/>    <!-- refer to usb_cam ros documentation -->
     <arg name="cameraConfig"    default="file://$(find robot_arm_workcell_manager)/config/usb_cam.yaml"/>
     
-    <arg name="markerSize"      default="0.04"/>    <!-- in m -->
     <arg name="cam_frame"       default="camera"/>
     <arg name="ref_frame"       default=""/>  <!-- leave empty and the pose will be published wrt param parent_name -->
 
-    <node pkg="tf" type="static_transform_publisher" name="base_link_to_camera_tf" args="0 0 0 0 1.57 0 map camera 10" />
+    <node pkg="tf" type="static_transform_publisher" name="eef_to_camera_tf" args="0 0 0 1.57 0 1.57 camera_link_optical camera 15" />  
 
-    <!-- rosrun usb_cam usb_cam_node _video_device:="/dev/video1" _pixel_format:="yuyv" -->
     <node pkg="usb_cam" type="usb_cam_node" name="usb_camera">
-        <remap from="/usb_camera/camera_info"  to="/camera_info"/>
-        <remap from="/usb_camera/image_raw"  to="/image" />
-        
-        <param name="camera_frame_id"     value="$(arg cam_frame)"/>
-        <param name="video_device"        value="$(arg camSelect)"/>
-        <param name="pixel_format"        value="$(arg pixelFormat)"/>
-        <param name="camera_info_url" type="string" value="$(arg cameraConfig)" />
+      <remap from="/usb_camera/camera_info"  to="/camera_info"/>
+      <remap from="/usb_camera/image_raw"  to="/image" />   
+      <param name="camera_frame_id"     value="$(arg cam_frame)"/>
+      <param name="video_device"        value="$(arg camSelect)"/>
+      <param name="pixel_format"        value="$(arg pixelFormat)"/>
+      <param name="camera_info_url" type="string" value="$(arg cameraConfig)" />
     </node>
     
-
-    <!-- Run the aruco_detect node -->
-    <!-- namespace for camera input -->
-    <arg name="ns" default=""/>
-    
-    <arg name="image" default="/image"/>
-    <arg name="transport" default="compressed"/>
-    <arg name="fiducial_len" default="0.14"/>
-    <arg name="dictionary" default="7"/>
-    <arg name="do_pose_estimation" default="true"/>
-    <arg name="ignore_fiducials" default="" />
-    <arg name="fiducial_len_override" default="" />
-
-    <node pkg="aruco_detect" name="aruco_detect"
-        type="aruco_detect" respawn="false">
-        <param name="image_transport" value="$(arg transport)"/>
-        <param name="publish_images" value="true" />
-        <param name="fiducial_len" value="$(arg fiducial_len)"/>
-        <param name="dictionary" value="$(arg dictionary)"/>
-        <param name="do_pose_estimation" value="$(arg do_pose_estimation)"/>
-        <param name="ignore_fiducials" value="$(arg ignore_fiducials)"/>
-        <param name="fiducial_len_override" value="$(arg fiducial_len_override)"/>
-        <remap from="/camera/compressed" to="$(arg ns)/$(arg image)/$(arg transport)"/>
-        <remap from="/camera_info" to="$(arg ns)/camera_info"/>
-    </node>
+  </group>
 
 
-    <!-- rosrun usb_cam usb_cam_node _video_device:="/dev/video1" _pixel_format:="yuyv" -->
+
+  <!--              ************************************************************************************              -->
+  <!--              ******************************** Aruco Detector node *******************************              -->
+  <!--              ************************************************************************************              -->
 
 
-    <arg name="run_fiducial_markers_handler_node" default="true"/>
-    <arg name="markers_config_file"  default="$(find robot_arm_workcell_manager)/config/markers_tf.yaml" />
 
-    <group if="$(arg run_fiducial_markers_handler_node)">
-        <node pkg="robot_arm_workcell_manager" name="fiducial_markers_handler"
-            type="fiducial_markers_handler" output="screen" respawn="false">
-            <param name="camera_frame_id" value="$(arg cam_frame)" />
-            <param name="marker_tf_path" value="$(arg markers_config_file)"/>
-        </node>
-    </group>
+  <!-- Run the aruco_detect node -->
+  <!-- namespace for camera input -->
+  <arg name="ns" default=""/>
+  <arg name="image" default="/image"/>
+  <arg name="transport" default="compressed"/>
+  <arg name="markerSize"      default="0.04"/>    <!-- in m -->
+  <arg name="dictionary" default="7"/>
+  <arg name="do_pose_estimation" default="true"/>
+  <arg name="ignore_fiducials" default="" />
+  <arg name="fiducial_len_override" default="" />
 
+  <node pkg="aruco_detect" name="aruco_detect"
+    type="aruco_detect" respawn="false">
+    <param name="image_transport" value="$(arg transport)"/>
+    <param name="publish_images" value="true" />
+    <param name="fiducial_len" value="$(arg markerSize)"/>
+    <param name="dictionary" value="$(arg dictionary)"/>
+    <param name="do_pose_estimation" value="$(arg do_pose_estimation)"/>
+    <param name="ignore_fiducials" value="$(arg ignore_fiducials)"/>
+    <param name="fiducial_len_override" value="$(arg fiducial_len_override)"/>
+    <remap from="/camera/compressed" to="$(arg ns)/$(arg image)/$(arg transport)"/>
+    <remap from="/camera_info" to="$(arg ns)/camera_info"/>
+  </node>
 
 </launch>
