@@ -97,7 +97,7 @@ While the task is ongoing, user can check state of the arm_workcell by rostopic 
 Use Gazebo environment to test the pick and place of the workcell.
 
 ```
-roslaunch cssd_ur_description ur10_gazebo.launch
+roslaunch cssd_gazebo ur10_gazebo.launch
 ```
 
 ---
