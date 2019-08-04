@@ -10,8 +10,10 @@
   <!--              ****************************** Robot Arm Fake Joint Pub ****************************              -->
   <!--              ************************************************************************************              -->
 
-  
+  <remap unless="$(arg enable_fake_joints_execution)" from="/follow_joint_trajectory" to="/arm_controller/follow_joint_trajectory"/>
+
   <group if="$(arg enable_fake_joints_execution)">
+
     <!-- NOTE!!!! We do not have a robot connected, so publish fake joint states -->
     <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
       <param name="/use_gui" value="false"/> 
@@ -38,7 +40,7 @@
   <!-- Run the main MoveIt executable without trajectory execution (we do not have controllers configured by default) -->
   <include file="$(find ur10_moveit_config)/launch/move_group.launch">
     <arg name="allow_trajectory_execution" value="true"/>  
-    <arg name="fake_execution" value="true"/>
+    <arg name="fake_execution" value="$(arg enable_fake_joints_execution)"/>
     <!-- <arg name="info" value="true"/> -->
     <arg name="limited" default="$(arg limited)"/>
     <arg name="debug" value="$(arg debug)"/>
