@@ -14,7 +14,7 @@ RobotArmWorkcellManager::RobotArmWorkcellManager(const std::string& _dispenser_n
 
     dispenser_request_sub_ = nh_.subscribe ("/cssd_workcell/dispenser_request", 10 ,&RobotArmWorkcellManager::dispenserRequestCallback,this);
     dispenser_state_pub_   = nh_.advertise<rmf_msgs::DispenserState>("/cssd_workcell/dispenser_state", 10);
-    dispenser_result_pub_  = nh_.advertise<rmf_msgs::DispenserResult>("/ssd_workcell/dispenser_result", 10);
+    dispenser_result_pub_  = nh_.advertise<rmf_msgs::DispenserResult>("/cssd_workcell/dispenser_result", 10);
 
     dispenser_name_ = _dispenser_name;
 
@@ -89,9 +89,9 @@ void RobotArmWorkcellManager::dispenserRequestCallback(const rmf_msgs::Dispenser
         return;
     }
 
-    // already completed this request, publish results, TODO
+    // already made a request, publish results, TODO
     if (dispenser_completed_request_ids_.find(_msg->request_id) != dispenser_completed_request_ids_.end()) {
-        std::cout << " Task Request is completed previously" << std::endl;
+        std::cout << " Task Request has been requested previously, with success result of: " << dispenser_completed_request_ids_[_msg->request_id] << std::endl;
         publishDispenserResult(_msg->request_id, dispenser_completed_request_ids_[_msg->request_id]);
         return;
     }
@@ -233,8 +233,8 @@ void RobotArmWorkcellManager::dispenserTaskExecutionThread(){
 void RobotArmWorkcellManager::publishDispenserResult(std::string request_id, bool success){
     dispenser_result_msg_.dispenser_time = ros::Time::now();
     dispenser_result_msg_.dispenser_name = dispenser_name_;
-    dispenser_result_msg_.request_id = dispenser_curr_task_.request_id;
-    dispenser_result_msg_.success = true;
+    dispenser_result_msg_.request_id = request_id;
+    dispenser_result_msg_.success = success;
     dispenser_result_pub_.publish(dispenser_result_msg_);
 }
 
@@ -245,9 +245,8 @@ bool RobotArmWorkcellManager::executePickPlaceMotion( std::vector<std::string> f
 
     std::vector<tf::Transform *> tf_array;
     tf::Transform *marker_transform (new tf::Transform);
-    bool motion_is_success, detection_is_success ;
 
-    detection_is_success    = markers_detector_.getTransformPose( marker_transform, "base_link", marker_frame_id);       // TODO: create new function: checkMarkerExist()
+    if (! markers_detector_.getTransformPose( marker_transform, "base_link", marker_frame_id) ) return false;      // TODO: create new function: checkMarkerExist()
 
     markers_detector_.setTargetMarker(marker_frame_id);
     std::this_thread::sleep_for (std::chrono::seconds(motion_pause_time_));
@@ -255,7 +254,7 @@ bool RobotArmWorkcellManager::executePickPlaceMotion( std::vector<std::string> f
     // Get transform from tf detection
     for (std::string frame : frame_array){
         tf::Transform *target_tf (new tf::Transform);
-        detection_is_success    = markers_detector_.getTransformPose( target_tf, "base_link", frame );
+        if (! markers_detector_.getTransformPose( target_tf, "base_link", frame ) ) return false;
         tf_array.push_back(target_tf);
     }
 
@@ -265,7 +264,8 @@ bool RobotArmWorkcellManager::executePickPlaceMotion( std::vector<std::string> f
     for (const auto& target_tf : tf_array){
         geometry_msgs::Pose _eef_target_pose;
         tf::poseTFToMsg(*target_tf, _eef_target_pose);
-        motion_is_success       = arm_controller_.moveToEefTarget(_eef_target_pose, 0.5);    
+
+        if (! arm_controller_.moveToEefTarget(_eef_target_pose, 0.5) ) return false;
         std::this_thread::sleep_for (std::chrono::seconds(motion_pause_time_));
     }
 

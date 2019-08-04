@@ -3,15 +3,16 @@
 <!--              ************************************************************************************              -->
 
 <launch>
-    <arg name="enable_usb_cam" default="true">
+    <arg name="enable_usb_cam" default="true"/>
 
     <arg name="run_fiducial_markers_handler_node" default="true"/>
     <arg name="markers_config_file"  default="$(find robot_arm_workcell_manager)/config/markers_tf.yaml" />
 
+    <param name="camera_frame_id" value="camera" />
+    <param name="marker_tf_path" value="$(arg markers_config_file)"/>
+    
     <group if="$(arg run_fiducial_markers_handler_node)">
         <node pkg="robot_arm_workcell_manager" name="fiducial_markers_handler_node" type="fiducial_markers_handler_node" output="screen" respawn="false">
-            <param name="camera_frame_id" value="$(arg cam_frame)" />
-            <param name="marker_tf_path" value="$(arg markers_config_file)"/>
         </node>
     </group>
 
