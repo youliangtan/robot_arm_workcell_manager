@@ -5,6 +5,7 @@ Robot arm manipulation with moveit and fiducial markers. This Robot Arm manipula
 
 ![alt text](/documentations/rviz_bot.png?)
 
+---
 
 ## Getting Started
 
@@ -26,9 +27,12 @@ sudo apt-get install ros-melodic-fiducial-msgs
 
 ### Make and Build
 ```
-catkin_make --pkg cssdbot_moveit_config cssd_ur_description   # TODO: add it xml
+catkin_make --pkg cssdbot_moveit_config cssdbot_description cssd_gazebo
 catkin_make --pkg robot_arm_workcell_manager -j4
 ```
+
+---
+
 
 ## Run the Code
 
@@ -77,11 +81,6 @@ rosparam load rawm_param.yaml
 rosrun robot_arm_workcell_manager robot_arm_workcell_manager
 ```
 
-### 4. Gazebo Environment Testing (TODO)
-```
-roslaunch cssd_ur_description ur10_gazebo.launch
-```
-
 ### Request a Task 
 
 Pub a `DispenserRequest.msg` to start the pick and place motion.
@@ -90,6 +89,18 @@ rostopic pub /cssd_workcell/dispenser_request rmf_msgs/DispenserRequest '{reques
 ```
 
 While the task is ongoing, user can check state of the arm_workcell by rostopic echo `/dispenser_state` and `dispenser_result` topic. 
+
+---
+
+## Gazebo Environment Testing (TODO)
+
+Use Gazebo environment to test the pick and place of the workcell.
+
+```
+roslaunch cssd_ur_description ur10_gazebo.launch
+```
+
+---
 
 
 ## Notes
