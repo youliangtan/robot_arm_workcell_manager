@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>cssd_ur_description</name>
+  <name>cssdbot_description</name>
   <version>0.0.0</version>
-  <description>The ur10_simulation package</description>
+  <description>The cssd robot arm physical description package</description>
 
   <!-- One maintainer tag required, multiple allowed, one person per tag -->
   <!-- Example:  -->
@@ -49,7 +49,6 @@
   <!-- Use doc_depend for packages you need only for building documentation: -->
   <!--   <doc_depend>doxygen</doc_depend> -->
   <buildtool_depend>catkin</buildtool_depend>
-
 
   <!-- The export tag contains other, unspecified, tags -->
   <export>

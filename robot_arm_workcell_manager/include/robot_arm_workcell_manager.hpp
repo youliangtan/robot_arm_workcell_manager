@@ -85,8 +85,6 @@ class RobotArmWorkcellManager{
         ros::Subscriber dispenser_request_sub_;
         ros::Publisher dispenser_state_pub_;
         ros::Publisher dispenser_result_pub_;
-        tf::TransformBroadcaster br;  
-        tf::TransformListener listener;
 
         // ros param
         double dispenser_pub_rate_;

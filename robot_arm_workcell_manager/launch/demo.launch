@@ -1,15 +1,32 @@
 <launch>
 
+  <arg name="debug" default="false" />
+  <arg name="limited" default="false"/>
+  <arg name="enable_fake_joints_execution" default="true"/>  
+  <!-- <param name="use_sim_time" value="true"/>   -->
+  
+
+  <!--              ************************************************************************************              -->
+  <!--              ****************************** Robot Arm Fake Joint Pub ****************************              -->
+  <!--              ************************************************************************************              -->
+
+  
+  <group if="$(arg enable_fake_joints_execution)">
+    <!-- NOTE!!!! We do not have a robot connected, so publish fake joint states -->
+    <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
+      <param name="/use_gui" value="false"/> 
+      <rosparam param="/source_list">[/move_group/fake_controller_joint_states]</rosparam>
+    </node> 
+
+    <!-- Given the published joint states, publish tf for the robot links -->
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="true" output="screen" />
+  </group>
+
+
   <!--              ************************************************************************************              -->
   <!--              ******************************** Robot Arm Launcher ********************************              -->
   <!--              ************************************************************************************              -->
 
-
-  <!-- By default, we do not start a database (it can be large) -->
-  <arg name="db" default="false" />
-  <arg name="debug" default="false" />
-  <arg name="limited" default="false"/>
-  <!-- <param name="use_sim_time" value="true"/>   -->
 
   <!-- Load the URDF, SRDF and other .yaml configuration files on the param server -->
   <include file="$(find cssdbot_moveit_config)/launch/planning_context.launch">
@@ -18,21 +35,12 @@
     <arg name="limited" value="$(arg limited)"/>
   </include>
 
-  <!-- If needed, broadcast static tf for robot root -->
-  <!-- NOTE!!!! We do not have a robot connected, so publish fake joint states -->
-  <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
-    <param name="/use_gui" value="false"/> 
-    <rosparam param="/source_list">[/move_group/fake_controller_joint_states]</rosparam>
-  </node> 
-  
-  <!-- Given the published joint states, publish tf for the robot links -->
-  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="true" output="screen" />
-
   <!-- Run the main MoveIt executable without trajectory execution (we do not have controllers configured by default) -->
-  <include file="$(find cssdbot_moveit_config)/launch/move_group.launch">
+  <include file="$(find ur10_moveit_config)/launch/move_group.launch">
     <arg name="allow_trajectory_execution" value="true"/>  
     <arg name="fake_execution" value="true"/>
-    <arg name="info" value="true"/>
+    <!-- <arg name="info" value="true"/> -->
+    <arg name="limited" default="$(arg limited)"/>
     <arg name="debug" value="$(arg debug)"/>
     <!-- <arg name="planner" value="stomp" /> -->
   </include>
@@ -47,58 +55,15 @@
 
 
 
-
-
   <!--              ************************************************************************************              -->
-  <!--              ********************************* Marker Detectors *********************************              -->
+  <!--              ****************************** Fiducial Marker handler *****************************              -->
   <!--              ************************************************************************************              -->
 
-
-  <arg name="camSelect"       default="/dev/video0.original"/>
-  <arg name="pixelFormat"     default="yuyv"/>    <!-- refer to usb_cam ros documentation -->
-  <arg name="cameraConfig"    default="file://$(find robot_arm_workcell_manager)/config/usb_cam.yaml"/>
+  <arg name="enable_usb_cam" default="true"/>
   
-  <arg name="markerSize"      default="0.04"/>    <!-- in m -->
-  <arg name="cam_frame"       default="camera"/>
-  <arg name="ref_frame"       default=""/>  <!-- leave empty and the pose will be published wrt param parent_name -->
-
-  <node pkg="tf" type="static_transform_publisher" name="eef_to_camera_tf" args="0 0 0 1.57 0 1.57 camera_link_optical camera 15" />  
-  <node pkg="usb_cam" type="usb_cam_node" name="usb_camera">
-    <remap from="/usb_camera/camera_info"  to="/camera_info"/>
-    <remap from="/usb_camera/image_raw"  to="/image" />
-    
-    <param name="camera_frame_id"     value="$(arg cam_frame)"/>
-    <param name="video_device"        value="$(arg camSelect)"/>
-    <param name="pixel_format"        value="$(arg pixelFormat)"/>
-    <param name="camera_info_url" type="string" value="$(arg cameraConfig)" />
-  </node>
-  
-
-  <!-- Run the aruco_detect node -->
-  <!-- namespace for camera input -->
-  <arg name="ns" default=""/>
-  
-  <arg name="image" default="/image"/>
-  <arg name="transport" default="compressed"/>
-  <arg name="fiducial_len" default="$(arg markerSize)"/>
-  <arg name="dictionary" default="7"/>
-  <arg name="do_pose_estimation" default="true"/>
-  <arg name="ignore_fiducials" default="" />
-  <arg name="fiducial_len_override" default="" />
-
-  <node pkg="aruco_detect" name="aruco_detect"
-    type="aruco_detect" respawn="false">
-    <param name="image_transport" value="$(arg transport)"/>
-    <param name="publish_images" value="true" />
-    <param name="fiducial_len" value="$(arg fiducial_len)"/>
-    <param name="dictionary" value="$(arg dictionary)"/>
-    <param name="do_pose_estimation" value="$(arg do_pose_estimation)"/>
-    <param name="ignore_fiducials" value="$(arg ignore_fiducials)"/>
-    <param name="fiducial_len_override" value="$(arg fiducial_len_override)"/>
-    <remap from="/camera/compressed" to="$(arg ns)/$(arg image)/$(arg transport)"/>
-    <remap from="/camera_info" to="$(arg ns)/camera_info"/>
-  </node>
-
+  <include file="$(find robot_arm_workcell_manager )/launch/markers_detector.launch">
+    <arg name="camSelect"      default="/dev/video0"/>
+    <arg name="enable_usb_cam" value="$(arg enable_usb_cam)"/>
+  </include>
 
 </launch>
-

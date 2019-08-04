@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>cssd_gazebo</name>
+  <version>0.0.0</version>
+  <description>The ur10_gazebo_simulation package</description>
+
+  <maintainer email="tan_you_liang@hotmail.com">youLiang</maintainer>
+
+
+  <license>TODO</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+
+  <export>
+  </export>
+</package>

@@ -1,19 +1,31 @@
-<?xml version="1.0"?>
 <launch>
+  <arg name="sim" default="true"/>
+  <arg name="config" default="true"/>
+
+  <include file="$(find robot_arm_workcell_manager)/launch/demo.launch">
+    <arg name='enable_usb_cam'  default='false'/>
+    <arg name="enable_fake_joints_execution" default="false"/>  
+  </include>
+
+  <!-- Remap follow_joint_trajectory -->
+  <remap if="$(arg sim)" from="/follow_joint_trajectory" to="/arm_controller/follow_joint_trajectory"/>
+  
+
+  <!--              ************************************************************************************              -->
+  <!--              ******************************** UR10 Gazebo Stuffs ********************************              -->
+  <!--              ************************************************************************************              -->
+
+
   <arg name="limited" default="false"  doc="If true, limits joint range [-PI, PI] on all joints." />
   <arg name="paused" default="false" doc="Starts gazebo in paused mode" />
   <arg name="gui" default="true" doc="Starts gazebo gui" />
   
+
   <!-- startup simulated world -->
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
     <arg name="world_name" default="worlds/empty.world"/>
     <arg name="paused" value="$(arg paused)"/>
     <arg name="gui" value="$(arg gui)"/>
-  </include>
-
-  <!-- send robot urdf to param server -->
-  <include file="$(find cssd_ur_description)/launch/ur10_upload.launch">
-    <arg name="limited" value="$(arg limited)"/>
   </include>
 
   <!-- push robot_description to factory and spawn robot in gazebo -->
@@ -29,3 +41,14 @@
   <node name="ros_control_controller_manager" pkg="controller_manager" type="controller_manager" respawn="false" output="screen" args="load joint_group_position_controller" />
 
 </launch>
+
+
+
+<!-- ******************************* GraveYard ********************************* -->
+
+<!--
+  <include file="$(find robot_arm_workcell_manager)/launch/demo.launch">
+    <arg name='enable_usb_cam'  default='false'/>
+    <arg name="enable_fake_joints_pub" default="false"/>  
+  </include>
+-->

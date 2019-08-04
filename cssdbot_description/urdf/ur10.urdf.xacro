@@ -306,7 +306,7 @@
     <link name="${prefix}end_effector_link">
       <visual>
         <geometry>
-          <mesh filename="package://cssd_ur_description/meshes/visual/end_effector.STL"/>
+          <mesh filename="package://cssdbot_description/meshes/visual/end_effector.STL"/>
         </geometry>
         <origin xyz="0.0 0.0 0.0" rpy="${-pi/2} 0.0 ${pi/2}" />
         <material name="LightGrey">
@@ -315,7 +315,7 @@
       </visual>
       <collision>
         <geometry>
-          <mesh filename="package://cssd_ur_description/meshes/collision/end_effector.STL"/>
+          <mesh filename="package://cssdbot_description/meshes/collision/end_effector.STL"/>
         </geometry>
 	<origin xyz="0.0 0.0 0.0" rpy="${-pi/2} 0.0 ${pi/2}" />
       </collision>
