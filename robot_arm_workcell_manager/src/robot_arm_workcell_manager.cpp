@@ -284,6 +284,7 @@ bool RobotArmWorkcellManager::executeRobotArmMission(){
     
     bool motion_is_success;
     std::vector<tf::Transform *> tf_array;
+    rmf_msgs::DispenserRequestItem requested_item = dispenser_curr_task_.items[0] ;
 
     // FOR NOW, TODO: No hard coding
     std::vector<std::string> picking_frame_array = {"pre-pick", "insert", "lift", "post-pick"};
@@ -292,14 +293,14 @@ bool RobotArmWorkcellManager::executeRobotArmMission(){
     // home
     if (! arm_controller_.moveToNamedTarget("home_position") ) return false;
     
-    // picking
-    if (! executePickPlaceMotion(picking_frame_array ,"marker_0") ) return false;
+    // picking, e.g: requested_item.item_type = "marker_X" 
+    if (! executePickPlaceMotion(picking_frame_array , requested_item.item_type ) ) return false;
 
     // turn to face trolley
     if (! arm_controller_.moveToNamedTarget("pre_place_position") ) return false;
 
-    // placing
-    if (! executePickPlaceMotion(placing_frame_array ,"marker_100") ) return false;
+    // placing, e.g: requested_item.compartment_name = "marker_X"
+    if (! executePickPlaceMotion(placing_frame_array , requested_item.compartment_name) ) return false;
 
     // back home (2nd)
     if (! arm_controller_.moveToNamedTarget("low_home_position") ) return false;

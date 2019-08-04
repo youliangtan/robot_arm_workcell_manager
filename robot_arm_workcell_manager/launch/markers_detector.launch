@@ -6,15 +6,15 @@
   <!--              ************************************************************************************              -->
 
   <arg name="enable_usb_cam"  default="true"/>
+  <arg name="camSelect"       default="/dev/video0"/>
+  <arg name="pixelFormat"     default="yuyv"/>    <!-- refer to usb_cam ros documentation -->
+  <arg name="cameraConfig"    default="file://$(find robot_arm_workcell_manager)/config/usb_cam.yaml"/>
+  
+  <arg name="cam_frame"       default="camera"/>
+  <arg name="ref_frame"       default=""/>  <!-- leave empty and the pose will be published wrt param parent_name -->
 
   <group if="$(arg enable_usb_cam)">
     
-    <arg name="camSelect"       default="/dev/video1"/>
-    <arg name="pixelFormat"     default="yuyv"/>    <!-- refer to usb_cam ros documentation -->
-    <arg name="cameraConfig"    default="file://$(find robot_arm_workcell_manager)/config/usb_cam.yaml"/>
-    
-    <arg name="cam_frame"       default="camera"/>
-    <arg name="ref_frame"       default=""/>  <!-- leave empty and the pose will be published wrt param parent_name -->
 
     <node pkg="tf" type="static_transform_publisher" name="eef_to_camera_tf" args="0 0 0 1.57 0 1.57 camera_link_optical camera 15" />  
 
