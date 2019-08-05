@@ -16,7 +16,6 @@
   <group if="$(arg enable_usb_cam)">
     
 
-    <node pkg="tf" type="static_transform_publisher" name="eef_to_camera_tf" args="0 0 0 1.57 0 1.57 camera_link_optical camera 15" />  
 
     <node pkg="usb_cam" type="usb_cam_node" name="usb_camera">
       <remap from="/usb_camera/camera_info"  to="/camera_info"/>
@@ -29,6 +28,8 @@
     
   </group>
 
+  <!-- Todo -->
+  <node pkg="tf" type="static_transform_publisher" name="eef_to_camera_tf" args="0 0 0 1.57 0 1.57 camera_link_optical camera 15" />  
 
 
   <!--              ************************************************************************************              -->

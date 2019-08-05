@@ -12,8 +12,6 @@
 
   <remap unless="$(arg enable_fake_joints_execution)" from="/follow_joint_trajectory" to="/arm_controller/follow_joint_trajectory"/>
 
-  <node pkg="tf" type="static_transform_publisher" name="eef_to_camera_tf" args="0 0 0 1.57 0 1.57 camera_link_optical camera 15" />  
-
   <group if="$(arg enable_fake_joints_execution)">
 
     <!-- NOTE!!!! We do not have a robot connected, so publish fake joint states -->
