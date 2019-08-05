@@ -3,16 +3,16 @@
   <arg name="debug" default="false" />
   <arg name="limited" default="false"/>
   <arg name="enable_fake_joints_execution" default="true"/>  
-  <!-- <param name="use_sim_time" value="true"/>   -->
-  
+
+
+  <!-- Load ros parameters   -->
+  <rosparam file="$(find robot_arm_workcell_manager)/config/rawm_param.yaml" command="load" ns="" />
 
   <!--              ************************************************************************************              -->
   <!--              ****************************** Robot Arm Fake Joint Pub ****************************              -->
   <!--              ************************************************************************************              -->
 
   <remap unless="$(arg enable_fake_joints_execution)" from="/follow_joint_trajectory" to="/arm_controller/follow_joint_trajectory"/>
-
-  <node pkg="tf" type="static_transform_publisher" name="eef_to_camera_tf" args="0 0 0 1.57 0 1.57 camera_link_optical camera 15" />  
 
   <group if="$(arg enable_fake_joints_execution)">
 
@@ -25,7 +25,6 @@
     <!-- Given the published joint states, publish tf for the robot links -->
     <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="true" output="screen" />
   </group>
-
 
   <!--              ************************************************************************************              -->
   <!--              ******************************** Robot Arm Launcher ********************************              -->

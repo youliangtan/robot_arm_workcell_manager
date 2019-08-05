@@ -42,29 +42,25 @@ Run motion executor test code.
 # Terminal A: Run Rviz and Robot Desciption... blablabla
 roslaunch robot_arm_workcell_manager demo.launch
 
-# Terminal B: Run Node 
-rosrun robot_arm_workcell_manager robot_arm_controller_node _motion_target_yaml_path:="/home/youliang/catkin_ws/src/robot_arm_workcell_manager/config/motion_target.yaml" _group_name:="manipulator"
-## OR
+# Terminal B: Run arm_controller Node 
 roslaunch robot_arm_workcell_manager arm_controller.launch
 ```
 
 ### 2. Run Fiducial Markers Handler Test Code
 Test code to try out aruco marker detection. Camera and aruco markers are used for this application.
+
+
 ```
 # Check Camera and configure path
 vlc v4l2:///dev/video{$NUM}
 ```
 
+**Calibration**: Refer to OpenCV Camera Calibration code, [here](https://docs.opencv.org/2.4/doc/tutorials/calib3d/camera_calibration/camera_calibration.html#results). This tool has provided a chessboard.png for calibration. Once done, then copy the camera & distortion matrix from a .xml file to `/robot_arm_workcell_manager/config/usb_cam.yaml`.
+
 Run Test Code
 ```
 roslaunch robot_arm_workcell_manager fiducial_markers_handler.launch
-## or
-roslaunch robot_arm_workcell_manager markers_detector.launch
-rosrun robot_arm_workcell_manager fiducial_markers_handler_node _camera_frame_id:="camera" _marker_tf_path:="/home/youliang/catkin_ws/src/robot_arm_workcell_manager/config/markers_tf.yaml"
 ```
-
-**Calibration**
-Refer to OpenCV Camera Calibration code ([here](https://docs.opencv.org/2.4/doc/tutorials/calib3d/camera_calibration/camera_calibration.html#results)). This tool has provided a chessboard.png for calibration. Once done, then copy the camera & distortion matrix from a .xml file to `/robot_arm_workcell_manager/config/usb_cam.yaml`.
 
 
 ### 3. Overall Test with Robot Arm Workcell Manager (RAWM)
@@ -75,12 +71,7 @@ This RAWM exec depends on above `robot_arm_controller` and `fiducial_markers_han
 ## Terminal A: Run Rviz and Moveit
 roslaunch robot_arm_workcell_manager demo.launch
 
-## Terminal B: Load Param
-roscd robot_arm_workcell_manager
-cd config
-rosparam load rawm_param.yaml
-
-## Run Exec
+## Terminal B: Run RAWM
 rosrun robot_arm_workcell_manager robot_arm_workcell_manager
 ```
 
@@ -95,13 +86,19 @@ While the task is ongoing, user can check state of the arm_workcell by rostopic 
 
 ---
 
-## Gazebo Environment Testing (TODO)
+## Gazebo Environment Testing
 
 Use Gazebo environment to test the pick and place of the workcell.
 
 ```
+## Terminal A: Run Gazebo, alongside with Rviz and Moveit
 roslaunch cssd_gazebo ur10_gazebo.launch
+
+## Terminal B: Run RAWM
+rosrun robot_arm_workcell_manager robot_arm_workcell_manager
 ```
+
+Then send the same `DispenserRequest.msg` as above. 
 
 ---
 
