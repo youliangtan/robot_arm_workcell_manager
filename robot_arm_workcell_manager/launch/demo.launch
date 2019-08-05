@@ -3,8 +3,10 @@
   <arg name="debug" default="false" />
   <arg name="limited" default="false"/>
   <arg name="enable_fake_joints_execution" default="true"/>  
-  <!-- <param name="use_sim_time" value="true"/>   -->
-  
+
+
+  <!-- Load ros parameters   -->
+  <rosparam file="$(find robot_arm_workcell_manager)/config/rawm_param.yaml" command="load" ns="" />
 
   <!--              ************************************************************************************              -->
   <!--              ****************************** Robot Arm Fake Joint Pub ****************************              -->
@@ -23,7 +25,6 @@
     <!-- Given the published joint states, publish tf for the robot links -->
     <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="true" output="screen" />
   </group>
-
 
   <!--              ************************************************************************************              -->
   <!--              ******************************** Robot Arm Launcher ********************************              -->
