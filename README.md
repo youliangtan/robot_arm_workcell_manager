@@ -103,9 +103,6 @@ Use Gazebo environment to test the pick and place of the workcell.
 roslaunch cssd_gazebo ur10_gazebo.launch
 ```
 
-**TODO: Fix execution which gazebo is not able to read the topic which being sent from movegroup**
-
-
 ---
 
 
