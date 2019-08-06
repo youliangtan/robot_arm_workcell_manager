@@ -11,7 +11,9 @@
     <param name="group_name" type="string" value="manipulator" />
     <param name="dispenser_state_pub_rate" type="double" value="0.5" />
     <param name="motion_pause_time" type="int" value="1" />
+    <param name="flip_marker" type="bool" value="true" />
 
-    <node pkg="robot_arm_workcell_manager" type="robot_arm_workcell_manager" name="robot_arm_workcell_manager_node" respawn="true"></node>
+
+    <node pkg="robot_arm_workcell_manager" type="robot_arm_workcell_manager" name="robot_arm_workcell_manager_node" respawn="true" output="screen"></node>
 
 </launch>

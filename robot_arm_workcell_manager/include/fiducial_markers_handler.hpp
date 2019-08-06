@@ -49,7 +49,7 @@ class FiducialMarkersHandler{
 
         bool loadParameters();
 
-        tf::Quaternion pitching_up(tf::Quaternion quat, int marker_mode);
+        tf::Quaternion reorientateMarker(tf::Quaternion quat);
 
         // TODO: to work on this
         // To make sure tf transform will not be depreciated?? or another method to change this.... 10s for tf now
@@ -63,6 +63,7 @@ class FiducialMarkersHandler{
         // param
         YAML::Node MARKERS_TF_CONFIG_;
         std::string camera_frame_id_;
+        bool is_marker_flipped_;
 
         // ros stuffs
         ros::NodeHandle nh_;

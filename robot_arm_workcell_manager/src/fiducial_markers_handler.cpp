@@ -33,12 +33,23 @@ FiducialMarkersHandler::~FiducialMarkersHandler(){
 bool FiducialMarkersHandler::loadParameters(){
 
     if (nh_.getParam("/camera_frame_id", camera_frame_id_)){
-      ROS_INFO(" [PARAM] Got path param: %s", camera_frame_id_.c_str());
+        ROS_INFO(" [PARAM] Got camera frame param: %s", camera_frame_id_.c_str());
     }
     else{
-      ROS_ERROR(" [PARAM] Failed to get param 'camera_frame_id'");
-      return false;
+        ROS_ERROR(" [PARAM] Failed to get param 'camera_frame_id', set to default 'camera'");
+        nh_.param<std::string>("/camera_frame_id", camera_frame_id_, "camera");
     }
+
+
+    if (nh_.getParam("/flip_marker", is_marker_flipped_)){
+      ROS_INFO(" [PARAM] Got flip marker param: %d", is_marker_flipped_);
+    }
+    else{
+        ROS_ERROR(" [PARAM] Failed to get param flip marker param, set to default: false");
+        nh_.param<bool>("/flip_marker", is_marker_flipped_, false);
+    }
+
+
 
     std::string _yaml_path = "";
     if (nh_.getParam("/marker_tf_path", _yaml_path)){
@@ -67,20 +78,17 @@ bool FiducialMarkersHandler::loadParameters(){
 
 
 // TODO, work on the mode: rosparam
-// To Orientate Marker's frame to the correct convention
-tf::Quaternion FiducialMarkersHandler::pitching_up(tf::Quaternion quat, int marker_mode=1){
-    switch (marker_mode){
-        case 1:{
-            quat = quat * tf::Quaternion(  0, 0.7071081, 0, -0.7071055 );
-            quat = quat * tf::Quaternion(     0.7071081, 0, 0, -0.7071055 );
-        }
-
-        case 2:{
-            quat = quat * tf::Quaternion(  0.7071068, 0, 0, 0.7071068);
-            quat = quat * tf::Quaternion(   0, 0.7071068, 0, 0.7071068);
-        }
-        return quat;
+// To reOrientate Marker's frame to the correct convention
+tf::Quaternion FiducialMarkersHandler::reorientateMarker(tf::Quaternion quat){
+    if(is_marker_flipped_){
+        quat = quat * tf::Quaternion(  0, 0, 1, 0);
     }
+
+    else{
+        // quat = quat * tf::Quaternion(  0, 0.7071081, 0, -0.7071055 );
+        // quat = quat * tf::Quaternion(     0.7071081, 0, 0, -0.7071055 );
+    }
+    return quat;
 }
 
 
@@ -215,7 +223,7 @@ void FiducialMarkersHandler::updateFiducialArrayCallback(const fiducial_msgs::Fi
         tf::Quaternion before_rotation(pose.rotation.x,pose.rotation.y,pose.rotation.z,pose.rotation.w);
         tf::Quaternion after_rotation;
         // TODO: to fix this pitching up thing
-        after_rotation = pitching_up(before_rotation);
+        after_rotation = reorientateMarker(before_rotation);
 
         transform.setOrigin(tf::Vector3(pose.translation.x,pose.translation.y,pose.translation.z));
         transform.setRotation(after_rotation);
