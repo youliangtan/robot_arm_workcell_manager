@@ -1,0 +1,37 @@
+<?xml version="1.0" ?>
+<sdf version="1">
+  <model name="CSSD Tray">
+    <static>false</static>
+    <link name="link">
+      <!--<pose> 0.1545 0.228 0 1.57 0 -1.57 </pose> -->
+      <pose> 0 0 0 0 0 0 </pose>
+       <inertial>
+        <mass>1.447</mass>
+        <pose>0 0 0 0 0 0</pose>
+        <inertia>
+          <ixx>1.0</ixx>
+          <iyy>1.0</iyy>
+          <izz>1</izz>
+        </inertia>
+      </inertial>
+
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <scale>0.001 0.001 0.001</scale>
+            <uri>model://CSSD Tray/meshes/Tray_Assem_Locating_Stand-off.STL</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <scale>0.001 0.001 0.001</scale>
+            <uri>model://CSSD Tray/meshes/Tray_Assem_Locating_Stand-off.STL</uri>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+  </model>
+</sdf>
+
