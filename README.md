@@ -72,7 +72,7 @@ This RAWM exec depends on above `robot_arm_controller` and `fiducial_markers_han
 roslaunch robot_arm_workcell_manager demo.launch
 
 ## Terminal B: Run RAWM
-rosrun robot_arm_workcell_manager robot_arm_workcell_manager
+roslaunch robot_arm_workcell_manager robot_arm_workcell_manager.launch
 ```
 
 ### Request a Task 
@@ -95,7 +95,7 @@ Use Gazebo environment to test the pick and place of the workcell.
 roslaunch cssd_gazebo ur10_gazebo.launch
 
 ## Terminal B: Run RAWM
-rosrun robot_arm_workcell_manager robot_arm_workcell_manager
+roslaunch robot_arm_workcell_manager robot_arm_workcell_manager.launch
 ```
 
 Then send the same `DispenserRequest.msg` as above. 
@@ -114,5 +114,5 @@ Then send the same `DispenserRequest.msg` as above.
 
 ## TODO
 - Namespace for rosparam (senario of runnin multiple robot arms)
-- Fix camera frame between `camera_optical_frame` and `camera`  (and update new tf tree)
+- Fix camera frame between `camera_optical_frame` and `camera`  (and update new tf tree), Upsidedown case!!
 - Gazebo simulation
