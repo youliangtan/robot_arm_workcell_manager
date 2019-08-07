@@ -102,6 +102,23 @@ Then send the same `DispenserRequest.msg` as above.
 
 ---
 
+## Multiple Robot Arm Testing
+To enable multiple `RAWM` (robot arm workcells) to work together on the same mahchine, namespace is used in the respective launchfile. To change edit the namespace, go to `demo.launch` and `robot_arm_workcell_manager.launch` to change the desired namespace.
+
+```
+  <!-- Namespace Toggling -->
+  <arg name="arm_namespace"                 default="ur10"/>  
+  <arg name="enable_namespace"              default="true"/> 
+```
+
+Then, run the code as usual....
+
+3 topics: `/cssd_workcell/dispenser_request`, `/cssd_workcell/dispenser_state`, `/cssd_workcell/dispenser_result` will work as the same.
+
+Note: This function is currently in development. TODO: create namespace for tf_lookup in `fiducial_markers_handler.cpp` code.
+
+---
+
 
 ## Notes
 - A custom designed "fork-lift" end effector is used in this process

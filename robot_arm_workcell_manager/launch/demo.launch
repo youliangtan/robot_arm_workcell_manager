@@ -3,8 +3,10 @@
   <arg name="debug"                         default="false" />
   <arg name="limited"                       default="false"/>
   <arg name="enable_fake_joints_execution"  default="true"/>  
-  <arg name="arm_namespace"                 default="/"/>  
-  <arg name="enable_namespace"              default="false"/>  
+  
+  <!-- Namespace Toggling -->
+  <arg name="arm_namespace"                 default="ur10"/>  
+  <arg name="enable_namespace"              default="true"/>  
 
 
   <group ns="$(arg arm_namespace)">
@@ -72,8 +74,8 @@
       <arg name="enable_usb_cam"      value="$(arg enable_usb_cam)"/>
       
       <!-- Hard fix to solve abs ns -->
-      <arg if="$(arg enable_namespace)"    name="remap_namespace"     value="$(arg arm_namespace)"/>
-      <arg unless="$(arg enable_namespace)"    name="remap_namespace"    value=""/>
+      <arg if="$(arg enable_namespace)"         name="remap_namespace"     value="$(arg arm_namespace)"/>
+      <arg unless="$(arg enable_namespace)"     name="remap_namespace"    value=""/>
   
     </include>
 

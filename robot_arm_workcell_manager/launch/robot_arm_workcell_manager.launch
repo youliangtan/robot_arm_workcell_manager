@@ -1,19 +1,27 @@
 <launch>
-
-    <arg name="motion_target_file"  default="$(find robot_arm_workcell_manager)/config/motion_target.yaml" />
-    <arg name="markers_config_file"  default="$(find robot_arm_workcell_manager)/config/markers_tf.yaml" />
-
-    <param name="marker_tf_path" value="$(arg markers_config_file)"/>
-    <param name="motion_target_yaml_path" type="string" value="$(arg motion_target_file)" />
-    <param name="arm_mission_path" type='string' value="pending" />
     
-    <param name="camera_frame_id" value="camera" />
-    <param name="group_name" type="string" value="manipulator" />
-    <param name="dispenser_state_pub_rate" type="double" value="0.5" />
-    <param name="motion_pause_time" type="int" value="1" />
-    <param name="flip_marker" type="bool" value="true" />
+    <!-- Namespace Toggling -->
+    <arg name="namespace"  default="ur10" />
 
+    <group  ns="$(arg namespace)">
 
-    <node pkg="robot_arm_workcell_manager" type="robot_arm_workcell_manager" name="robot_arm_workcell_manager_node" respawn="true" output="screen"></node>
+        <arg name="motion_target_file"  default="$(find robot_arm_workcell_manager)/config/motion_target.yaml" />
+        <arg name="markers_config_file"  default="$(find robot_arm_workcell_manager)/config/markers_tf.yaml" />
+
+        <param name="/marker_tf_path" value="$(arg markers_config_file)"/>
+        <param name="/motion_target_yaml_path" type="string" value="$(arg motion_target_file)" />
+        <param name="/arm_mission_path" type='string' value="pending" />
+        
+        <param name="/camera_frame_id" value="camera" />
+        <param name="/group_name" type="string" value="manipulator" />
+        <param name="/dispenser_state_pub_rate" type="double" value="0.5" />
+        <param name="/motion_pause_time" type="int" value="1" />
+        <param name="/flip_marker" type="bool" value="true" />
+
+        <node pkg="robot_arm_workcell_manager" type="robot_arm_workcell_manager" name="robot_arm_workcell_manager" respawn="true" output="screen">
+            <remap from="/fiducial_transforms"  to="fiducial_transforms"/>
+        </node>
+
+    </group>
 
 </launch>
