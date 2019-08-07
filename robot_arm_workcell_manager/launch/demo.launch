@@ -1,69 +1,82 @@
 <launch>
 
-  <arg name="debug" default="false" />
-  <arg name="limited" default="false"/>
-  <arg name="enable_fake_joints_execution" default="true"/>  
+  <arg name="debug"                         default="false" />
+  <arg name="limited"                       default="false"/>
+  <arg name="enable_fake_joints_execution"  default="true"/>  
+  <arg name="arm_namespace"                 default="/"/>  
+  <arg name="enable_namespace"              default="false"/>  
 
 
-  <!--              ************************************************************************************              -->
-  <!--              ****************************** Robot Arm Fake Joint Pub ****************************              -->
-  <!--              ************************************************************************************              -->
+  <group ns="$(arg arm_namespace)">
 
-  <remap unless="$(arg enable_fake_joints_execution)" from="/follow_joint_trajectory" to="/arm_controller/follow_joint_trajectory"/>
+    <!--              ************************************************************************************              -->
+    <!--              ****************************** Robot Arm Fake Joint Pub ****************************              -->
+    <!--              ************************************************************************************              -->
 
-  <group if="$(arg enable_fake_joints_execution)">
+    <remap unless="$(arg enable_fake_joints_execution)" from="/follow_joint_trajectory" to="/arm_controller/follow_joint_trajectory"/>
 
-    <!-- NOTE!!!! We do not have a robot connected, so publish fake joint states -->
-    <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
-      <param name="/use_gui" value="false"/> 
-      <rosparam param="/source_list">[/move_group/fake_controller_joint_states]</rosparam>
-    </node> 
+    <group if="$(arg enable_fake_joints_execution)">
 
-    <!-- Given the published joint states, publish tf for the robot links -->
-    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="true" output="screen" />
-  </group>
+      <!-- NOTE!!!! We do not have a robot connected, so publish fake joint states -->
+      <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
+        <param name="/use_gui" value="false"/> 
+        <rosparam param="/source_list">[/move_group/fake_controller_joint_states]</rosparam>
+      </node> 
 
-  <!--              ************************************************************************************              -->
-  <!--              ******************************** Robot Arm Launcher ********************************              -->
-  <!--              ************************************************************************************              -->
+      <!-- Given the published joint states, publish tf for the robot links -->
+      <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="true" output="screen" >
+          <param name="tf_prefix" value="$(arg arm_namespace)"/>
+      </node>
+    </group>
 
-
-  <!-- Load the URDF, SRDF and other .yaml configuration files on the param server -->
-  <include file="$(find cssdbot_moveit_config)/launch/planning_context.launch">
-    <!-- <param name="use_sim_time" value="true"/>   -->
-    <arg name="load_robot_description" value="true"/>
-    <arg name="limited" value="$(arg limited)"/>
-  </include>
-
-  <!-- Run the main MoveIt executable without trajectory execution (we do not have controllers configured by default) -->
-  <include file="$(find ur10_moveit_config)/launch/move_group.launch">
-    <arg name="allow_trajectory_execution" value="true"/>  
-    <arg name="fake_execution" value="$(arg enable_fake_joints_execution)"/>
-    <!-- <arg name="info" value="true"/> -->
-    <arg name="limited" default="$(arg limited)"/>
-    <arg name="debug" value="$(arg debug)"/>
-    <!-- <arg name="planner" value="stomp" /> -->
-  </include>
+    <!--              ************************************************************************************              -->
+    <!--              ******************************** Robot Arm Launcher ********************************              -->
+    <!--              ************************************************************************************              -->
 
 
-  <!-- Run Rviz and load the default config to see the state of the move_group node -->
-  <include file="$(find cssdbot_moveit_config)/launch/moveit_rviz.launch">
-    <!-- <param name="use_sim_time" value="true"/>  -->
-    <arg name="config" value="true"/>
-    <arg name="debug" value="$(arg debug)"/>
-  </include>
+    <!-- Load the URDF, SRDF and other .yaml configuration files on the param server -->
+    <include file="$(find cssdbot_moveit_config)/launch/planning_context.launch">
+      <!-- <param name="use_sim_time" value="true"/>   -->
+      <arg name="load_robot_description" value="true"/>
+      <arg name="limited" value="$(arg limited)"/>
+    </include>
+
+    <!-- Run the main MoveIt executable without trajectory execution (we do not have controllers configured by default) -->
+    <include file="$(find ur10_moveit_config)/launch/move_group.launch">
+      <arg name="allow_trajectory_execution" value="true"/>  
+      <arg name="fake_execution" value="$(arg enable_fake_joints_execution)"/>
+      <!-- <arg name="info" value="true"/> -->
+      <arg name="limited" default="$(arg limited)"/>
+      <arg name="debug" value="$(arg debug)"/>
+      <!-- <arg name="planner" value="stomp" /> -->
+    </include>
+
+
+    <!-- Run Rviz and load the default config to see the state of the move_group node -->
+    <include file="$(find cssdbot_moveit_config)/launch/moveit_rviz.launch">
+      <!-- <param name="use_sim_time" value="true"/>  -->
+      <arg name="config" value="true"/>
+      <arg name="debug" value="$(arg debug)"/>
+    </include>
 
 
 
-  <!--              **********************************************************************************              -->
-  <!--              ****************************** Fiducial Marker handler *****************************              -->
-  <!--              ************************************************************************************              -->
+    <!--              **********************************************************************************              -->
+    <!--              ****************************** Fiducial Marker handler *****************************              -->
+    <!--              ************************************************************************************              -->
 
-  <arg name="enable_usb_cam" default="true"/>
+    <arg name="enable_usb_cam" default="true"/>
+    
+    <include file="$(find robot_arm_workcell_manager )/launch/markers_detector.launch">
+      <arg name="camSelect"           value="/dev/video1"/>
+      <arg name="enable_usb_cam"      value="$(arg enable_usb_cam)"/>
+      
+      <!-- Hard fix to solve abs ns -->
+      <arg if="$(arg enable_namespace)"    name="remap_namespace"     value="$(arg arm_namespace)"/>
+      <arg unless="$(arg enable_namespace)"    name="remap_namespace"    value=""/>
   
-  <include file="$(find robot_arm_workcell_manager )/launch/markers_detector.launch">
-    <arg name="camSelect"      default="/dev/video1"/>
-    <arg name="enable_usb_cam" value="$(arg enable_usb_cam)"/>
-  </include>
+    </include>
+
+  </group>
 
 </launch>

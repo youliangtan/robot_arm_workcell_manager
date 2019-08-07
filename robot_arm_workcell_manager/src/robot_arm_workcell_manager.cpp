@@ -12,9 +12,9 @@
 RobotArmWorkcellManager::RobotArmWorkcellManager(const std::string& _dispenser_name): nh_("~"){
 
 
-    dispenser_request_sub_ = nh_.subscribe ("/cssd_workcell/dispenser_request", 10 ,&RobotArmWorkcellManager::dispenserRequestCallback,this);
-    dispenser_state_pub_   = nh_.advertise<rmf_msgs::DispenserState>("/cssd_workcell/dispenser_state", 10);
-    dispenser_result_pub_  = nh_.advertise<rmf_msgs::DispenserResult>("/cssd_workcell/dispenser_result", 10);
+    dispenser_request_sub_ = nh_.subscribe ("cssd_workcell/dispenser_request", 10 ,&RobotArmWorkcellManager::dispenserRequestCallback,this);
+    dispenser_state_pub_   = nh_.advertise<rmf_msgs::DispenserState>("cssd_workcell/dispenser_state", 10);
+    dispenser_result_pub_  = nh_.advertise<rmf_msgs::DispenserResult>("cssd_workcell/dispenser_result", 10);
 
     dispenser_name_ = _dispenser_name;
 

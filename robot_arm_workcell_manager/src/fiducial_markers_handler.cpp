@@ -18,7 +18,7 @@ FiducialMarkersHandler::FiducialMarkersHandler(): nh_("~"){
 
     ROS_INFO("Initializing Fiducial Markers Handler");
 
-    markers_sub_ = nh_.subscribe ("/fiducial_transforms", 10 ,&FiducialMarkersHandler::updateFiducialArrayCallback,this);
+    markers_sub_ = nh_.subscribe ("fiducial_transforms", 10 ,&FiducialMarkersHandler::updateFiducialArrayCallback,this);
     loadParameters();
 
     ROS_INFO("FiducialMarkersHandler::FiducialMarkersHandler() completed!! \n");
