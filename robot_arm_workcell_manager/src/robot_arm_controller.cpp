@@ -59,11 +59,11 @@ RobotArmController::~RobotArmController(){
 bool RobotArmController::loadParameters(){
 
     if (nh_.getParam("/group_name", group_name_)){
-      ROS_INFO(" [PARAM] Got group_name param: %s", group_name_.c_str());
+        ROS_INFO(" [PARAM] Got group_name param: %s", group_name_.c_str());
     }
     else{
-      ROS_ERROR(" [PARAM] Failed to get param 'group_name'");
-      return false;
+        ROS_ERROR(" [PARAM] Failed to get param 'group_name', set default to 'manipulator' ");
+        nh_.param<std::string>("/group_name", group_name_, "manipulator");
     }
 
     std::string _yaml_path = "";

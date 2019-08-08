@@ -38,8 +38,8 @@ bool RobotArmWorkcellManager::loadParameters(){
         ROS_INFO(" [PARAM] Got path param: %f", dispenser_pub_rate_);
     }
     else{
-        ROS_ERROR(" [PARAM] Failed to get param 'dispenser_state_pub_rate'");
-        return false;
+        ROS_ERROR(" [PARAM] Failed to get param 'dispenser_state_pub_rate', set to default: 1 ");
+        nh_.param<double>("/dispenser_state_pub_rate", dispenser_pub_rate_, 1);
     }
 
 

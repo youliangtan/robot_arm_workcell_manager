@@ -1,5 +1,7 @@
 <launch>
 
+  <arg name="remap_namespace"  default=""/>
+
 
   <!--              ************************************************************************************              -->
   <!--              ********************************* USB Camera Input *********************************              -->
@@ -18,8 +20,7 @@
 
 
     <node pkg="usb_cam" type="usb_cam_node" name="usb_camera">
-      <remap from="/usb_camera/camera_info"  to="/camera_info"/>
-      <remap from="/usb_camera/image_raw"  to="/image" />   
+      <remap from="/usb_camera"  to="usb_camera"/>
       <param name="camera_frame_id"     value="$(arg cam_frame)"/>
       <param name="video_device"        value="$(arg camSelect)"/>
       <param name="pixel_format"        value="$(arg pixelFormat)"/>
@@ -32,9 +33,8 @@
   <!-- <node pkg="tf" type="static_transform_publisher" name="eef_to_camera_tf" args="0 0 0 -1.57 0 1.57 camera_link_optical camera 15" />   -->
   
   <!-- Todo: When camera is upright -->
-  <node pkg="tf" type="static_transform_publisher" name="eef_to_camera_tf" args="0 0 0 -1.57 0 -1.57 camera_link_optical camera 15" />  
-
-
+  <node pkg="tf" type="static_transform_publisher" name="eef_to_camera_tf" args="0 0 0 -1.57 0 -1.57 $(arg remap_namespace)/camera_link_optical $(arg remap_namespace)/camera 15" >
+  </node>  
 
   <!--              ************************************************************************************              -->
   <!--              ******************************** Aruco Detector node *******************************              -->
@@ -44,7 +44,6 @@
 
   <!-- Run the aruco_detect node -->
   <!-- namespace for camera input -->
-  <arg name="ns" default=""/>
   <arg name="image" default="/image"/>
   <arg name="transport" default="compressed"/>
   <arg name="markerSize"      default="0.04"/>    <!-- in m -->
@@ -53,8 +52,7 @@
   <arg name="ignore_fiducials" default="" />
   <arg name="fiducial_len_override" default="" />
 
-  <node pkg="aruco_detect" name="aruco_detect"
-    type="aruco_detect" respawn="false">
+  <node pkg="aruco_detect" name="aruco_detect"  type="aruco_detect" respawn="false">
     <param name="image_transport" value="$(arg transport)"/>
     <param name="publish_images" value="true" />
     <param name="fiducial_len" value="$(arg markerSize)"/>
@@ -62,8 +60,13 @@
     <param name="do_pose_estimation" value="$(arg do_pose_estimation)"/>
     <param name="ignore_fiducials" value="$(arg ignore_fiducials)"/>
     <param name="fiducial_len_override" value="$(arg fiducial_len_override)"/>
-    <remap from="/camera/compressed" to="$(arg ns)/$(arg image)/$(arg transport)"/>
-    <remap from="/camera_info" to="$(arg ns)/camera_info"/>
+
+    <remap from="/camera/compressed" to="usb_camera/image_raw/compressed"/>
+    <!-- <remap from="/camera/compressed" to="camera/compressed"/> -->
+    <remap from="/camera_info" to="usb_camera/camera_info"/>
+    
+    <remap from="/fiducial_images" to="fiducial_images"/>
+    <remap from="/fiducial_transforms" to="fiducial_transforms"/>
   </node>
 
 </launch>
