@@ -5,8 +5,8 @@
   <arg name="enable_fake_joints_execution"  default="true"/>  
   
   <!-- Namespace Toggling -->
-  <arg name="arm_namespace"                 default="ur10"/>  
-  <arg name="enable_namespace"              default="true"/>  
+  <arg name="arm_namespace"                 default="ur10"/>  <!-- "/" -->
+  <arg name="enable_namespace"              default="true"/>  <!-- "false" -->
 
 
   <group ns="$(arg arm_namespace)">
@@ -14,6 +14,12 @@
     <!--              ************************************************************************************              -->
     <!--              ****************************** Robot Arm Fake Joint Pub ****************************              -->
     <!--              ************************************************************************************              -->
+
+    <!-- Hard fix to solve abs ns -->
+    <group if="$(arg enable_namespace)" >
+      <node pkg="tf" type="static_transform_publisher" name="armworld2world_tf" args="0 0 0 0 0 0 world $(arg arm_namespace)/world 15" />
+    </group>
+
 
     <remap unless="$(arg enable_fake_joints_execution)" from="/follow_joint_trajectory" to="/arm_controller/follow_joint_trajectory"/>
 
@@ -30,6 +36,11 @@
           <param name="tf_prefix" value="$(arg arm_namespace)"/>
       </node>
     </group>
+
+
+    <remap unless="$(arg enable_namespace)" from="/execute_trajectory" to="$execute_trajectory"/>
+    <remap unless="$(arg enable_namespace)" from="/move_group" to="$move_group"/>
+    <remap unless="$(arg enable_namespace)" from="/place" to="place"/>
 
     <!--              ************************************************************************************              -->
     <!--              ******************************** Robot Arm Launcher ********************************              -->

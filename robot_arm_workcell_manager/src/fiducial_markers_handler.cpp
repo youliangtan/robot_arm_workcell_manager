@@ -69,6 +69,17 @@ bool FiducialMarkersHandler::loadParameters(){
     }
     ROS_INFO(" Markers TF Config YAML: Loading Completed! ");
 
+
+    if (nh_.getParam("/arm_namespace", arm_namespace_)){
+      ROS_INFO(" [PARAM] Got arm_namespace param: %s", arm_namespace_.c_str() );
+    }
+    else{
+        ROS_ERROR(" [PARAM] Failed to get param 'arm_namespace', set to default: '' ");
+        nh_.param<std::string>("/arm_namespace", arm_namespace_, "");
+    }
+
+
+
     return true;
 }
 
@@ -104,6 +115,9 @@ bool FiducialMarkersHandler::getTransformPose(tf::Transform *target_transform, s
 
     //get transform of marker relative to base link
   	tf::StampedTransform stamped_transform;
+    target_frame_id = arm_namespace_ + "/" + target_frame_id;
+    frame_id = arm_namespace_ + "/" + frame_id;
+
   	try{
 	  	tf_listener_.waitForTransform(target_frame_id, frame_id, ros::Time(0), ros::Duration(2) );
 	  	tf_listener_.lookupTransform(target_frame_id, frame_id, ros::Time(0), stamped_transform);
@@ -160,7 +174,9 @@ std::string FiducialMarkersHandler::setTargetMarker(std::string marker_id ){
             quat.setEuler( pose_array[3], pose_array[4], pose_array[5] );
             transform.setRotation(quat);
 
-            tf::StampedTransform extended_tf(transform, ros::Time::now(), marker_id, extended_frame);
+            std::string ns_extended_frame = arm_namespace_ + "/" + extended_frame;
+            std::string ns_marker_id = arm_namespace_ + "/" + marker_id;
+            tf::StampedTransform extended_tf(transform, ros::Time::now(), ns_marker_id, ns_extended_frame);
 
             markers_extended_tf_array_.push_back(extended_tf);
         }
@@ -216,7 +232,7 @@ void FiducialMarkersHandler::updateFiducialArrayCallback(const fiducial_msgs::Fi
     tf::Transform transform;
 
     for (int i=0 ;i<size_of_array;i++)  {
-        std::string marker_frame_id = "marker_" + std::to_string(_msg->transforms[i].fiducial_id);
+        std::string marker_frame_id = arm_namespace_ + "/marker_" + std::to_string(_msg->transforms[i].fiducial_id);
         pose = _msg->transforms[i].transform;
 
         //aruco orientation require rotation as axis is in wrong direction
@@ -228,7 +244,8 @@ void FiducialMarkersHandler::updateFiducialArrayCallback(const fiducial_msgs::Fi
         transform.setOrigin(tf::Vector3(pose.translation.x,pose.translation.y,pose.translation.z));
         transform.setRotation(after_rotation);
 
-        tf_broadcaster_.sendTransform(tf::StampedTransform(transform, ros::Time::now(), camera_frame_id_, marker_frame_id));
+        std::string abs_camera_frame_id = arm_namespace_ + "/" + camera_frame_id_;
+        tf_broadcaster_.sendTransform(tf::StampedTransform(transform, ros::Time::now(), abs_camera_frame_id, marker_frame_id));
     }
 
 }

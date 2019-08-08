@@ -33,7 +33,7 @@
   <!-- <node pkg="tf" type="static_transform_publisher" name="eef_to_camera_tf" args="0 0 0 -1.57 0 1.57 camera_link_optical camera 15" />   -->
   
   <!-- Todo: When camera is upright -->
-  <node pkg="tf" type="static_transform_publisher" name="eef_to_camera_tf" args="0 0 0 -1.57 0 -1.57 $(arg remap_namespace)/camera_link_optical $(arg remap_namespace)camera 15" >
+  <node pkg="tf" type="static_transform_publisher" name="eef_to_camera_tf" args="0 0 0 -1.57 0 -1.57 $(arg remap_namespace)/camera_link_optical $(arg remap_namespace)/camera 15" >
   </node>  
 
   <!--              ************************************************************************************              -->

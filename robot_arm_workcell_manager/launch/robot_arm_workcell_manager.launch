@@ -1,9 +1,11 @@
 <launch>
     
     <!-- Namespace Toggling -->
-    <arg name="namespace"  default="ur10" />
+    <arg name="arm_namespace"                   default="ur10" />
+    <arg name="enable_namespace"                default="true"/>  
 
-    <group  ns="$(arg namespace)">
+
+    <group  ns="$(arg arm_namespace)">
 
         <arg name="motion_target_file"  default="$(find robot_arm_workcell_manager)/config/motion_target.yaml" />
         <arg name="markers_config_file"  default="$(find robot_arm_workcell_manager)/config/markers_tf.yaml" />
@@ -17,6 +19,10 @@
         <param name="/dispenser_state_pub_rate" type="double" value="0.5" />
         <param name="/motion_pause_time" type="int" value="1" />
         <param name="/flip_marker" type="bool" value="true" />
+
+        <!-- Hard fix to solve abs ns -->
+        <param if="$(arg enable_namespace)"         name="/arm_namespace"     value="$(arg arm_namespace)"/>
+        <param unless="$(arg enable_namespace)"     name="/arm_namespace"     value=""/>
 
         <node pkg="robot_arm_workcell_manager" type="robot_arm_workcell_manager" name="robot_arm_workcell_manager" respawn="true" output="screen">
             <remap from="/fiducial_transforms"  to="fiducial_transforms"/>

@@ -64,6 +64,7 @@ class FiducialMarkersHandler{
         YAML::Node MARKERS_TF_CONFIG_;
         std::string camera_frame_id_;
         bool is_marker_flipped_;
+        std::string arm_namespace_;
 
         // ros stuffs
         ros::NodeHandle nh_;
