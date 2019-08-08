@@ -24,6 +24,7 @@ sudo apt-get install ros-melodic-fiducial-msgs
 ```
 - rmf_msgs: [here](null)
 
+- Work together with: CSSD_workcell_manager (ROS2)
 
 ### Make and Build
 ```
@@ -88,6 +89,8 @@ While the task is ongoing, user can check state of the arm_workcell by rostopic 
 
 ## Gazebo Environment Testing
 
+![alt text](/documentations/gazebo.png?)
+
 Use Gazebo environment to test the pick and place of the workcell.
 
 ```
@@ -99,6 +102,9 @@ roslaunch robot_arm_workcell_manager robot_arm_workcell_manager.launch
 ```
 
 Then send the same `DispenserRequest.msg` as above. 
+
+
+**IN DEVELOPMENT**
 
 ---
 
