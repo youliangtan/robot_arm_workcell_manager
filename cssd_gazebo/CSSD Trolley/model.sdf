@@ -1,0 +1,36 @@
+<?xml version="1.0" ?>
+<sdf version="1">
+  <model name="CSSD Trolley">
+    <static>true</static>
+    <link name="link">
+      <pose> 0 0 0 0 0 0 </pose>
+       <inertial>
+        <mass>1.447</mass>
+        <pose>0 0 0 0 0 0</pose>
+        <inertia>
+          <ixx>1.0</ixx>
+          <iyy>1.0</iyy>
+          <izz>1</izz>
+        </inertia>
+      </inertial>
+
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <scale>0.001 0.001 0.001</scale>
+            <uri>model://CSSD Trolley/meshes/Trolley_Abdullah_v2.STL</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <scale>0.001 0.001 0.001</scale>
+            <uri>model://CSSD Trolley/meshes/Trolley_Abdullah_v2.STL</uri>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+  </model>
+</sdf>
+

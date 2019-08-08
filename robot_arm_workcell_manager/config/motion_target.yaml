@@ -2,7 +2,9 @@
 # Check YAML: http://www.yamllint.com/
 
 named_target:
-  home_position:        {type: "joint_space_goal", values: [0, -2.107, 1.795, 0.354, 1.571,   0],   velFactor: 0.4}
+  home_position:        {type: "joint_space_goal", values: [0, -1.907, 1.355, 0.354, 1.571,   0],   velFactor: 0.4}
+# [0, -2.107, 1.795, 0.354, 1.571,   0]
+
   low_home_position:    {type: "joint_space_goal", values: [-0.098,-1.761,2.141,-0.321,1.487, 0], velFactor: 0.4}
   pre_place_position:   {type: "joint_space_goal", values: [1.550,-2.027,2.079,-0.062,1.614,  0], velFactor: 0.4}
   pre_place_pose:       {type: "eef_pose_goal", values: [0.3,0.3,1,0,0,1.5], velFactor: 0.4}

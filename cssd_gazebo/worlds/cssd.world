@@ -124,28 +124,28 @@
       <pose frame=''>1.36612 -0.244889 0 0 -0 0</pose>
     </model>
     <state world_name='default'>
-      <sim_time>1044 131000000</sim_time>
-      <real_time>95 595054708</real_time>
-      <wall_time>1565230810 692019085</wall_time>
-      <iterations>94393</iterations>
+      <sim_time>1474 585000000</sim_time>
+      <real_time>83 247755777</real_time>
+      <wall_time>1565251220 277255784</wall_time>
+      <iterations>62693</iterations>
       <model name='CSSD Shelf'>
-        <pose frame=''>1.00076 -0.682392 0 1.57 -0 1.57</pose>
+        <pose frame=''>1.42541 0.049957 -0.000343 1.57 0 -1.57</pose>
         <scale>1 1 1</scale>
         <link name='link'>
-          <pose frame=''>1.00076 -0.682392 0 1.57 -0 1.57</pose>
+          <pose frame=''>1.42541 0.049957 -0.000343 1.57 0 -1.57</pose>
           <velocity>0 0 0 0 -0 0</velocity>
           <acceleration>0 0 0 0 -0 0</acceleration>
           <wrench>0 0 0 0 -0 0</wrench>
         </link>
       </model>
       <model name='CSSD Tray 4'>
-        <pose frame=''>1.3061 0.047904 0.40517 0.009747 0.000769 3.14111</pose>
+        <pose frame=''>1.29488 0.307324 0.785421 -0.005306 0.004058 3.13852</pose>
         <scale>1 1 1</scale>
         <link name='tray'>
-          <pose frame=''>1.3061 0.047904 0.40517 0.009747 0.000769 3.14111</pose>
+          <pose frame=''>1.29488 0.307324 0.785421 -0.005306 0.004058 3.13852</pose>
           <velocity>0 0 0 0 -0 0</velocity>
-          <acceleration>0 0 0 0 -0 0</acceleration>
-          <wrench>0 0 0 0 -0 0</wrench>
+          <acceleration>-1.01194 -2.1475 -5.84421 2.93045 0.28668 2.47285</acceleration>
+          <wrench>-0.607167 -1.2885 -3.50652 0 -0 0</wrench>
         </link>
       </model>
       <model name='ground_plane'>
@@ -164,7 +164,7 @@
     </state>
     <gui fullscreen='0'>
       <camera name='user_camera'>
-        <pose frame=''>-1.33818 0.382625 1.34663 -0 0.336179 -0.452165</pose>
+        <pose frame=''>-0.190881 3.01306 1.44991 -0 0.280179 -0.909802</pose>
         <view_controller>orbit</view_controller>
         <projection_type>perspective</projection_type>
       </camera>

@@ -5,6 +5,7 @@ marker_id:
   marker_0: {type: "tray_marker" }
   marker_1: {type: "tray_marker" }
   marker_2: {type: "tray_marker" }
+  marker_3: {type: "tray_marker" }
   marker_100: {type: "compartment_marker" }
   marker_101: {type: "compartment_marker" }
   marker_102: {type: "compartment_marker" }
@@ -16,12 +17,15 @@ marker_extended_frames:
 
 markers_extended_tf:
   tray_marker:
-    pre-pick:   [0,   0.05,   0.33,   1.57,   -1.57,    0]
-    insert:     [0,   0.05,   0,     1.57,   -1.57,    0]
-    lift:       [0,   0,      0,     1.57,   -1.57,    0]
-    post-pick:  [0,   0,      0.33,   1.57,   -1.57,    0]
+    pre-pick:   [0,   0.012,   0.33,   1.57,   -1.57,    0]
+    insert:     [0,   0.012,   0.06,     1.57,   -1.57,    0]
+    lift:       [0,   -0.02,   0.06,     1.57,   -1.57,    0]
+    post-pick:  [0,   -0.02,   0.33,   1.57,   -1.57,    0]
   compartment_marker:     
     pre-place:  [0,   -0.1,   0.33,   1.57,   -1.57,    0]
     insert:     [0,   -0.1,   0,     1.57,   -1.57,    0]
     drop:       [0,   -0.05,  0,     1.57,   -1.57,    0]
     post-place: [0,   -0.05,  0.33,   1.57,   -1.57,    0]
+
+# TODO
+eef_to_tool_offset: 0.043
