@@ -5,7 +5,7 @@ Robot arm manipulation with moveit and fiducial markers. This Robot Arm manipula
 
 ![alt text](/documentations/rviz_bot.png?)
 
-**Gazebo** (in development)
+**Testing on Gazebo** (in development)
 ![alt text](/documentations/gazebo.png?)
 
 ---
