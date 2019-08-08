@@ -5,6 +5,9 @@ Robot arm manipulation with moveit and fiducial markers. This Robot Arm manipula
 
 ![alt text](/documentations/rviz_bot.png?)
 
+**Testing on Gazebo** (in development)
+![alt text](/documentations/gazebo.png?)
+
 ---
 
 ## Getting Started
@@ -24,6 +27,7 @@ sudo apt-get install ros-melodic-fiducial-msgs
 ```
 - rmf_msgs: [here](null)
 
+- Work together with: CSSD_workcell_manager (ROS2)
 
 ### Make and Build
 ```
@@ -100,6 +104,9 @@ roslaunch robot_arm_workcell_manager robot_arm_workcell_manager.launch
 
 Then send the same `DispenserRequest.msg` as above. 
 
+
+**IN DEVELOPMENT**
+
 ---
 
 ## Multiple Robot Arm Testing
@@ -127,6 +134,7 @@ Note: This function is currently in development. TODO: create namespace for tf_l
 - Camera calib is tuned, and written here: `/config/usb_cam.yaml`
 - Dispenser req will be received by RAWM, id: with convention of `marker_{$fiducial_id}`
 - Use Ros_bridge to link ros1 msg to ros2
+- Models must be moved to .gazebo folder in home directory to insert new model
 
 
 ## TODO
