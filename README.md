@@ -117,6 +117,7 @@ Then send the same `DispenserRequest.msg` as above.
 - Camera calib is tuned, and written here: `/config/usb_cam.yaml`
 - Dispenser req will be received by RAWM, id: with convention of `marker_{$fiducial_id}`
 - Use Ros_bridge to link ros1 msg to ros2
+- Models must be moved to .gazebo folder in home directory to insert new model
 
 
 ## TODO
