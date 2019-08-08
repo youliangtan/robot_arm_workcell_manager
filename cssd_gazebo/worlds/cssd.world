@@ -124,15 +124,25 @@
       <pose frame=''>1.36612 -0.244889 0 0 -0 0</pose>
     </model>
     <state world_name='default'>
-      <sim_time>351 843000000</sim_time>
-      <real_time>353 494423266</real_time>
-      <wall_time>1565063902 632929610</wall_time>
-      <iterations>351843</iterations>
+      <sim_time>1044 131000000</sim_time>
+      <real_time>95 595054708</real_time>
+      <wall_time>1565230810 692019085</wall_time>
+      <iterations>94393</iterations>
       <model name='CSSD Shelf'>
-        <pose frame=''>1 -1.6335 0 1.57 -0 1.57</pose>
+        <pose frame=''>1.00076 -0.682392 0 1.57 -0 1.57</pose>
         <scale>1 1 1</scale>
         <link name='link'>
-          <pose frame=''>1 -1.6335 0 1.57 -0 1.57</pose>
+          <pose frame=''>1.00076 -0.682392 0 1.57 -0 1.57</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link>
+      </model>
+      <model name='CSSD Tray 4'>
+        <pose frame=''>1.3061 0.047904 0.40517 0.009747 0.000769 3.14111</pose>
+        <scale>1 1 1</scale>
+        <link name='tray'>
+          <pose frame=''>1.3061 0.047904 0.40517 0.009747 0.000769 3.14111</pose>
           <velocity>0 0 0 0 -0 0</velocity>
           <acceleration>0 0 0 0 -0 0</acceleration>
           <wrench>0 0 0 0 -0 0</wrench>
@@ -154,10 +164,85 @@
     </state>
     <gui fullscreen='0'>
       <camera name='user_camera'>
-        <pose frame=''>-1.61213 0.540663 3.31871 0 0.937796 -0.243823</pose>
+        <pose frame=''>-1.33818 0.382625 1.34663 -0 0.336179 -0.452165</pose>
         <view_controller>orbit</view_controller>
         <projection_type>perspective</projection_type>
       </camera>
     </gui>
+    <model name='CSSD Tray 4'>
+      <static>0</static>
+      <link name='tray'>
+        <pose frame=''>0 0 0 0 -0 0</pose>
+        <inertial>
+          <mass>0.6</mass>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <inertia>
+            <ixx>0.01</ixx>
+            <iyy>0.02</iyy>
+            <izz>0.01</izz>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyz>0</iyz>
+          </inertia>
+        </inertial>
+        <collision name='collision'>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>model://CSSD Tray/meshes/Tray_Assem_Locating_Stand-off.STL</uri>
+            </mesh>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+            <friction>
+              <torsional>
+                <ode/>
+              </torsional>
+              <ode/>
+            </friction>
+          </surface>
+        </collision>
+        <visual name='visual'>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>model://CSSD Tray/meshes/Tray_Assem_Locating_Stand-off.STL</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <visual name='marker'>
+          <pose frame=''>0.153 -0 0.0825 3.14159 -1.57079 -9.3e-05</pose>
+          <geometry>
+            <box>
+              <size>0.04 0.04 1e-05</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://aruco_visual_marker_3/materials/scripts</uri>
+              <uri>model://aruco_visual_marker_3/materials/textures</uri>
+              <name>ArucoVisualMarker3/Marker</name>
+            </script>
+            <ambient>1 1 1 1</ambient>
+            <diffuse>1 1 1 1</diffuse>
+            <specular>0 0 0 1</specular>
+            <emissive>1 1 1 0</emissive>
+            <shader type='vertex'>
+              <normal_map>__default__</normal_map>
+            </shader>
+          </material>
+          <cast_shadows>1</cast_shadows>
+          <transparency>0</transparency>
+        </visual>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+      <pose frame=''>1.30635 0.044962 0 0 -0 0</pose>
+    </model>
   </world>
 </sdf>
