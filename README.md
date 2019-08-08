@@ -5,6 +5,9 @@ Robot arm manipulation with moveit and fiducial markers. This Robot Arm manipula
 
 ![alt text](/documentations/rviz_bot.png?)
 
+**Gazebo** (in development)
+![alt text](/documentations/gazebo.png?)
+
 ---
 
 ## Getting Started
@@ -88,8 +91,6 @@ While the task is ongoing, user can check state of the arm_workcell by rostopic 
 ---
 
 ## Gazebo Environment Testing
-
-![alt text](/documentations/gazebo.png?)
 
 Use Gazebo environment to test the pick and place of the workcell.
 
