@@ -1,0 +1,66 @@
+<?xml version='1.0'?>
+<sdf version='1.6'>
+  <model name='CSSD Tray 4'>
+      <static>false</static>
+      <link name='tray'>
+        <pose frame=''>0 0 0 0 -0 0</pose>
+
+        <inertial>
+          <mass>0.6</mass>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <inertia>
+            <ixx>0.01</ixx>
+            <iyy>0.02</iyy>
+            <izz>0.01</izz>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyz>0</iyz>
+          </inertia>
+        </inertial>
+
+        <collision name='collision'>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>model://CSSD Tray/meshes/Tray_Assem_Locating_Stand-off.STL</uri>
+            </mesh>
+          </geometry>
+        </collision>
+
+        <visual name='visual'>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>model://CSSD Tray/meshes/Tray_Assem_Locating_Stand-off.STL</uri>
+            </mesh>
+          </geometry>
+        </visual>
+
+      <visual name='marker'>
+	<pose frame=''> 0.153 -0 0.0825 0 -1.5708 3.1415 </pose>
+	 <geometry>
+            <box>
+              <size>0.04 0.04 1e-05</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://aruco_visual_marker_3/materials/scripts</uri>
+              <uri>model://aruco_visual_marker_3/materials/textures</uri>
+              <name>ArucoVisualMarker3/Marker</name>
+            </script>
+            <ambient>1 1 1 1</ambient>
+            <diffuse>1 1 1 1</diffuse>
+            <specular>0 0 0 1</specular>
+            <emissive>1 1 1 0</emissive>
+            <shader type='vertex'>
+              <normal_map>__default__</normal_map>
+            </shader>
+          </material>
+          <cast_shadows>1</cast_shadows>
+          <transparency>0</transparency>
+	</visual>
+
+   </link>
+  </model>
+</sdf>
