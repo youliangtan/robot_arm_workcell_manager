@@ -6,12 +6,12 @@
         <pose frame=''>0 0 0 0 -0 0</pose>
 
         <inertial>
-          <mass>0.6</mass>
-          <pose frame=''>0 0 0 0 -0 0</pose>
+          <mass>1.44</mass>
+          <pose frame=''>0 0.05943  0.00131 -0 0</pose>
           <inertia>
-            <ixx>0.01</ixx>
-            <iyy>0.02</iyy>
-            <izz>0.01</izz>
+            <ixx>0.0175</ixx>
+            <iyy>0.0463</iyy>
+            <izz>0.0303</izz>
             <ixy>0</ixy>
             <ixz>0</ixz>
             <iyz>0</iyz>

@@ -124,10 +124,10 @@
       <pose frame=''>1.36612 -0.244889 0 0 -0 0</pose>
     </model>
     <state world_name='default'>
-      <sim_time>1474 585000000</sim_time>
-      <real_time>83 247755777</real_time>
-      <wall_time>1565251220 277255784</wall_time>
-      <iterations>62693</iterations>
+      <sim_time>1519 695000000</sim_time>
+      <real_time>76 394811866</real_time>
+      <wall_time>1565614246 482887343</wall_time>
+      <iterations>45110</iterations>
       <model name='CSSD Shelf'>
         <pose frame=''>1.42541 0.049957 -0.000343 1.57 0 -1.57</pose>
         <scale>1 1 1</scale>
@@ -138,14 +138,14 @@
           <wrench>0 0 0 0 -0 0</wrench>
         </link>
       </model>
-      <model name='CSSD Tray 4'>
-        <pose frame=''>1.29488 0.307324 0.785421 -0.005306 0.004058 3.13852</pose>
+      <model name='CSSD Tray 3'>
+        <pose frame=''>1.29626 0.309776 0.784158 -0.012067 0.006651 3.14035</pose>
         <scale>1 1 1</scale>
         <link name='tray'>
-          <pose frame=''>1.29488 0.307324 0.785421 -0.005306 0.004058 3.13852</pose>
-          <velocity>0 0 0 0 -0 0</velocity>
-          <acceleration>-1.01194 -2.1475 -5.84421 2.93045 0.28668 2.47285</acceleration>
-          <wrench>-0.607167 -1.2885 -3.50652 0 -0 0</wrench>
+          <pose frame=''>1.29626 0.309776 0.784158 -0.012067 0.006651 3.14035</pose>
+          <velocity>4.2e-05 1e-05 -0.005814 0.061746 -0.021193 -0.000252</velocity>
+          <acceleration>0.041048 -0.022924 -0.863553 -2.63045 -0.29389 -2.87067</acceleration>
+          <wrench>0.024629 -0.013754 -0.518132 0 -0 0</wrench>
         </link>
       </model>
       <model name='ground_plane'>
@@ -164,12 +164,12 @@
     </state>
     <gui fullscreen='0'>
       <camera name='user_camera'>
-        <pose frame=''>-0.190881 3.01306 1.44991 -0 0.280179 -0.909802</pose>
+        <pose frame=''>2.31882 1.11659 1.22981 0 0.46818 -2.4938</pose>
         <view_controller>orbit</view_controller>
         <projection_type>perspective</projection_type>
       </camera>
     </gui>
-    <model name='CSSD Tray 4'>
+    <model name='CSSD Tray 3'>
       <static>0</static>
       <link name='tray'>
         <pose frame=''>0 0 0 0 -0 0</pose>
@@ -242,7 +242,7 @@
         <enable_wind>0</enable_wind>
         <kinematic>0</kinematic>
       </link>
-      <pose frame=''>1.30635 0.044962 0 0 -0 0</pose>
+      <pose frame=''>1.57931 0.246722 0 0 -0 0</pose>
     </model>
   </world>
 </sdf>

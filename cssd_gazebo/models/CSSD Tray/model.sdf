@@ -4,18 +4,20 @@
       <static>1</static>
       <link name='tray'>
         <pose frame=''>0 0 0 0 -0 0</pose>
+
         <inertial>
-          <mass>1.447</mass>
-          <pose frame=''>0 0 0 0 -0 0</pose>
+          <mass>1.44</mass>
+          <pose frame=''>0 0.05943  0.00131 -0 0</pose>
           <inertia>
-            <ixx>1</ixx>
-            <iyy>1</iyy>
-            <izz>1</izz>
+            <ixx>0.0175</ixx>
+            <iyy>0.0463</iyy>
+            <izz>0.0303</izz>
             <ixy>0</ixy>
             <ixz>0</ixz>
             <iyz>0</iyz>
           </inertia>
         </inertial>
+
         <collision name='collision'>
           <geometry>
             <mesh>

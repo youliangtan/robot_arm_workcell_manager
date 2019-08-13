@@ -18,8 +18,8 @@ marker_extended_frames:
 markers_extended_tf:
   tray_marker:
     pre-pick:   [0,   0.012,   0.33,   1.57,   -1.57,    0]
-    insert:     [0,   0.012,   0.06,     1.57,   -1.57,    0]
-    lift:       [0,   -0.02,   0.06,     1.57,   -1.57,    0]
+    insert:     [0,   0.012,   0.04,     1.57,   -1.57,    0]
+    lift:       [0,   -0.02,   0.04,     1.57,   -1.57,    0]
     post-pick:  [0,   -0.02,   0.33,   1.57,   -1.57,    0]
   compartment_marker:     
     pre-place:  [0,   -0.1,   0.33,   1.57,   -1.57,    0]
