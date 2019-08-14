@@ -124,3 +124,8 @@ Then send the same `DispenserRequest.msg` as above.
 - Namespace for rosparam (senario of runnin multiple robot arms)
 - Fix camera frame between `camera_optical_frame` and `camera`  (and update new tf tree), Upsidedown case!!
 - Gazebo simulation
+- Stop remaining motion when one of the motion in the middle fails. (e.g stop unloading if one of the loading motion fails)
+- Set start point before executing every motion.
+Error statement: Invalid Trajectory: start point deviates from current robot state more than 0.01
+joint 'shoulder_pan_joint': expected: 0.215141, current: 0.204255
+
