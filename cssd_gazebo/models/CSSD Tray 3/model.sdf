@@ -1,17 +1,18 @@
 <?xml version='1.0'?>
 <sdf version='1.6'>
   <model name='CSSD Tray 3'>
-      <static>false</static>
+      <static>0</static>
+      <allow_auto_disable>0</allow_auto_disable>
       <link name='tray'>
         <pose frame=''>0 0 0 0 -0 3.14</pose>
 
         <inertial>
-          <mass>1.44</mass>
-          <pose frame=''>0 0.05943  0.00131 -0 0</pose>
+          <mass>1.45</mass>
+          <pose frame=''>0 0 0.06  0 -0 0</pose>
           <inertia>
-            <ixx>0.0175</ixx>
-            <iyy>0.0463</iyy>
-            <izz>0.0303</izz>
+            <ixx>0.03</ixx>
+            <iyy>0.02</iyy>
+            <izz>0.05</izz>
             <ixy>0</ixy>
             <ixz>0</ixz>
             <iyz>0</iyz>
@@ -25,14 +26,33 @@
               <uri>model://CSSD Tray/meshes/Tray_Assem_Locating_Stand-off.STL</uri>
             </mesh>
           </geometry>
+         <surface>
+          <contact>
+            <poissons_ratio>0.35</poissons_ratio>
+            <elastic_modulus>7e+10</elastic_modulus>
+            <ode>
+              <kp>1e+12</kp>
+              <kd>2e+4</kd>
+              <max_vel>10</max_vel>
+              <min_depth>0.00</min_depth>
+            </ode>
+          </contact>
+          <friction>
+            <ode>
+            <mu>1</mu>
+            <mu2>1</mu2>
+            <slip1>0</slip1>
+            <slip2>0</slip2>
+            </ode>
 
-	  <friction>
-	    <torsional>
-	      <coefficient> 0.05 </coefficient>
-	      <use_patch_radius> false </use_patch_radius>
+            <torsional>
+              <coefficient>1</coefficient>
+              <use_patch_radius>0</use_patch_radius>
+              <surface_radius>0.01</surface_radius>
+            </torsional>
+          </friction>
+        </surface>
 
-	    </torsional>
-	  </friction>
         </collision>
 
         <visual name='visual'>
@@ -43,9 +63,8 @@
             </mesh>
           </geometry>
         </visual>
-
-      <visual name='marker'>
-	<pose frame=''> 0.153 -0 0.0825 0 -1.5708 3.1415 </pose>
+       <visual name='marker'>
+	<pose frame=''> 0.154 -0 0.0824 0 -1.57 3.14 </pose>
 	 <geometry>
             <box>
               <size>0.04 0.04 1e-05</size>
@@ -69,6 +88,7 @@
           <transparency>0</transparency>
 	</visual>
 
-   </link>
-  </model>
+      </link>
+      <pose frame=''>0 0 0 0 -0 0</pose>
+    </model>
 </sdf>

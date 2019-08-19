@@ -1,17 +1,17 @@
 <?xml version='1.0'?>
 <sdf version='1.6'>
   <model name='CSSD Tray 2'>
-      <static>false</static>
+      <static>0</static>
       <link name='tray'>
-        <pose frame=''>0 0 0 0 -0 0</pose>
+        <pose frame=''>0 0 0 0 -0 3.14</pose>
 
         <inertial>
-          <mass>1.44</mass>
-          <pose frame=''>0 0.05943  0.00131 -0 0</pose>
+          <mass>1.45</mass>
+          <pose frame=''>0 0 0.06  0 -0 0</pose>
           <inertia>
-            <ixx>0.0175</ixx>
-            <iyy>0.0463</iyy>
-            <izz>0.0303</izz>
+            <ixx>0.03</ixx>
+            <iyy>0.02</iyy>
+            <izz>0.05</izz>
             <ixy>0</ixy>
             <ixz>0</ixz>
             <iyz>0</iyz>
@@ -35,9 +35,8 @@
             </mesh>
           </geometry>
         </visual>
-
-      <visual name='marker'>
-	<pose frame=''> 0.153 -0 0.0825 0 -1.5708 3.1415 </pose>
+       <visual name='marker'>
+	<pose frame=''> 0.154 -0 0.0824 0 -1.57 3.14 </pose>
 	 <geometry>
             <box>
               <size>0.04 0.04 1e-05</size>
@@ -47,7 +46,7 @@
             <script>
               <uri>model://aruco_visual_marker_2/materials/scripts</uri>
               <uri>model://aruco_visual_marker_2/materials/textures</uri>
-              <name>ArucoVisualMarker3/Marker</name>
+              <name>ArucoVisualMarker2/Marker</name>
             </script>
             <ambient>1 1 1 1</ambient>
             <diffuse>1 1 1 1</diffuse>
@@ -61,6 +60,7 @@
           <transparency>0</transparency>
 	</visual>
 
-   </link>
-  </model>
+      </link>
+      <pose frame=''>0 0 0 0 -0 0</pose>
+    </model>
 </sdf>

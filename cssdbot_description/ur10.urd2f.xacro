@@ -1,7 +1,6 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://wiki.ros.org/xacro">
 
-
   <xacro:include filename="$(find ur_description)/urdf/ur.transmission.xacro" />
   <xacro:include filename="$(find ur_description)/urdf/ur.gazebo.xacro" />
 
@@ -84,6 +83,14 @@
       </xacro:cylinder_inertial>
     </link>
 
+    <gazebo reference="${prefix}base_link">
+      <kp>10000000.0</kp>
+      <kd>1.0</kd>
+      <mu1>1.0</mu1>
+      <mu2>1.0</mu2>
+      <minDepth>0.001</minDepth> 
+    </gazebo>
+	
     <joint name="${prefix}shoulder_pan_joint" type="revolute">
       <parent link="${prefix}base_link" />
       <child link = "${prefix}shoulder_link" />
@@ -97,6 +104,10 @@
       </xacro:if>
       <dynamics damping="0.0" friction="0.0"/>
     </joint>
+
+    <gazebo reference="${prefix}shoulder_pan_joint">
+      <implicitSpringDamper>1</implicitSpringDamper>
+    </gazebo>
 
     <link name="${prefix}shoulder_link">
       <visual>
@@ -117,6 +128,14 @@
       </xacro:cylinder_inertial>
     </link>
 
+    <gazebo reference="${prefix}shoulder_link">
+      <kp>10000000.0</kp>
+      <kd>1.0</kd>
+      <mu1>1.0</mu1>
+      <mu2>1.0</mu2>
+      <minDepth>0.001</minDepth> 
+    </gazebo>
+	
     <joint name="${prefix}shoulder_lift_joint" type="revolute">
       <parent link="${prefix}shoulder_link" />
       <child link = "${prefix}upper_arm_link" />
@@ -130,6 +149,10 @@
       </xacro:if>
       <dynamics damping="0.0" friction="0.0"/>
     </joint>
+
+    <gazebo reference="${prefix}shoulder_lift_joint">
+      <implicitSpringDamper>1</implicitSpringDamper>
+    </gazebo>
 
     <link name="${prefix}upper_arm_link">
       <visual>
@@ -150,6 +173,14 @@
       </xacro:cylinder_inertial>
     </link>
 
+    <gazebo reference="${prefix}upper_arm_link">
+      <kp>10000000.0</kp>
+      <kd>1.0</kd>
+      <mu1>1.0</mu1>
+      <mu2>1.0</mu2>
+      <minDepth>0.001</minDepth> 
+    </gazebo>
+
     <joint name="${prefix}elbow_joint" type="revolute">
       <parent link="${prefix}upper_arm_link" />
       <child link = "${prefix}forearm_link" />
@@ -163,6 +194,10 @@
       </xacro:if>
       <dynamics damping="0.0" friction="0.0"/>
     </joint>
+
+    <gazebo reference="${prefix}elbow_joint">
+      <implicitSpringDamper>1</implicitSpringDamper>
+    </gazebo>
 
     <link name="${prefix}forearm_link">
       <visual>
@@ -183,6 +218,14 @@
       </xacro:cylinder_inertial>
     </link>
 
+    <gazebo reference="${prefix}forearm_link">
+      <kp>10000000.0</kp>
+      <kd>1.0</kd>
+      <mu1>1.0</mu1>
+      <mu2>1.0</mu2>
+      <minDepth>0.001</minDepth> 
+    </gazebo>
+
     <joint name="${prefix}wrist_1_joint" type="revolute">
       <parent link="${prefix}forearm_link" />
       <child link = "${prefix}wrist_1_link" />
@@ -196,6 +239,10 @@
       </xacro:if>
       <dynamics damping="0.0" friction="0.0"/>
     </joint>
+
+    <gazebo reference="${prefix}wrist_1_joint">
+      <implicitSpringDamper>1</implicitSpringDamper>
+    </gazebo>
 
     <link name="${prefix}wrist_1_link">
       <visual>
@@ -216,6 +263,14 @@
       </xacro:cylinder_inertial>
     </link>
 
+    <gazebo reference="${prefix}wrist_1_link">
+      <kp>10000000.0</kp>
+      <kd>1.0</kd>
+      <mu1>1.0</mu1>
+      <mu2>1.0</mu2>
+      <minDepth>0.001</minDepth> 
+    </gazebo>
+
     <joint name="${prefix}wrist_2_joint" type="revolute">
       <parent link="${prefix}wrist_1_link" />
       <child link = "${prefix}wrist_2_link" />
@@ -229,6 +284,10 @@
       </xacro:if>
       <dynamics damping="0.0" friction="0.0"/>
     </joint>
+
+    <gazebo reference="${prefix}wrist_2_joint">
+      <implicitSpringDamper>1</implicitSpringDamper>
+    </gazebo>
 
     <link name="${prefix}wrist_2_link">
       <visual>
@@ -249,6 +308,14 @@
       </xacro:cylinder_inertial>
     </link>
 
+    <gazebo reference="${prefix}wrist_2_link">
+      <kp>10000000.0</kp>
+      <kd>1.0</kd>
+      <mu1>1.0</mu1>
+      <mu2>1.0</mu2>
+      <minDepth>0.001</minDepth> 
+    </gazebo>
+
     <joint name="${prefix}wrist_3_joint" type="revolute">
       <parent link="${prefix}wrist_2_link" />
       <child link = "${prefix}wrist_3_link" />
@@ -263,6 +330,10 @@
       <dynamics damping="0.0" friction="0.0"/>
     </joint>
 
+    <gazebo reference="${prefix}wrist_3_joint">
+      <implicitSpringDamper>1</implicitSpringDamper>
+    </gazebo>
+   
     <link name="${prefix}wrist_3_link">
       <visual>
         <geometry>
@@ -282,12 +353,25 @@
       </xacro:cylinder_inertial>
     </link>
 
+    <gazebo reference="${prefix}wrist_3_link">
+      <kp>10000000.0</kp>
+      <kd>1.0</kd>
+      <mu1>1.0</mu1>
+      <mu2>1.0</mu2>
+      <minDepth>0.001</minDepth> 
+    </gazebo>
+
     <joint name="${prefix}ee_fixed_joint" type="fixed">
       <parent link="${prefix}wrist_3_link" />
       <child link = "${prefix}ee_link" />
       <origin xyz="0.0 ${wrist_3_length} 0.0" rpy="0.0 0.0 ${pi/2.0}" />
     </joint>
 
+    <gazebo reference="${prefix}ee_fixed_joint">
+      <implicitSpringDamper>1</implicitSpringDamper>
+    </gazebo>
+
+   
     <link name="${prefix}ee_link">
       <collision>
         <geometry>
@@ -297,6 +381,11 @@
       </collision>
     </link>
 
+    <gazebo reference="${prefix}ee_link">
+      <implicitSpringDamper>1</implicitSpringDamper>
+    </gazebo>
+
+
 <!--end effector-->
   <joint name="${prefix}end_effector_joint" type="fixed">
       <parent link="${prefix}ee_link" />
@@ -304,24 +393,27 @@
       <origin xyz="0.0 0.0 0.0" rpy="0.0 0 0.0" />
     </joint>
 
+
+    <gazebo reference="${prefix}end_effector_joint">
+      <implicitSpringDamper>1</implicitSpringDamper>
+    </gazebo>
+
     <link name="${prefix}end_effector_link">
       <visual>
-        <geometry>	  
-          <mesh filename="package://cssdbot_description/meshes/visual/end_effector.STL" scale = "0.001 0.001 0.001"/>
+        <geometry>
+          <mesh filename="package://cssdbot_description/meshes/visual/end_effector.STL"/>
         </geometry>
-        <origin xyz="0.0 0.0 0.0" rpy="3.14 0 0" />
+        <origin xyz="0.005 0.0 0.0" rpy="3.14 0 0" />
         <material name="LightGrey">
           <color rgba="0.7 0.7 0.7 1.0"/>
         </material>
       </visual>
-
       <collision>
         <geometry>
-          <mesh filename="package://cssdbot_description/meshes/collision/end_effector.STL" scale = "0.001 0.001 0.001"/>
+          <mesh filename="package://cssdbot_description/meshes/collision/end_effector.STL"/>
         </geometry>
-	<origin xyz="0.0 0.0 0.0" rpy="3.14 0 0" />
+	<origin xyz="0.005 0.0 0.0" rpy="3.14 0.0 0" />
       </collision>
-
       <inertial>
         <origin xyz="0.06804 0.002 -0.046" rpy="0 0 0"/>
         <mass value="1.731"/>
@@ -333,43 +425,18 @@
       </xacro:cylinder_inertial> -->
     </link>
 
- <gazebo reference="${prefix}end_effector_link">
-   <mu1>1</mu1>
-   <mu2>1</mu2>
-   <fdir1>1 0 0</fdir1>
-   <maxContacts>1</maxContacts>
-   <minDepth>0.001</minDepth>
-   <gravity>true</gravity>
-   <collision name="eef_collision">
-     <geometry>
-        <mesh filename="package://cssdbot_description/meshes/visual/end_effector.STL" scale = "0.001 0.001 0.001"/>
 
-     </geometry>
+    <gazebo reference="${prefix}end_effector_link">
+      <kp>10000000.0</kp>
+      <kd>1.0</kd>
+      <mu1>1.0</mu1>
+      <mu2>1.0</mu2>
+      <minDepth>0.001</minDepth> 
+    </gazebo>
 
-     <surface>
-       <friction>
-         <torsional>
-           <coefficient>10</coefficient>
-           <use_patch_radius>false</use_patch_radius>
-           <!-- should be the same as collision sphere radius -->
-           <surface_radius>0.02175</surface_radius>
-           <patch_radius>0.01</patch_radius>
-         </torsional>
-       </friction>
-       <contact>
-         <poissons_ratio>0.5</poissons_ratio>
-         <elastic_modulus>1e8</elastic_modulus>
-       </contact>
-     </surface>
-   </collision>
- </gazebo>
-
-
-
-<!-- <kd>1000000000</kd>
-    <minDepth>0</minDepth>
--->
 <!--end of end effector-->
+
+
 
 <!-- start of camera -->
   <joint name="camera_optical_joint" type="fixed">
