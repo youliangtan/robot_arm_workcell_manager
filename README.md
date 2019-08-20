@@ -116,3 +116,5 @@ Then send the same `DispenserRequest.msg` as above.
 - Namespace for rosparam (senario of runnin multiple robot arms)
 - Fix camera frame between `camera_optical_frame` and `camera`  (and update new tf tree), Upsidedown case!!
 - Gazebo simulation
+  - initial joint position in joint
+  - friction of eef
