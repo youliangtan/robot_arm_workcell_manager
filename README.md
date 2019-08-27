@@ -113,7 +113,7 @@ Then send the same `DispenserRequest.msg` as above.
 1. Models phasing through eef due to mesh of tray being too thin. Solved by adding another collision box in the tray result is seen in picture below. If items are to go into the box, bitmask is needed
 ![alt text](/documentations/picking_up_tray.png)
 
-2. Models jitters. 
+2. Models jitters on ground and arm. 
 - Tuned [kp](http://sdformat.org/spec?ver=1.6&elem=collision#ode_kp) and [kd](http://sdformat.org/spec?ver=1.6&elem=collision#ode_kd) but more fine tunning needed
 - Changed arm urdf. Not sure if it's right but follow [pr2 arm urdf](https://github.com/PR2/pr2_common/blob/melodic-devel/pr2_description/urdf/gripper_v0/gripper.gazebo.xacro) but different from what is written in [tutorial](http://gazebosim.org/tutorials?tut=ros_urdf&cat=connect_ros).
 
