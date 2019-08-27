@@ -96,9 +96,9 @@ roslaunch cssd_gazebo ur10_gazebo.launch
 Terminal B: Run RAWM
 roslaunch robot_arm_workcell_manager robot_arm_workcell_manager.launch
 
-*** you will notice that the gazebo and RAWM terminal is unable to finish launch file. This is due to gazebo hacking method to initialise joint in the home position. Wait for a few seconds then press play at the bottom of gazebo.
 ```
 
+***You will notice that the gazebo and RAWM terminal is unable to finish launch file. This is due to gazebo hacking method to initialise joint in the home position. Wait for a few seconds then press play at the bottom of gazebo. May not work***
 Then send the same `DispenserRequest.msg` as above. 
 
 ### Adding models
