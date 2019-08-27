@@ -5,25 +5,34 @@ Robot arm manipulation with moveit and fiducial markers. This Robot Arm manipula
 
 ![alt text](/documentations/rviz_bot.png?)
 
+**Testing on Gazebo** (in development)
+![alt text](/documentations/gazebo.png?)
+
 ---
 
 ## Getting Started
 
 ### Installation
+
 ```
 # ROS moveit stuffs
-# Robot Arm Dependencies
 # Gazebo Stuffs
 ```
 
 ### Dependencies
+
+- Universal Robot: [here](https://github.com/ros-industrial/universal_robot), **Remember to switch branch
+- HanWha: TBC
+
 - Fiducial Marker Detector: [here](https://github.com/UbiquityRobotics/fiducials)
 ```
 sudo apt-get install ros-melodic-aruco-detect
 sudo apt-get install ros-melodic-fiducial-msgs
 ```
-- rmf_msgs: [here](null)
 
+- rmf_msgs: [here](https://github.com/RMFHOPE/rmf_msgs_ros1), **Phasing Out Soon
+
+- Work together with: CSSD_workcell_manager (ROS2)
 
 ### Make and Build
 ```
@@ -88,17 +97,39 @@ While the task is ongoing, user can check state of the arm_workcell by rostopic 
 
 ## Gazebo Environment Testing
 
-Use Gazebo environment to test the pick and place of the workcell.
-
+### Running CSSD gazebo environment
 ```
-## Terminal A: Run Gazebo, alongside with Rviz and Moveit
+Terminal A: Run Gazebo, alongside with Rviz and Moveit
 roslaunch cssd_gazebo ur10_gazebo.launch
 
-## Terminal B: Run RAWM
+Terminal B: Run RAWM
 roslaunch robot_arm_workcell_manager robot_arm_workcell_manager.launch
+
 ```
 
+***You will notice that the gazebo and RAWM terminal is unable to finish launch file. This is due to gazebo hacking method to initialise joint in the home position. Wait for a few seconds then press play at the bottom of gazebo. May not work***
 Then send the same `DispenserRequest.msg` as above. 
+
+### Adding models
+1. Create .gazebo file in home directory
+2. Move all the model files in cssd_gazebo/models to .gazebo directory
+3. Model will appear under insert tab in gazebo
+
+***go to [this](http://sdformat.org/spec) link to see SDF format***
+
+### Issues
+
+1. Models phasing through eef due to mesh of tray being too thin. Solved by adding another collision box in the tray result is seen in picture below. If items are to go into the box, bitmask is needed
+![alt text](/documentations/picking_up_tray.png)
+
+2. Models jitters on ground and arm. 
+- Tuned [kp](http://sdformat.org/spec?ver=1.6&elem=collision#ode_kp) and [kd](http://sdformat.org/spec?ver=1.6&elem=collision#ode_kd) but more fine tunning needed
+- Changed arm urdf. Not sure if it's right but follow [pr2 arm urdf](https://github.com/PR2/pr2_common/blob/melodic-devel/pr2_description/urdf/gripper_v0/gripper.gazebo.xacro) but different from what is written in [tutorial](http://gazebosim.org/tutorials?tut=ros_urdf&cat=connect_ros).
+
+3. Lack of friction. Not solved.
+
+![](documentations/slip.gif)
+
 
 ---
 
@@ -110,9 +141,17 @@ Then send the same `DispenserRequest.msg` as above.
 - Camera calib is tuned, and written here: `/config/usb_cam.yaml`
 - Dispenser req will be received by RAWM, id: with convention of `marker_{$fiducial_id}`
 - Use Ros_bridge to link ros1 msg to ros2
+- Models must be moved to .gazebo folder in home directory to insert new model
 
 
 ## TODO
 - Namespace for rosparam (senario of runnin multiple robot arms)
 - Fix camera frame between `camera_optical_frame` and `camera`  (and update new tf tree), Upsidedown case!!
 - Gazebo simulation
+  - initial joint position in joint
+  - friction of eef
+- Stop remaining motion when one of the motion in the middle fails. (e.g stop unloading if one of the loading motion fails)
+- Set start point before executing every motion.
+Error statement: Invalid Trajectory: start point deviates from current robot state more than 0.01
+joint 'shoulder_pan_joint': expected: 0.215141, current: 0.204255
+

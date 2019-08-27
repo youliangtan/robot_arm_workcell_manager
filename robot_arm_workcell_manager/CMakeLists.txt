@@ -21,6 +21,7 @@ find_package(catkin REQUIRED COMPONENTS
   geometry_msgs
   ur_description
   ur_gazebo
+moveit_ros_move_group
   
   fiducial_msgs
   aruco_detect

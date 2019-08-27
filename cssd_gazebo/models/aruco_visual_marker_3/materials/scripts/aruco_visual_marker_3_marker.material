@@ -1,0 +1,13 @@
+material ArucoVisualMarker3/Marker
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture 5x5_1000-3.png
+			}
+		}
+	}
+}
