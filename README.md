@@ -88,17 +88,35 @@ While the task is ongoing, user can check state of the arm_workcell by rostopic 
 
 ## Gazebo Environment Testing
 
-Use Gazebo environment to test the pick and place of the workcell.
-
+### Running CSSD gazebo environment
 ```
-## Terminal A: Run Gazebo, alongside with Rviz and Moveit
+Terminal A: Run Gazebo, alongside with Rviz and Moveit
 roslaunch cssd_gazebo ur10_gazebo.launch
 
-## Terminal B: Run RAWM
+Terminal B: Run RAWM
 roslaunch robot_arm_workcell_manager robot_arm_workcell_manager.launch
+
+*** you will notice that the gazebo and RAWM terminal is unable to finish launch file. This is due to gazebo hacking method to initialise joint in the home position. Wait for a few seconds then press play at the bottom of gazebo.
 ```
 
 Then send the same `DispenserRequest.msg` as above. 
+
+### Adding models
+1. Create .gazebo file in home directory
+2. Move all the model files in cssd_gazebo/models to .gazebo directory
+3. Model will appear under insert tab in gazebo
+
+***go to [this](http://sdformat.org/spec) link to see SDF format***
+
+### Issues
+
+1. Models phasing through eef due to mesh of tray being too thin. Solved by adding another collision box in the tray result is seen in picture below. If items are to go into the box, bitmask is needed
+![alt text](/documentations/picking_up_tray.png)
+
+2. Models jitters. Tuned [kp](http://sdformat.org/spec?ver=1.6&elem=collision#ode_kp) and [kd](http://sdformat.org/spec?ver=1.6&elem=collision#ode_kd) but more fine tunning needed
+
+3. Lack of friction. Not solved.
+![](slip.gif)
 
 ---
 
