@@ -116,6 +116,7 @@ Then send the same `DispenserRequest.msg` as above.
 2. Models jitters. Tuned [kp](http://sdformat.org/spec?ver=1.6&elem=collision#ode_kp) and [kd](http://sdformat.org/spec?ver=1.6&elem=collision#ode_kd) but more fine tunning needed
 
 3. Lack of friction. Not solved.
+
 ![](documentations/slip.gif)
 
 ---
