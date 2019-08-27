@@ -18,24 +18,18 @@
           </inertia>
         </inertial>
 
-        <collision name='collision'>
-          <geometry>
-            <mesh>
-              <scale>1 1 1</scale>
-              <uri>model://CSSD Tray/meshes/Tray_Assem_Locating_Stand-off.STL</uri>
-            </mesh>
-          </geometry>
-        </collision>
-
-      <collision name="inside tray">    
-	<pose> 0 0 0.11 </pose>
-	<geometry>
-	  <box>
-            <size>0.30 0.35 0.1</size>
-          </box>
-	</geometry>
+      <collision name="collision">
+        <max_contact>20</max_contact>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://CSSD Tray/meshes/Tray_Assem_Locating_Stand-off.STL</uri>
+          </mesh>
+        </geometry>
         <surface>
           <contact>
+            <poissons_ratio>0.35</poissons_ratio>
+            <elastic_modulus>7e+10</elastic_modulus>
             <ode>
               <kp>1e+12</kp>
               <kd>2e+4</kd>
@@ -52,7 +46,6 @@
             <ode>
               <mu>1000000000</mu>
               <mu2>10000000000</mu2>
-              <fdir1> 1 0 0</fdir1>
             </ode>
           </friction>
         </surface>

@@ -32,7 +32,7 @@
             <elastic_modulus>7e+10</elastic_modulus>
             <ode>
               <kp>1e+12</kp>
-              <kd>5e+5</kd>
+              <kd>2e+4</kd>
               <max_vel>10</max_vel>
               <min_depth>0.00</min_depth>
             </ode>
