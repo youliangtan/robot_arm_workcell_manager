@@ -13,19 +13,24 @@ Robot arm manipulation with moveit and fiducial markers. This Robot Arm manipula
 ## Getting Started
 
 ### Installation
+
 ```
 # ROS moveit stuffs
-# Robot Arm Dependencies
 # Gazebo Stuffs
 ```
 
 ### Dependencies
+
+- Universal Robot: [here](https://github.com/ros-industrial/universal_robot), **Remember to switch branch
+- HanWha: TBC
+
 - Fiducial Marker Detector: [here](https://github.com/UbiquityRobotics/fiducials)
 ```
 sudo apt-get install ros-melodic-aruco-detect
 sudo apt-get install ros-melodic-fiducial-msgs
 ```
-- rmf_msgs: [here](null)
+
+- rmf_msgs: [here](https://github.com/RMFHOPE/rmf_msgs_ros1), **Phasing Out Soon
 
 - Work together with: CSSD_workcell_manager (ROS2)
 
