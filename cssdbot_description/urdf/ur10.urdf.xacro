@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://wiki.ros.org/xacro">
 
+
   <xacro:include filename="$(find ur_description)/urdf/ur.transmission.xacro" />
   <xacro:include filename="$(find ur_description)/urdf/ur.gazebo.xacro" />
 
@@ -297,38 +298,87 @@
     </link>
 
 <!--end effector-->
-    <joint name="${prefix}end_effector_joint" type="fixed">
+  <joint name="${prefix}end_effector_joint" type="fixed">
       <parent link="${prefix}ee_link" />
       <child link = "${prefix}end_effector_link" />
-      <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+      <origin xyz="0.0 0.0 0.0" rpy="0.0 0 0.0" />
     </joint>
 
     <link name="${prefix}end_effector_link">
       <visual>
-        <geometry>
-          <mesh filename="package://cssdbot_description/meshes/visual/end_effector.STL"/>
+        <geometry>	  
+          <mesh filename="package://cssdbot_description/meshes/visual/end_effector.STL" scale = "0.001 0.001 0.001"/>
         </geometry>
-        <origin xyz="0.0 0.0 0.0" rpy="${-pi/2} 0.0 ${pi/2}" />
+        <origin xyz="0.0 0.0 0.0" rpy="3.14 0 0" />
         <material name="LightGrey">
           <color rgba="0.7 0.7 0.7 1.0"/>
         </material>
       </visual>
+
       <collision>
         <geometry>
-          <mesh filename="package://cssdbot_description/meshes/collision/end_effector.STL"/>
+          <mesh filename="package://cssdbot_description/meshes/collision/end_effector.STL" scale = "0.001 0.001 0.001"/>
         </geometry>
-	<origin xyz="0.0 0.0 0.0" rpy="${-pi/2} 0.0 ${pi/2}" />
+        <surface>
+	  <friction>
+	    <ode>
+
+	    </ode>
+	  </friction>
+        </surface>
+	<origin xyz="0.0 0.0 0.0" rpy="3.14 0 0" />
       </collision>
-      <xacro:cylinder_inertial radius="0.075" length="0.12" mass="${wrist_3_mass}">
+
+      <inertial>
+        <origin xyz="0.06804 0.002 -0.046" rpy="0 0 0"/>
+        <mass value="1.731"/>
+        <inertia ixx="0.0067278788"  ixy="-0.0003058706"  ixz="-0.0001818974" iyy="0.01092908" iyz="0.0001225669" izz="0.0159415" />
+      </inertial>
+
+<!--      <xacro:cylinder_inertial radius="0.075" length="0.12" mass="${wrist_3_mass}">
         <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
-      </xacro:cylinder_inertial>
+      </xacro:cylinder_inertial> -->
     </link>
 
+ <gazebo reference="${prefix}end_effector_link">
+   <mu1 value="100000" />
+   <mu2 value="100000"/>
+   <kd value="0" />
+   <fdir>1 0 0 </fdir>
+   <maxContacts>100000</maxContacts>
+   <minDepth>0.001</minDepth>
+   <gravity>true</gravity>
+   <collision name="eef_collision">
+     <geometry>
+        <mesh filename="package://cssdbot_description/meshes/visual/end_effector.STL" scale = "0.001 0.001 0.001"/>
+     </geometry>
+     <surface>
+       <friction>
+         <torsional>
+           <coefficient>10</coefficient>
+           <use_patch_radius>false</use_patch_radius>
+           <surface_radius>0.02175</surface_radius>
+           <patch_radius>0.01</patch_radius>
+         </torsional>
+       </friction>
+       <contact>
+         <poissons_ratio>0.5</poissons_ratio>
+         <elastic_modulus>1e8</elastic_modulus>
+       </contact>
+     </surface>
+   </collision>
+   <dynamics friction="100.0" />
+ </gazebo>
+
+
+
+<!-- <kd>1000000000</kd>
+    <minDepth>0</minDepth>
+-->
 <!--end of end effector-->
 
-<!--camera link-->
-
-<joint name="camera_optical_joint" type="fixed">
+<!-- start of camera -->
+  <joint name="camera_optical_joint" type="fixed">
     <!-- satisfy both gazebo convention and aruco pkg convetion. looking from x axis and z axis respectively. -->
     <origin xyz=" 0.055 0.06 0.0825" rpy="0 0.0 0" />>
     <parent link="end_effector_link"/>
@@ -378,6 +428,7 @@
       </plugin>
     </sensor>
   </gazebo>
+<!--camera link-->
 
 <!--end of camera link-->
     <!-- ROS base_link to UR 'Base' Coordinates transform -->
