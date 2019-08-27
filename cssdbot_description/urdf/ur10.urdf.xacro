@@ -319,6 +319,13 @@
         <geometry>
           <mesh filename="package://cssdbot_description/meshes/collision/end_effector.STL" scale = "0.001 0.001 0.001"/>
         </geometry>
+        <surface>
+	  <friction>
+	    <ode>
+
+	    </ode>
+	  </friction>
+        </surface>
 	<origin xyz="0.0 0.0 0.0" rpy="3.14 0 0" />
       </collision>
 
@@ -332,12 +339,13 @@
         <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
       </xacro:cylinder_inertial> -->
     </link>
-
+<!--
  <gazebo reference="${prefix}end_effector_link">
-   <mu1>1</mu1>
-   <mu2>1</mu2>
-   <fdir1>1 0 0</fdir1>
-   <maxContacts>1</maxContacts>
+   <mu1 value="100000" />
+   <mu2 value="100000"/>
+   <kd value="0" />
+   <fdir>1 0 0 </fdir>
+   <maxContacts>100000</maxContacts>
    <minDepth>0.001</minDepth>
    <gravity>true</gravity>
    <collision name="eef_collision">
@@ -351,7 +359,6 @@
          <torsional>
            <coefficient>10</coefficient>
            <use_patch_radius>false</use_patch_radius>
-           <!-- should be the same as collision sphere radius -->
            <surface_radius>0.02175</surface_radius>
            <patch_radius>0.01</patch_radius>
          </torsional>
@@ -362,9 +369,10 @@
        </contact>
      </surface>
    </collision>
+   <dynamics friction="100.0" />
  </gazebo>
 
-
+-->
 
 <!-- <kd>1000000000</kd>
     <minDepth>0</minDepth>
