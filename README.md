@@ -12,10 +12,10 @@ Robot arm manipulation with moveit and fiducial markers. This Robot Arm manipula
 
 ## Getting Started
 
-### Installation
+### Basic Installation
 
 ```
-# ROS moveit stuffs
+# ROS, Moveit stuffs
 # Gazebo Stuffs
 ```
 
