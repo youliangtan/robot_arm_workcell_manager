@@ -5,6 +5,9 @@ Robot arm manipulation with moveit and fiducial markers. This Robot Arm manipula
 
 ![alt text](/documentations/rviz_bot.png?)
 
+**Testing on Gazebo** (in development)
+![alt text](/documentations/gazebo.png?)
+
 ---
 
 ## Getting Started
@@ -24,6 +27,7 @@ sudo apt-get install ros-melodic-fiducial-msgs
 ```
 - rmf_msgs: [here](null)
 
+- Work together with: CSSD_workcell_manager (ROS2)
 
 ### Make and Build
 ```
@@ -121,6 +125,7 @@ Then send the same `DispenserRequest.msg` as above.
 
 ![](documentations/slip.gif)
 
+
 ---
 
 
@@ -131,6 +136,7 @@ Then send the same `DispenserRequest.msg` as above.
 - Camera calib is tuned, and written here: `/config/usb_cam.yaml`
 - Dispenser req will be received by RAWM, id: with convention of `marker_{$fiducial_id}`
 - Use Ros_bridge to link ros1 msg to ros2
+- Models must be moved to .gazebo folder in home directory to insert new model
 
 
 ## TODO
@@ -139,3 +145,8 @@ Then send the same `DispenserRequest.msg` as above.
 - Gazebo simulation
   - initial joint position in joint
   - friction of eef
+- Stop remaining motion when one of the motion in the middle fails. (e.g stop unloading if one of the loading motion fails)
+- Set start point before executing every motion.
+Error statement: Invalid Trajectory: start point deviates from current robot state more than 0.01
+joint 'shoulder_pan_joint': expected: 0.215141, current: 0.204255
+
