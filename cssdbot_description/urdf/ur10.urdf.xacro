@@ -351,9 +351,7 @@
    <collision name="eef_collision">
      <geometry>
         <mesh filename="package://cssdbot_description/meshes/visual/end_effector.STL" scale = "0.001 0.001 0.001"/>
-
      </geometry>
-
      <surface>
        <friction>
          <torsional>
