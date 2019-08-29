@@ -97,6 +97,13 @@ While the task is ongoing, user can check state of the arm_workcell by rostopic 
 
 ## Gazebo Environment Testing
 
+
+### Add models to Gazebo
+Symlink models from package to `~/.gazebo/`.
+```
+ln -s ~/catkin_ws/src/robot_arm_workcell_manager/cssd_gazebo/models ~/.gazebo/models
+```
+
 ### Running CSSD gazebo environment
 ```
 Terminal A: Run Gazebo, alongside with Rviz and Moveit
@@ -110,10 +117,14 @@ roslaunch robot_arm_workcell_manager robot_arm_workcell_manager.launch
 ***You will notice that the gazebo and RAWM terminal is unable to finish launch file. This is due to gazebo hacking method to initialise joint in the home position. Wait for a few seconds then press play at the bottom of gazebo. May not work***
 Then send the same `DispenserRequest.msg` as above. 
 
-### Add models to Gazebo
-Symlink models from package to `~/.gazebo/`.
+### Editing the Position of Trolley (TBC)
+Dont save the map above, to permanently save the world, edit it according to the step below.
 ```
-ln -s ~/catkin_ws/src/robot_arm_workcell_manager/cssd_gazebo/models ~/.gazebo/models
+roslaunch cssd_gazebo gazebo_editing_world.launch
+
+# Edit then save and close the world, then spawn the launch file below 
+
+roslaunch cssd_gazebo ur10_gazebo.launch
 ```
 
 ***go to [this](http://sdformat.org/spec) link to see SDF format***
