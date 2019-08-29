@@ -110,10 +110,11 @@ roslaunch robot_arm_workcell_manager robot_arm_workcell_manager.launch
 ***You will notice that the gazebo and RAWM terminal is unable to finish launch file. This is due to gazebo hacking method to initialise joint in the home position. Wait for a few seconds then press play at the bottom of gazebo. May not work***
 Then send the same `DispenserRequest.msg` as above. 
 
-### Adding models
-1. Create .gazebo file in home directory
-2. Move all the model files in cssd_gazebo/models to .gazebo directory
-3. Model will appear under insert tab in gazebo
+### Add models to Gazebo
+Symlink models from package to `~/.gazebo/`.
+```
+ln -s ~/catkin_ws/src/robot_arm_workcell_manager/cssd_gazebo/models ~/.gazebo/models
+```
 
 ***go to [this](http://sdformat.org/spec) link to see SDF format***
 
