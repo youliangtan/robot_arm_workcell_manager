@@ -23,16 +23,13 @@ Robot arm manipulation with moveit and fiducial markers. This Robot Arm manipula
 
 - Universal Robot: [here](https://github.com/ros-industrial/universal_robot), **Remember to switch branch
 - HanWha: TBC
-
 - Fiducial Marker Detector: [here](https://github.com/UbiquityRobotics/fiducials)
 ```
 sudo apt-get install ros-melodic-aruco-detect
 sudo apt-get install ros-melodic-fiducial-msgs
 ```
-
 - rmf_msgs: [here](https://github.com/RMFHOPE/rmf_msgs_ros1), **Phasing Out Soon
-
-- Work together with: CSSD_workcell_manager (ROS2)
+- CSSD_workcell_manager (ROS2): Work in Progress
 
 ### Make and Build
 ```
@@ -64,7 +61,7 @@ Test code to try out aruco marker detection. Camera and aruco markers are used f
 vlc v4l2:///dev/video{$NUM}
 ```
 
-**Calibration**: Refer to OpenCV Camera Calibration code, [here](https://docs.opencv.org/2.4/doc/tutorials/calib3d/camera_calibration/camera_calibration.html#results). This tool has provided a chessboard.png for calibration. Once done, then copy the camera & distortion matrix from a .xml file to `/robot_arm_workcell_manager/config/usb_cam.yaml`.
+**Calibration**: Refer to OpenCV Camera Calibration code, [here](https://docs.opencv.org/2.4/doc/tutorials/calib3d/camera_calibration/camera_calibration.html#results). Once done, then copy the camera & distortion matrix from a .xml file to `/robot_arm_workcell_manager/config/usb_cam.yaml`.
 
 Run Test Code
 ```
@@ -106,30 +103,30 @@ ln -s ~/catkin_ws/src/robot_arm_workcell_manager/cssd_gazebo/models ~/.gazebo/mo
 
 ### Running CSSD gazebo environment
 ```
-Terminal A: Run Gazebo, alongside with Rviz and Moveit
+# Terminal A: Run Gazebo, alongside with Rviz and Moveit
 roslaunch cssd_gazebo ur10_gazebo.launch
 
-Terminal B: Run RAWM
+# Terminal B: Run RAWM
 roslaunch robot_arm_workcell_manager robot_arm_workcell_manager.launch
 
+# Terminal C: Send the same `DispenserRequest.msg` as above
 ```
 
 ***You will notice that the gazebo and RAWM terminal is unable to finish launch file. This is due to gazebo hacking method to initialise joint in the home position. Wait for a few seconds then press play at the bottom of gazebo. May not work***
-Then send the same `DispenserRequest.msg` as above. 
+
 
 ### Editing the Position of Trolley (TBC)
 Dont save the map above, to permanently save the world, edit it according to the step below.
 ```
 roslaunch cssd_gazebo gazebo_editing_world.launch
-
 # Edit then save and close the world, then spawn the launch file below 
-
-roslaunch cssd_gazebo ur10_gazebo.launch
 ```
 
-***go to [this](http://sdformat.org/spec) link to see SDF format***
+***[this](http://sdformat.org/spec) link to SDF format***
 
-### Issues
+---
+
+## Issues on Gazebo
 
 1. Models phasing through eef due to mesh of tray being too thin. Solved by adding another collision box in the tray result is seen in picture below. If items are to go into the box, bitmask is needed
 ![alt text](/documentations/picking_up_tray.png)
@@ -152,13 +149,12 @@ roslaunch cssd_gazebo ur10_gazebo.launch
 - "Named Motion Target" can be used to name then request each "joint/pose goal" of the robot arm. Edit `motion_config.yaml` accordingly.
 - Camera calib is tuned, and written here: `/config/usb_cam.yaml`
 - Dispenser req will be received by RAWM, id: with convention of `marker_{$fiducial_id}`
-- Use Ros_bridge to link ros1 msg to ros2
+- Use Ros_bridge/SOSS to link ros1 msg to ros2
 - Models must be moved to .gazebo folder in home directory to insert new model
 
 
 ## TODO
 - Namespace for rosparam (senario of runnin multiple robot arms)
-- Fix camera frame between `camera_optical_frame` and `camera`  (and update new tf tree), Upsidedown case!!
 - Gazebo simulation
   - initial joint position in joint
   - friction of eef
