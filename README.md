@@ -95,12 +95,6 @@ While the task is ongoing, user can check state of the arm_workcell by rostopic 
 ## Gazebo Environment Testing
 
 
-### Add models to Gazebo
-Symlink models from package to `~/.gazebo/`.
-```
-ln -s ~/catkin_ws/src/robot_arm_workcell_manager/cssd_gazebo/models ~/.gazebo/models
-```
-
 ### Running CSSD gazebo environment
 ```
 # Terminal A: Run Gazebo, alongside with Rviz and Moveit
@@ -139,6 +133,7 @@ roslaunch cssd_gazebo gazebo_editing_world.launch
 
 ![](documentations/slip.gif)
 
+*Video Link*, [here](https://drive.google.com/file/d/13X5QM5tw2AVXvWy2OXm6R4ZGWNI3iGG4/view?usp=sharing)
 
 ---
 
