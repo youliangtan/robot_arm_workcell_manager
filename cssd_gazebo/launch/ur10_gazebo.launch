@@ -11,11 +11,12 @@
 
   <!-- startup simulated world -->
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
-   <arg name="world_name" default="$(find cssd_gazebo)/worlds/cssd.world"/> 
+   <arg name="world_name" default="$(find cssd_gazebo)/worlds/cssd.world"/>
+    <env name="GAZEBO_MODEL_PATH" value="$(find cssd_gazebo)/models" />
     <arg name="paused" value="$(arg paused)"/>
     <arg name="gui" value="$(arg gui)"/>
   </include>
-  
+
 
   <!-- send robot URDF to param server -->
   <include file="$(find cssdbot_description)/launch/ur10_upload.launch">
@@ -43,11 +44,11 @@
 
   <include file="$(find robot_arm_workcell_manager)/launch/demo.launch">
     <arg name='enable_usb_cam'  default='false'/>
-    <arg name="enable_fake_joints_execution" default="false"/>  
+    <arg name="enable_fake_joints_execution" default="false"/>
   </include>
 
   <!-- push robot_description to factory and spawn robot in gazebo -->
-  <node name="spawn_gazebo_model" pkg="gazebo_ros" type="spawn_model" args="-urdf -param robot_description -model robot 
+  <node name="spawn_gazebo_model" pkg="gazebo_ros" type="spawn_model" args="-urdf -param robot_description -model robot
     -J shoulder_pan_joint 0
     -J shoulder_lift_joint -2.107
     -J elbow_joint 1.795
