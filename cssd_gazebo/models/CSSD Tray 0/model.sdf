@@ -19,8 +19,8 @@
         </inertia>
       </inertial>
 
-      <!--
-      <collision name="collision">
+
+      <!-- <collision name="collision">
         <max_contact>20</max_contact>
         <geometry>
           <mesh>
@@ -28,18 +28,62 @@
             <uri>model://CSSD Tray/meshes/Tray_Assem_Locating_Stand-off.STL</uri>
           </mesh>
         </geometry>
-      </collision>
-      -->
+      </collision> -->
+
 
       <!-- Extents: (+/- 0.15, +/- 0.175, [0.058, 0.06]),  -->
       <collision name="tray floor">
-        <pose> 0.0  0.0  0.059  0.0  0.0  0.0</pose>
+        <pose> 0.0  0.0  0.104  0.0  0.0  0.0</pose>
         <geometry>
           <box>
-            <size>0.30 0.35 0.003</size>
+            <size>0.30 0.35 0.01</size>
           </box>
         </geometry>
       </collision>
+      <collision name="tray pegs">
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://CSSD Tray/meshes/tray_pegs.stl</uri>
+          </mesh>
+        </geometry>
+      </collision>
+
+      <!-- Extents: (0.12635, 0.15334), (0.11351, 0.15688), z: 0.058 -->
+      <!-- radius: 0.029 -->
+      <collision name="front left leg">
+        <pose>0.12635 0.15334 0.029 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.03 0.03 0.048</size>
+          </box>
+        </geometry>
+      </collision>
+      <collision name="front right leg">
+        <pose>0.12635 -0.15334 0.034 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.03 0.03 0.048</size>
+          </box>
+        </geometry>
+      </collision>
+      <collision name="back left leg">
+        <pose>-0.12635 0.15334 0.034 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.03 0.03 0.048</size>
+          </box>
+        </geometry>
+      </collision>
+      <collision name="back right leg">
+        <pose>-0.12635 -0.15334 0.034 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.03 0.03 0.048</size>
+          </box>
+        </geometry>
+      </collision>
+
       <visual name='visual'>
         <geometry>
           <mesh>

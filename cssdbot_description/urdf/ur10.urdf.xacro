@@ -315,32 +315,40 @@
           <color rgba="0.7 0.7 0.7 1.0"/>
         </material>
       </visual>
-      <visual>
+
+
+      <collision>
         <geometry>
-          <!-- extents: ([0.0125, 0.281], [-0.114, 0.114], [-0.046, -0.043]) -->
-          <box size="0.2685 0.228 0.003" />
+          <mesh filename="package://cssdbot_description/meshes/collision/end_effector_holes.stl" scale = "1 1 1"/>
         </geometry>
-        <origin xyz="0.14675 0.0 0.0445" rpy="0 0 0" />
+	      <origin xyz="0.0 0.0 0.0" rpy="3.14 0 0" />
+      </collision>
+
+
+      <!-- extents: ([0.0125, 0.281], [-0.114, 0.114], [-0.046, -0.043]) -->
+      <!-- <visual>
+        <geometry>
+          <box size="0.2685 0.228 0.01" />
+        </geometry>
+        <origin xyz="0.14675 0.0 0.04" rpy="0 0 0" />
         <material name="LightGrey">
           <color rgba="0.7 0.7 0.7 1.0"/>
         </material>
       </visual>
-
-      <!--
       <collision>
         <geometry>
-          <mesh filename="package://cssdbot_description/meshes/collision/end_effector.STL" scale = "0.001 0.001 0.001"/>
+          <box size="0.2685 0.228 0.01" />
         </geometry>
-	      <origin xyz="0.0 0.0 0.0" rpy="3.14 0 0" />
-      </collision>
-      -->
-      <collision>
+        <origin xyz="0.14675 0.0 0.04" rpy="0 0 0" />
+      </collision> -->
+
+      <!-- extents: ([0.0125, 0.281], [-0.114, 0.114], [-0.046, -0.043]) -->
+      <!-- <collision>
         <geometry>
-          <!-- extents: ([0.0125, 0.281], [-0.114, 0.114], [-0.046, -0.043]) -->
           <box size="0.2685 0.228 0.003" />
         </geometry>
-        <origin xyz="0.14675 0.0 -0.0445" rpy="0 0 0" />
-      </collision>
+        <origin xyz="0.14675 0.0 0.0445" rpy="0 0 0" />
+      </collision> -->
 
       <inertial>
         <origin xyz="0.06804 0.002 -0.046" rpy="0 0 0"/>
@@ -353,7 +361,7 @@
       </xacro:cylinder_inertial> -->
     </link>
 
- <gazebo reference="${prefix}end_effector_link">
+ <!-- <gazebo reference="${prefix}end_effector_link">
   <maxContacts>100000</maxContacts>
   <gravity>true</gravity>
   <collision name="eef_collision">
@@ -361,7 +369,7 @@
       <mesh filename="package://cssdbot_description/meshes/visual/end_effector.STL" scale = "0.001 0.001 0.001"/>
     </geometry>
   </collision>
- </gazebo>
+ </gazebo> -->
 
 
 
