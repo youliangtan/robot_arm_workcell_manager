@@ -2,7 +2,8 @@
 <robot xmlns:xacro="http://wiki.ros.org/xacro">
 
 
-  <xacro:include filename="$(find ur_description)/urdf/ur.transmission.xacro" />
+  <!-- <xacro:include filename="$(find cssdbot_description)/urdf/ur.transmission.xacro" /> -->
+  <xacro:include filename="$(find cssdbot_description)/urdf/ur.transmission.xacro" />
   <xacro:include filename="$(find ur_description)/urdf/ur.gazebo.xacro" />
 
   <xacro:macro name="cylinder_inertial" params="radius length mass *origin">
@@ -457,7 +458,7 @@
     </joint>
 
 
-    <xacro:ur_arm_transmission prefix="${prefix}" hw_interface="${transmission_hw_interface}" />
+    <xacro:cssd_arm_transmission prefix="${prefix}" hw_interface="${transmission_hw_interface}" />
     <xacro:ur_arm_gazebo prefix="${prefix}" />
 
 
