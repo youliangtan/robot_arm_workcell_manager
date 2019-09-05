@@ -1,4 +1,4 @@
-arm_effort_controller:
+arm_controller:
   type: effort_controllers/JointTrajectoryController
   joints:
      - shoulder_pan_joint
