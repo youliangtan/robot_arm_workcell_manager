@@ -1,3 +1,4 @@
+<?xml version="1.0" ?>
 <sdf version='1.6'>
   <world name='default'>
     <light name='sun' type='directional'>
@@ -142,12 +143,12 @@
       <uri>model://CSSD Tray 0</uri>
       <name>CSSD Tray 0</name>
     </include>
-    <!--
+
     <include>
       <uri>model://CSSD Tray 1</uri>
       <name>CSSD Tray 1</name>
     </include>
-    -->
+
     <state world_name='default'>
       <sim_time>555 529000000</sim_time>
       <real_time>16 616138684</real_time>

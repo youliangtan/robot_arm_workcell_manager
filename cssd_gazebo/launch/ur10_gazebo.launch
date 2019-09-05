@@ -24,23 +24,10 @@
     <arg name="transmission_hw_interface" value="hardware_interface/EffortJointInterface"/>
   </include>
 
-
-
-
   <include file="$(find ur_gazebo)/launch/controller_utils.launch"/>
 
   <!-- start this controller -->
-
-  <!-- <rosparam file="$(find ur_gazebo)/controller/arm_controller_ur10.yaml" command="load"/>
-  <node name="arm_controller_spawner"
-        pkg="controller_manager"
-        type="controller_manager"
-        args="spawn arm_controller"
-        respawn="false"
-        output="screen"
-  /> -->
-
-  <rosparam file="$(find cssdbot_description)/controller/ur_velocity_controller.yaml" command="load"/>
+  <rosparam file="$(find cssdbot_description)/controller/ur_effort_controller.yaml" command="load"/>
   <node name="arm_controller_spawner"
         pkg="controller_manager"
         type="controller_manager"
@@ -49,8 +36,6 @@
         output="screen"
   />
 
-
-  <!-- <rosparam file="$(find cssdbot_moveit_config)/config/ros_controllers.yaml" command="load"/> -->
 
   <!--              ************************************************************************************              -->
   <!--              ******************************** RAWM Spawner **************************************              -->

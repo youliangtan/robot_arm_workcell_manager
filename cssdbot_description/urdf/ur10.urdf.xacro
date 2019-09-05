@@ -298,7 +298,7 @@
       </collision>
     </link>
 
-<!--end effector-->
+  <!--end effector-->
   <joint name="${prefix}end_effector_joint" type="fixed">
       <parent link="${prefix}ee_link" />
       <child link = "${prefix}end_effector_link" />
@@ -324,36 +324,25 @@
         </geometry>
 	      <origin xyz="0.0 0.0 0.0" rpy="3.14 0 0" />
       </collision>
-      <!-- Extents: ([0.0125, 0.2112], +/- 0.5673, [-0.046, -0.043]) -->
+
+      <!-- Extents: ([0.0125, 0.2112], +/- 0.05673, [-0.046, -0.043]) -->
+      <!-- Note: I'm making this 3mm thicker than the actual model -->
+      <collision>
+        <origin xyz="0.11185 0.0 0.046"/>
+        <geometry>
+          <box size="0.1987 0.11346 0.006"/>
+        </geometry>
+      </collision>
 
 
       <!-- Extents: ([0.12276, 0.2112], +/- 0.08644, [-0.046, -0.043]) -->
-
-
-      <!-- extents: ([0.0125, 0.281], [-0.114, 0.114], [-0.046, -0.043]) -->
-      <!-- <visual>
-        <geometry>
-          <box size="0.2685 0.228 0.01" />
-        </geometry>
-        <origin xyz="0.14675 0.0 0.04" rpy="0 0 0" />
-        <material name="LightGrey">
-          <color rgba="0.7 0.7 0.7 1.0"/>
-        </material>
-      </visual>
+      <!-- Note: I'm making this 3mm thicker than the actual model -->
       <collision>
+        <origin xyz="0.16698 0.0 0.046"/>
         <geometry>
-          <box size="0.2685 0.228 0.01" />
+          <box size="0.08844 0.17288 0.006"/>
         </geometry>
-        <origin xyz="0.14675 0.0 0.04" rpy="0 0 0" />
-      </collision> -->
-
-      <!-- extents: ([0.0125, 0.281], [-0.114, 0.114], [-0.046, -0.043]) -->
-      <!-- <collision>
-        <geometry>
-          <box size="0.2685 0.228 0.003" />
-        </geometry>
-        <origin xyz="0.14675 0.0 0.0445" rpy="0 0 0" />
-      </collision> -->
+      </collision>
 
       <inertial>
         <origin xyz="0.06804 0.002 -0.046" rpy="0 0 0"/>
