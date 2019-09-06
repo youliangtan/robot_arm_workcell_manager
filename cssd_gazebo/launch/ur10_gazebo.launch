@@ -6,14 +6,13 @@
 
 
   <arg name="limited" default="false"  doc="If true, limits joint range [-PI, PI] on all joints." />
-  <arg name="paused" default="true" doc="Starts gazebo in paused mode" />
   <arg name="gui" default="true" doc="Starts gazebo gui" />
 
   <!-- startup simulated world -->
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
    <arg name="world_name" default="$(find cssd_gazebo)/worlds/cssd.world"/>
     <env name="GAZEBO_MODEL_PATH" value="$(find cssd_gazebo)/models" />
-    <arg name="paused" value="$(arg paused)"/>
+    <arg name="paused" value="true"/>
     <arg name="gui" value="$(arg gui)"/>
   </include>
 
@@ -23,6 +22,7 @@
     <arg name="limited" value="$(arg limited)"/>
     <arg name="transmission_hw_interface" value="hardware_interface/EffortJointInterface"/>
   </include>
+  <rosparam file="$(find cssd_gazebo)/params/cssd_pid_gains.yaml" command="load"/>
 
   <!-- push robot_description to factory and spawn robot in gazebo -->
   <!-- Note: The robot hovers 5mm above the ground to avoid collisions with the groun plane -->
@@ -33,7 +33,8 @@
           -J elbow_joint 1.795
           -J wrist_1_joint 0.354
           -J wrist_2_joint 1.571
-          -J wrist_3_joint 0 -z 0.005 "
+          -J wrist_3_joint 0
+          -z 0.005 "
         respawn="false" output="screen"
   />
 
@@ -41,6 +42,7 @@
 
   <!-- start this controller -->
   <rosparam file="$(find cssdbot_description)/controller/ur_effort_controller.yaml" command="load"/>
+
   <node name="arm_controller_spawner"
         pkg="controller_manager"
         type="controller_manager"
@@ -48,6 +50,13 @@
         respawn="false"
         output="screen"
   />
+
+  <!-- Warm up Gazebo so that the controller can load
+    d: How long before attempting to warm up (this should be a bit longer than you expect the URDF to finish loading)
+    i: How many warm-up steps to perform (the CSSD simulation seems to require ~3, so let's do 5 to be safe)
+    w: How long to wait between warm-up steps (this gives time for the simulation to talk to the control_manager)
+   -->
+  <node name="gazebo_warm_start" pkg="cssd_gazebo" type="warm_start" args="-d 6.0 -i 5 -w 1.0" output="screen"/>
 
   <!--              ************************************************************************************              -->
   <!--              ******************************** RAWM Spawner **************************************              -->
@@ -57,7 +66,5 @@
     <arg name="enable_fake_joints_execution" value="false"/>
     <arg name="load_robot_description" value="false"/>
   </include>
-
-  <node name="gazebo_unpauser" pkg="cssd_gazebo" type="gazebo_unpauser.py" output="screen" />
 
 </launch>

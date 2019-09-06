@@ -7,16 +7,14 @@ find_package(catkin REQUIRED COMPONENTS
   gazebo_ros
 )
 catkin_package()
-catkin_install_python(
-  PROGRAMS
-    scripts/gazebo_unpauser.py
-  DESTINATION
-    ${CATKIN_PACKAGE_BIN_DESTINATION}
+
+find_package(gazebo REQUIRED)
+
+add_executable(warm_start src/warm_start.cpp)
+target_link_libraries(warm_start PRIVATE ${GAZEBO_LIBRARIES})
+target_include_directories(warm_start PRIVATE ${GAZEBO_INCLUDE_DIRS})
+
+install(
+  TARGETS warm_start
+  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
-
-include_directories(
-include
- ${catkin_INCLUDE_DIRS}
-)
-
-

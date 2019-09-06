@@ -10,9 +10,18 @@
     </include>
 
     <link name='aruco_tag'>
-      <pose>0 0 0 0 -0 3.14</pose>
+      <pose> -0.154 0.0 0.0824 0 -1.57 0.0</pose>
+
+      <inertial>
+        <mass>0.01</mass>
+        <inertia>
+          <ixx>0.001</ixx>
+          <iyy>0.001</iyy>
+          <izz>0.001</izz>
+        </inertia>
+      </inertial>
+
       <visual name='marker'>
-        <pose> 0.154 -0 0.0824 0 -1.57 3.14 </pose>
         <geometry>
           <box>
             <size>0.04 0.04 1e-05</size>
