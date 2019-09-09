@@ -24,7 +24,7 @@
   </include>
 
   <!-- push robot_description to factory and spawn robot in gazebo -->
-  <!-- Note: The robot hovers 5mm above the ground to avoid collisions with the groun plane -->
+  <!-- Note: The robot hovers 1mm above the ground to avoid collisions with the groun plane -->
   <node name="spawn_gazebo_model" pkg="gazebo_ros" type="spawn_model"
         args="-urdf -param robot_description -model robot
           -J shoulder_pan_joint 0
