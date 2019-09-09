@@ -155,30 +155,30 @@
       <wall_time>1567076561 931110067</wall_time>
       <iterations>1771</iterations>
       <model name='CSSD Shelf'>
-        <pose frame=''>0.998619 0.100342 0 1.57 0 -1.57</pose>
+        <pose frame=''>0.998619 0.100342 0.01 1.57 0 -1.57</pose>
         <scale>1 1 1</scale>
         <link name='link'>
-          <pose frame=''>0.998619 0.100342 0 1.57 0 -1.57</pose>
+          <pose frame=''>0.998619 0.100342 0.01 1.57 0 -1.57</pose>
           <velocity>0 0 0 0 -0 0</velocity>
           <acceleration>0 0 0 0 -0 0</acceleration>
           <wrench>0 0 0 0 -0 0</wrench>
         </link>
       </model>
       <model name='CSSD Tray 0'>
-        <pose frame=''>0.869524 0.361542 0.453367 -0.002949 -0.017358 0.010598</pose>
+        <pose frame=''>0.869524 0.361542 0.463367 -0.002949 -0.017358 0.010598</pose>
         <scale>1 1 1</scale>
         <link name='tray'>
-          <pose frame=''>0.869524 0.361542 0.453367 0.002922 0.017363 -3.13259</pose>
+          <pose frame=''>0.869524 0.361542 0.463367 0.002922 0.017363 -3.13259</pose>
           <velocity>0 0 0 0 0 0</velocity>
           <acceleration>0 0 0 0 0 0</acceleration>
           <wrench>0 0 0 0 0 0</wrench>
         </link>
       </model>
       <model name='CSSD Tray 1'>
-        <pose frame=''>0.869227 0.360226 0.784566 0.003528 -0.016359 0.002928</pose>
+        <pose frame=''>0.869227 0.360226 0.884566 0.003528 -0.016359 0.002928</pose>
         <scale>1 1 1</scale>
         <link name='tray'>
-          <pose frame=''>0.869227 0.360226 0.784566 -0.003554 0.016353 -3.14026</pose>
+          <pose frame=''>0.869227 0.360226 0.884566 -0.003554 0.016353 -3.14026</pose>
           <velocity>0 0 0 0 0 0</velocity>
           <acceleration>0 0 0 0 0 0</acceleration>
           <wrench>0 0 0 0 0 0</wrench>
