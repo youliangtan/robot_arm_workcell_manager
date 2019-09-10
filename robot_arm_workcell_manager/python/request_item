@@ -1,0 +1,40 @@
+#!/usr/bin/env python2
+
+import sys
+import time
+import argparse
+import rospy
+from rmf_msgs.msg import DispenserRequest, DispenserRequestItem
+
+
+def main(argv):
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-i', '--item-type', default='marker_0')
+    parser.add_argument('-c', '--compartment', default='marker_100')
+    parser.add_argument('-d', '--dispenser-name', default='ur10_001')
+    parser.add_argument('-r', '--request-id', default='R3QU35T')
+
+    args = parser.parse_args(argv)
+
+    pub = rospy.Publisher('/cssd_workcell/dispenser_request', DispenserRequest, queue_size=10, latch=True)
+    rospy.init_node('cssd_request_item')
+
+    request = DispenserRequest()
+
+    item = DispenserRequestItem()
+    item.item_type = args.item_type
+    item.quantity = 1
+    item.compartment_name = args.compartment
+    request.items.append(item)
+
+    request.request_id = args.request_id
+    request.dispenser_name = args.dispenser_name
+
+    pub.publish(request)
+
+    print('Sent message {}'.format(request))
+    time.sleep(3.0)
+
+
+if __name__ == '__main__':
+    main(sys.argv[1:])
