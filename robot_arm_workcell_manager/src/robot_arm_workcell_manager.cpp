@@ -246,7 +246,7 @@ bool RobotArmWorkcellManager::executePickPlaceMotion( std::vector<std::string> f
     std::vector<tf::Transform *> tf_array;
     tf::Transform *marker_transform (new tf::Transform);
 
-    if (! markers_detector_.getTransformPose( marker_transform, "base_link", marker_frame_id) ) return false;      // TODO: create new function: checkMarkerExist()
+    if (! markers_detector_.getTransformPose( marker_transform, "base_link", marker_frame_id) ) return false;
 
     markers_detector_.setTargetMarker(marker_frame_id);
     std::this_thread::sleep_for (std::chrono::seconds(motion_pause_time_));
@@ -261,16 +261,20 @@ bool RobotArmWorkcellManager::executePickPlaceMotion( std::vector<std::string> f
     markers_detector_.removeTargetMarker();
 
     // Execute all motion
+    int idx = 0;
     for (const auto& target_tf : tf_array){
         geometry_msgs::Pose _eef_target_pose;
         tf::poseTFToMsg(*target_tf, _eef_target_pose);
 
-        if (! arm_controller_.moveToEefTarget(_eef_target_pose, 0.5) ) return false;
+        ROS_INFO(" **Executing Pick Place Motion**  tf_frame: %s ", frame_array.at(idx).c_str());
+        if (! arm_controller_.moveToEefTarget(_eef_target_pose, 0.15) ) return false;  //TODO: all vel factor is in config file, or rosparam
         std::this_thread::sleep_for (std::chrono::seconds(motion_pause_time_));
+        idx++;
     }
 
     return true;
 }
+
 
 
 
@@ -285,6 +289,8 @@ bool RobotArmWorkcellManager::executeRobotArmMission(){
     bool motion_is_success;
     std::vector<tf::Transform *> tf_array;
     rmf_msgs::DispenserRequestItem requested_item = dispenser_curr_task_.items[0] ;
+    int rack_level = 0;
+    tf::Transform *marker_transform (new tf::Transform);
 
     // FOR NOW, TODO: No hard coding
     std::vector<std::string> picking_frame_array = {"pre-pick", "insert", "lift", "post-pick"};
@@ -292,18 +298,31 @@ bool RobotArmWorkcellManager::executeRobotArmMission(){
 
     // home
     if (! arm_controller_.moveToNamedTarget("home_position") ) return false;
-    
+
+    // TODO: Lookup for target marker at different picking lvl
+    while (! markers_detector_.getTransformPose( marker_transform, "base_link", requested_item.item_type) ){
+        ROS_ERROR("Going to rack level: %s ", std::to_string(rack_level).c_str() );
+        if (arm_controller_.moveToNamedTarget("rack_level_" + std::to_string(rack_level)) )  rack_level++;
+        else return false;
+    }
+
     // picking, e.g: requested_item.item_type = "marker_X" 
     if (! executePickPlaceMotion(picking_frame_array , requested_item.item_type ) ) return false;
 
     // turn to face trolley
+    if (! arm_controller_.moveToNamedTarget("mir_facing_home") ) return false;
+
+    // Lower the position
     if (! arm_controller_.moveToNamedTarget("pre_place_position") ) return false;
 
     // placing, e.g: requested_item.compartment_name = "marker_X"
     if (! executePickPlaceMotion(placing_frame_array , requested_item.compartment_name) ) return false;
 
-    // back home (2nd)
-    if (! arm_controller_.moveToNamedTarget("low_home_position") ) return false;
+    // back lower home 
+    if (! arm_controller_.moveToNamedTarget("pre_place_position") ) return false;
+
+    // turn to face trolley
+    if (! arm_controller_.moveToNamedTarget("mir_facing_home") ) return false;
 
     ROS_INFO("\n ***** Done with Task with request_id: %s *****", dispenser_curr_task_.request_id.c_str());
     
