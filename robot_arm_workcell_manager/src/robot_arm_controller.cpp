@@ -102,11 +102,12 @@ bool RobotArmController::moveToNamedTarget(const std::string& _target_name){
         vel_factor = NAMED_TARGET_CONFIG_["named_target"][_target_name]["velFactor"].as<double>();
     } 
     catch (std::exception& err){
-        ROS_ERROR("Exception in YAML LOADER: %s", err.what());
+        ROS_ERROR("Exception in YAML LOADER while trying to find targer name: %s .\n Error: %s", _target_name.c_str(), err.what());
         return false;
     }
     
-    ROS_INFO("Loaded Named Target: %s, type: %s, velFactor: %f, values: [ %f %f %f %f %f %f ]",  
+    ROS_INFO(" **Executing Named Target Motion** ");
+    ROS_INFO(" - Named Target: %s, type: %s, velFactor: %f, values: [ %f %f %f %f %f %f ]",  
         _target_name.c_str(), goal_type.c_str(), vel_factor,
         goal_values[0], goal_values[1], goal_values[2], goal_values[3], goal_values[4], goal_values[5]);
 

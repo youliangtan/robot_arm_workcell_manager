@@ -101,6 +101,7 @@
       <elevation>0</elevation>
       <heading_deg>0</heading_deg>
     </spherical_coordinates>
+    
     <model name='CSSD Shelf'>
       <static>1</static>
       <link name='link'>
@@ -139,6 +140,12 @@
       </link>
       <pose frame=''>1.36612 -0.244889 0 0 -0 0</pose>
     </model>
+
+    <include>
+      <uri>model://UR10Base</uri>
+      <name>UR10Base</name>
+    </include>
+
     <include>
       <uri>model://CSSD Tray 0</uri>
       <name>CSSD Tray 0</name>
@@ -149,11 +156,39 @@
       <name>CSSD Tray 1</name>
     </include>
 
+    <include>
+      <uri>model://CSSD Tray 2</uri>
+      <name>CSSD Tray 2</name>
+    </include>
+
+    <include>
+      <uri>model://CSSD Tray 3</uri>
+      <name>CSSD Tray 3</name>
+    </include>
+
+    <include>
+      <uri>model://MiRCartWithTrayPlacement</uri>
+      <name>MiRCartWithTrayPlacement</name>
+    </include>
+
+
     <state world_name='default'>
       <sim_time>555 529000000</sim_time>
       <real_time>16 616138684</real_time>
       <wall_time>1567076561 931110067</wall_time>
       <iterations>1771</iterations>
+      
+      <model name='UR10Base'>
+        <pose frame=''>-0.4 -0.35 -0.48 0 0 0</pose>
+        <scale>1 1 1</scale>
+        <!-- <link name='link'>
+          <pose frame=''>0 0 0 0 0 0</pose>
+          <velocity>0 0 0 0 0 0</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link> -->
+      </model>
+
       <model name='CSSD Shelf'>
         <pose frame=''>0.998619 0.100342 0.01 1.57 0 -1.57</pose>
         <scale>1 1 1</scale>
@@ -164,6 +199,7 @@
           <wrench>0 0 0 0 -0 0</wrench>
         </link>
       </model>
+
       <model name='CSSD Tray 0'>
         <pose frame=''>0.869524 0.361542 0.463367 -0.002949 -0.017358 0.010598</pose>
         <scale>1 1 1</scale>
@@ -175,15 +211,47 @@
         </link>
       </model>
       <model name='CSSD Tray 1'>
-        <pose frame=''>0.869227 0.360226 0.884566 0.003528 -0.016359 0.002928</pose>
+        <pose frame=''>0.869227 0.360226 0.85 0.003528 -0.016359 0.002928</pose>
         <scale>1 1 1</scale>
         <link name='tray'>
-          <pose frame=''>0.869227 0.360226 0.884566 -0.003554 0.016353 -3.14026</pose>
+          <pose frame=''>0.869227 0.360226 0.85 -0.003554 0.016353 -3.14026</pose>
           <velocity>0 0 0 0 0 0</velocity>
           <acceleration>0 0 0 0 0 0</acceleration>
           <wrench>0 0 0 0 0 0</wrench>
         </link>
       </model>
+      <model name='CSSD Tray 2'>
+        <pose frame=''>0.869227 0.360226 1.15 0.003528 -0.016359 0.002928</pose>
+        <scale>1 1 1</scale>
+        <link name='tray'>
+          <pose frame=''>0.869227 0.360226 1.15 -0.003554 0.016353 -3.14026</pose>
+          <velocity>0 0 0 0 0 0</velocity>
+          <acceleration>0 0 0 0 0 0</acceleration>
+          <wrench>0 0 0 0 0 0</wrench>
+        </link>
+      </model>
+      <model name='CSSD Tray 3'>
+        <pose frame=''>0.869227 0.360226 1.45 0.003528 -0.016359 0.002928</pose>
+        <scale>1 1 1</scale>
+        <link name='tray'>
+          <pose frame=''>0.869227 0.360226 1.45 -0.003554 0.016353 -3.14026</pose>
+          <velocity>0 0 0 0 0 0</velocity>
+          <acceleration>0 0 0 0 0 0</acceleration>
+          <wrench>0 0 0 0 0 0</wrench>
+        </link>
+      </model>
+
+      <model name='MiRCartWithTrayPlacement'>
+        <pose frame=''>-0.089707 1.3382 0 0 0 -1.57</pose>
+        <scale>1 1 1</scale>
+        <link name='body'>
+          <pose frame=''>-0.089707 1.3382 0 0 0 -1.57</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link>
+      </model>
+
       <model name='ground_plane'>
         <pose frame=''>0 0 0 0 -0 0</pose>
         <scale>1 1 1</scale>
