@@ -105,7 +105,7 @@ bool FiducialMarkersHandler::getTransformPose(tf::Transform *target_transform, s
     //get transform of marker relative to base link
   	tf::StampedTransform stamped_transform;
   	try{
-	  	tf_listener_.waitForTransform(target_frame_id, frame_id, ros::Time(0), ros::Duration(2) );
+	  	tf_listener_.waitForTransform(target_frame_id, frame_id, ros::Time::now(), ros::Duration(2) );
 	  	tf_listener_.lookupTransform(target_frame_id, frame_id, ros::Time(0), stamped_transform);
     }
     catch (tf::TransformException ex) {
@@ -113,8 +113,13 @@ bool FiducialMarkersHandler::getTransformPose(tf::Transform *target_transform, s
         return false;
     }
 
+    // Expiry time
+    ros::Duration diff = ros::Time::now()-stamped_transform.stamp_;
+    if (diff.toSec() > 2 ) return false;   // TODO: ROSParam for this thresh
+
   	target_transform->setRotation(stamped_transform.getRotation());
   	target_transform->setOrigin(stamped_transform.getOrigin());
+    ROS_INFO(" - Frame: %s and %s Detected!", target_frame_id.c_str(), frame_id.c_str());
 
     return true;
 }

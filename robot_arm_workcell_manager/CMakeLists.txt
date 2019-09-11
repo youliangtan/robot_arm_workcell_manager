@@ -22,7 +22,7 @@ find_package(catkin REQUIRED COMPONENTS
   ur_description
   ur_gazebo
 moveit_ros_move_group
-  
+
   fiducial_msgs
   aruco_detect
   rmf_msgs
@@ -92,16 +92,16 @@ catkin_package(
 
 include_directories(
   include
-  ${catkin_INCLUDE_DIRS} 
+  ${catkin_INCLUDE_DIRS}
   ${EIGEN3_INCLUDE_DIR}
   ${YAML_CPP_INCLUDE_DIRS}
 )
 
 add_library( robot_arm_controller src/robot_arm_controller.cpp )
-target_link_libraries(  robot_arm_controller  ${catkin_LIBRARIES} ${YAML_CPP_LIBRARIES} ) 
+target_link_libraries(  robot_arm_controller  ${catkin_LIBRARIES} ${YAML_CPP_LIBRARIES} )
 
 add_executable( robot_arm_controller_node src/robot_arm_controller.cpp )
-target_link_libraries(  robot_arm_controller_node  ${catkin_LIBRARIES} ${YAML_CPP_LIBRARIES} ) 
+target_link_libraries(  robot_arm_controller_node  ${catkin_LIBRARIES} ${YAML_CPP_LIBRARIES} )
 
 
 add_library( fiducial_markers_handler src/fiducial_markers_handler.cpp )
@@ -114,20 +114,23 @@ target_link_libraries( fiducial_markers_handler_node  ${catkin_LIBRARIES}  ${YAM
 ## -------------------------------- Main Exec for RAWM Package -----------------------------------
 
 add_executable( robot_arm_workcell_manager src/robot_arm_workcell_manager.cpp )
-target_link_libraries(  robot_arm_workcell_manager  
-                        ${catkin_LIBRARIES} 
-                        robot_arm_controller 
+target_link_libraries(  robot_arm_workcell_manager
+                        ${catkin_LIBRARIES}
+                        robot_arm_controller
                         fiducial_markers_handler
                       ) #${GAZEBO_INCLUDE_DIRS}  ${catkin_INCLUDE_DIRS} )
 
-
+install(
+  DIRECTORY python/
+  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
 
 # set(Executables
 #   CoffeebotController
 #   hacky_coffeebot_workspace
 # )
 # foreach(exec ${Executables})
-#   add_executable(${exec} 
+#   add_executable(${exec}
 #     src/${exec}.cpp
 #   )
 #   target_link_libraries(${exec} PRIVATE
@@ -149,7 +152,7 @@ target_link_libraries(  robot_arm_workcell_manager
 # #---------------------------------------------------------------------------------------------------
 # install(
 #   DIRECTORY
-#     config 
+#     config
 #     controller
 #     launch
 #     meshes

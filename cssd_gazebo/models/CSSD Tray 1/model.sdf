@@ -1,90 +1,64 @@
 <?xml version='1.0'?>
 <sdf version='1.6'>
   <model name='CSSD Tray 1'>
-      <static>0</static>
-      <link name='tray'>
-        <pose frame=''>0 0 0 0 -0 3.14</pose>
+    <allow_auto_disable>0</allow_auto_disable>
+    <static>0</static>
 
-        <inertial>
-          <mass>1.45</mass>
-          <pose frame=''>0 0 0.06  0 -0 0</pose>
-          <inertia>
-            <ixx>0.03</ixx>
-            <iyy>0.02</iyy>
-            <izz>0.05</izz>
-            <ixy>0</ixy>
-            <ixz>0</ixz>
-            <iyz>0</iyz>
-          </inertia>
-        </inertial>
+    <include>
+      <uri>model://CSSD Tray</uri>
+      <name>base</name>
+    </include>
 
-      <collision name="collision">
-        <max_contact>20</max_contact>
+
+    <link name='aruco_tag'>
+      <pose> -0.154 0.0 0.0824 0 -1.57 0.0</pose>
+
+      <inertial>
+        <mass>0.01</mass>
+        <inertia>
+          <ixx>0.001</ixx>
+          <iyy>0.001</iyy>
+          <izz>0.001</izz>
+        </inertia>
+      </inertial>
+
+      <visual name='marker'>
         <geometry>
-          <mesh>
-            <scale>1 1 1</scale>
-            <uri>model://CSSD Tray/meshes/Tray_Assem_Locating_Stand-off.STL</uri>
-          </mesh>
+          <box>
+            <size>0.04 0.04 1e-05</size>
+          </box>
         </geometry>
-        <surface>
-          <contact>
-            <poissons_ratio>0.35</poissons_ratio>
-            <elastic_modulus>7e+10</elastic_modulus>
-            <ode>
-              <kp>1e+12</kp>
-              <kd>2e+4</kd>
-              <max_vel>10</max_vel>
-              <min_depth>0.00</min_depth>
-            </ode>
-          </contact>
-          <friction>
-            <torsional>
-              <coefficient>1.0</coefficient>
-              <use_patch_radius>0</use_patch_radius>
-              <surface_radius>0.01</surface_radius>
-            </torsional>
-            <ode>
-              <mu>1000000000</mu>
-              <mu2>10000000000</mu2>
-            </ode>
-          </friction>
-        </surface>
-      </collision>
+        <material>
+          <script>
+            <uri>model://aruco_visual_marker_1/materials/scripts</uri>
+            <uri>model://aruco_visual_marker_1/materials/textures</uri>
+            <name>ArucoVisualMarker1/Marker</name>
+          </script>
+          <ambient>1 1 1 1</ambient>
+          <diffuse>1 1 1 1</diffuse>
+          <specular>0 0 0 1</specular>
+          <emissive>1 1 1 0</emissive>
+          <shader type='vertex'>
+            <normal_map>__default__</normal_map>
+          </shader>
+        </material>
+        <cast_shadows>1</cast_shadows>
+        <transparency>0</transparency>
+      </visual>
+    </link>
 
-        <visual name='visual'>
-          <geometry>
-            <mesh>
-              <scale>1 1 1</scale>
-              <uri>model://CSSD Tray/meshes/Tray_Assem_Locating_Stand-off.STL</uri>
-            </mesh>
-          </geometry>
-        </visual>
-       <visual name='marker'>
-	<pose frame=''> 0.154 -0 0.0824 0 -1.57 3.14 </pose>
-	 <geometry>
-            <box>
-              <size>0.04 0.04 1e-05</size>
-            </box>
-          </geometry>
-          <material>
-            <script>
-              <uri>model://aruco_visual_marker_1/materials/scripts</uri>
-              <uri>model://aruco_visual_marker_1/materials/textures</uri>
-              <name>ArucoVisualMarker1/Marker</name>
-            </script>
-            <ambient>1 1 1 1</ambient>
-            <diffuse>1 1 1 1</diffuse>
-            <specular>0 0 0 1</specular>
-            <emissive>1 1 1 0</emissive>
-            <shader type='vertex'>
-              <normal_map>__default__</normal_map>
-            </shader>
-          </material>
-          <cast_shadows>1</cast_shadows>
-          <transparency>0</transparency>
-	</visual>
+    <joint name="aruco_tag_joint" type="revolute">
+      <parent>base::tray</parent>
+      <child>aruco_tag</child>
 
-      </link>
-      <pose frame=''>0 0 0 0 -0 0</pose>
-    </model>
+      <!-- Common hack to make this a "fixed" joint -->
+      <axis>
+        <limit>
+          <lower>0.0</lower>
+          <upper>0.0</upper>
+        </limit>
+      </axis>
+
+    </joint>
+  </model>
 </sdf>
