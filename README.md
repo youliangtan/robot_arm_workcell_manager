@@ -3,10 +3,7 @@ Robot arm manipulation with moveit and fiducial markers. This Robot Arm manipula
 
 **PACKAGE IS STILL IN DEVELOPMENT!!!**
 
-![alt text](/documentations/rviz_bot.png?)
-
-**Testing on Gazebo** (in development)
-![alt text](/documentations/gazebo.png?)
+![alt text](/documentations/gazebo_test.png?)
 
 ---
 
@@ -85,7 +82,10 @@ roslaunch robot_arm_workcell_manager robot_arm_workcell_manager.launch
 
 Open another terminal, then use rostopic to publish a `DispenserRequest.msg` to start the pick and place motion.
 ```
-rostopic pub /cssd_workcell/dispenser_request rmf_msgs/DispenserRequest '{request_id: test_reqeust, dispenser_name: ur10_001, items:[{item_type: marker_0, quantity: 1, compartment_name: 'marker_100'}] }' --once
+rostopic pub /cssd_workcell/dispenser_request rmf_msgs/DispenserRequest '{request_id: test_reqeust, dispenser_name: ur10_001, items:[{item_type: marker_2, quantity: 1, compartment_name: 'marker_101'}] }' --once
+# second request
+rostopic pub /cssd_workcell/dispenser_request rmf_msgs/DispenserRequest '{request_id: test_reqeust, dispenser_name: ur10_001, items:[{item_type: marker_1, quantity: 1, compartment_name: 'marker_100'}] }' --once
+
 ```
 
 While the task is ongoing, user can check state of the arm_workcell by rostopic echo `/dispenser_state` and `dispenser_result` topic. 
@@ -128,8 +128,9 @@ roslaunch cssd_gazebo gazebo_editing_world.launch
 2. Models jitters on ground and arm. 
 - Tuned [kp](http://sdformat.org/spec?ver=1.6&elem=collision#ode_kp) and [kd](http://sdformat.org/spec?ver=1.6&elem=collision#ode_kd) but more fine tunning needed
 - Changed arm urdf. Not sure if it's right but follow [pr2 arm urdf](https://github.com/PR2/pr2_common/blob/melodic-devel/pr2_description/urdf/gripper_v0/gripper.gazebo.xacro) but different from what is written in [tutorial](http://gazebosim.org/tutorials?tut=ros_urdf&cat=connect_ros).
+- As what is mentioned by Michael Grey, might wanna further tune the Inertia
 
-3. Lack of friction. Not solved.
+3. Lack of friction. partially solved.
 
 ![](documentations/slip.gif)
 

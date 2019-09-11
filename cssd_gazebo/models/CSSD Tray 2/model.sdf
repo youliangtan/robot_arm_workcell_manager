@@ -31,7 +31,7 @@
           <script>
             <uri>model://aruco_visual_marker_2/materials/scripts</uri>
             <uri>model://aruco_visual_marker_2/materials/textures</uri>
-            <name>ArucoVisualMarker0/Marker</name>
+            <name>ArucoVisualMarker2/Marker</name>
           </script>
           <ambient>1 1 1 1</ambient>
           <diffuse>1 1 1 1</diffuse>
