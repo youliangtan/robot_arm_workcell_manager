@@ -24,10 +24,13 @@ Robot arm manipulation manager package is one of the module for the Central ster
 - HanWha: TBC
 - Fiducial Marker Detector: [here](https://github.com/UbiquityRobotics/fiducials)
 ```
-sudo apt-get install ros-melodic-aruco-detect
-sudo apt-get install ros-melodic-fiducial-msgs
+sudo apt-get install ros-melodic-aruco-detect  ros-melodic-fiducial-msgs
 ```
-- rmf_msgs: [here](https://github.com/RMFHOPE/rmf_msgs_ros1), **Phasing Out Soon
+- ros-control
+```
+sudo apt-get install ros-melodic-ros-control ros-melodic-ros-controllers
+```
+- rmf_msgs
 - CSSD_workcell_manager (ROS2): Work in Progress
 
 ### Make and Build
