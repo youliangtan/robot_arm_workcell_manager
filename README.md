@@ -5,7 +5,8 @@ Robot arm manipulation manager package is one of the module for the Central ster
 
 ![alt text](/documentations/gazebo_test.png?)
 
-*Full Video Link*, [here](https://drive.google.com/open?id=13X5QM5tw2AVXvWy2OXm6R4ZGWNI3iGG4)
+*Full Video Link*, [here](https://drive.google.com/open?id=1dGKh3FVMlUwX8GUMv3mgxQFBm0OnGa8B)
+
 ---
 
 ## Getting Started
