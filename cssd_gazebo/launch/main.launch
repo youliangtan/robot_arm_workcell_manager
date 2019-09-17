@@ -12,7 +12,9 @@
   </include>
 
   <!-- include our robots -->
-  <include file="$(find cssd_gazebo)/launch/two_arms.launch"/>
+  <include file="$(find cssd_gazebo)/launch/two_arms.launch" >
+  </include>
+
 
   <!--              ************************************************************************************              -->
   <!--              ******************************** RAWM Spawner **************************************              -->
