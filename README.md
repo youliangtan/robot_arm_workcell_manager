@@ -54,9 +54,12 @@ roslaunch robot_arm_workcell_manager robot_arm_workcell_manager.launch
 Open another terminal, then use rostopic to publish a `DispenserRequest.msg` to start the pick and place motion.
 ```
 rostopic pub /cssd_workcell/dispenser_request rmf_msgs/DispenserRequest '{request_id: 0xx01, dispenser_name: ur10_001, items:[{item_type: marker_2, quantity: 1, compartment_name: 'marker_101'}] }' --once
+
 # second request
 rostopic pub /cssd_workcell/dispenser_request rmf_msgs/DispenserRequest '{request_id: 0xx02, dispenser_name: ur10_001, items:[{item_type: marker_1, quantity: 1, compartment_name: 'marker_100'}] }' --once
 
+# third request: manually remove tray, and play with the pose of cart on gazebo
+rostopic pub /cssd_workcell/dispenser_request rmf_msgs/DispenserRequest '{request_id: 0xx00, dispenser_name: ur10_001, items:[{item_type: marker_0, quantity: 1, compartment_name: 'marker_100'}] }' --once
 ```
 
 By now, the robot dispenser will execute the task according to the `DispenserRequest`. GoodLuck!!
