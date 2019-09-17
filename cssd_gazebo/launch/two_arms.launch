@@ -3,7 +3,7 @@
   <!-- ARM 1-->
   <group ns="arm1">
     <param name="tf_prefix" value="robot1_tf" />
-    <include file="$(find cssd_gazebo)/launch/ur10_gazebo.launch" >
+    <include file="$(find cssd_gazebo)/launch/ur10_arm.launch" >
       <arg name="init_pose" value="-z 0.8" />
       <arg name="robot_name"  value="Robot1" />
     </include>
@@ -12,7 +12,7 @@
   <!-- ARM 2-->
   <group ns="arm2">
     <param name="tf_prefix" value="robot2_tf" />
-    <include file="$(find cssd_gazebo)/launch/ur10_gazebo.launch" >
+    <include file="$(find cssd_gazebo)/launch/ur10_arm.launch" >
       <!--Placed 2.25 meters apart in the y axis from arm 1-->
       <arg name="init_pose" value="-z 0.8 -y 2.25" />
       <arg name="robot_name"  value="Robot2" />
