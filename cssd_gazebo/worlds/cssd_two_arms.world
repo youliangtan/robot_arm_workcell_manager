@@ -1,0 +1,2889 @@
+<sdf version='1.6'>
+  <world name='default'>
+    <light name='sun' type='directional'>
+      <cast_shadows>1</cast_shadows>
+      <pose frame=''>0 0 10 0 -0 0</pose>
+      <diffuse>0.8 0.8 0.8 1</diffuse>
+      <specular>0.2 0.2 0.2 1</specular>
+      <attenuation>
+        <range>1000</range>
+        <constant>0.9</constant>
+        <linear>0.01</linear>
+        <quadratic>0.001</quadratic>
+      </attenuation>
+      <direction>-0.5 0.1 -0.9</direction>
+    </light>
+    <model name='ground_plane'>
+      <static>1</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>100 100</size>
+            </plane>
+          </geometry>
+          <surface>
+            <contact>
+              <collide_bitmask>65535</collide_bitmask>
+              <ode/>
+            </contact>
+            <friction>
+              <ode>
+                <mu>100</mu>
+                <mu2>50</mu2>
+              </ode>
+              <torsional>
+                <ode/>
+              </torsional>
+            </friction>
+            <bounce/>
+          </surface>
+          <max_contacts>99999999</max_contacts>
+        </collision>
+        <visual name='visual'>
+          <cast_shadows>0</cast_shadows>
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>100 100</size>
+            </plane>
+          </geometry>
+          <material>
+            <script>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+              <name>Gazebo/Grey</name>
+            </script>
+          </material>
+        </visual>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+    </model>
+    <gravity>0 0 -9.8</gravity>
+    <magnetic_field>6e-06 2.3e-05 -4.2e-05</magnetic_field>
+    <atmosphere type='adiabatic'/>
+    <physics name='default_physics' default='0' type='ode'>
+      <max_contacts>100</max_contacts>
+      <max_step_size>0.001</max_step_size>
+      <real_time_factor>1</real_time_factor>
+      <real_time_update_rate>1000</real_time_update_rate>
+      <ode>
+        <solver>
+          <type>quick</type>
+          <iters>50</iters>
+          <sor>1.3</sor>
+          <use_dynamic_moi_rescaling>0</use_dynamic_moi_rescaling>
+        </solver>
+        <constraints>
+          <cfm>0</cfm>
+          <erp>0.2</erp>
+          <contact_max_correcting_vel>100</contact_max_correcting_vel>
+          <contact_surface_layer>0.001</contact_surface_layer>
+        </constraints>
+      </ode>
+    </physics>
+    <scene>
+      <ambient>0.4 0.4 0.4 1</ambient>
+      <background>0.7 0.7 0.7 1</background>
+      <shadows>1</shadows>
+    </scene>
+    <audio>
+      <device>default</device>
+    </audio>
+    <wind/>
+    <spherical_coordinates>
+      <surface_model>EARTH_WGS84</surface_model>
+      <latitude_deg>0</latitude_deg>
+      <longitude_deg>0</longitude_deg>
+      <elevation>0</elevation>
+      <heading_deg>0</heading_deg>
+    </spherical_coordinates>
+    <model name='CSSD Shelf'>
+      <static>1</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry>
+            <mesh>
+              <scale>0.001 0.001 0.001</scale>
+              <uri>model://CSSD Shelf/meshes/Abdullah's rack.STL</uri>
+            </mesh>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+            <friction>
+              <torsional>
+                <ode/>
+              </torsional>
+              <ode/>
+            </friction>
+          </surface>
+        </collision>
+        <visual name='visual'>
+          <geometry>
+            <mesh>
+              <scale>0.001 0.001 0.001</scale>
+              <uri>model://CSSD Shelf/meshes/Abdullah's rack.STL</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+      <pose frame=''>1.36612 -0.244889 0 0 -0 0</pose>
+    </model>
+    <model name='UR10Base'>
+      <static>1</static>
+      <link name='link'>
+        <pose frame=''>0 0 0 0 -0 0</pose>
+        <visual name='visual'>
+          <geometry>
+            <mesh>
+              <scale>0.001 0.001 0.001</scale>
+              <uri>model://UR10Base/meshes/base.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name='collision'>
+          <geometry>
+            <mesh>
+              <scale>0.001 0.001 0.001</scale>
+              <uri>model://UR10Base/meshes/base.obj</uri>
+            </mesh>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+            <friction>
+              <torsional>
+                <ode/>
+              </torsional>
+              <ode/>
+            </friction>
+          </surface>
+        </collision>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+    </model>
+    <model name='CSSD Tray 0'>
+      <allow_auto_disable>0</allow_auto_disable>
+      <static>0</static>
+      <static>0</static>
+      <link name='base::tray'>
+        <pose frame=''>0 0 0 0 -0 3.14</pose>
+        <inertial>
+          <mass>5.5</mass>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <inertia>
+            <ixx>0.1026</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>0.206</iyy>
+            <iyz>0</iyz>
+            <izz>0.155</izz>
+          </inertia>
+        </inertial>
+        <collision name='tray floor'>
+          <pose frame=''>0 0 0.06 0 -0 0</pose>
+          <geometry>
+            <box>
+              <size>0.3 0.35 0.004</size>
+            </box>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+            <friction>
+              <torsional>
+                <ode/>
+              </torsional>
+              <ode/>
+            </friction>
+          </surface>
+        </collision>
+        <collision name='tray pegs'>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>model://CSSD Tray/meshes/tray_pegs.stl</uri>
+            </mesh>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+            <friction>
+              <torsional>
+                <ode/>
+              </torsional>
+              <ode/>
+            </friction>
+          </surface>
+        </collision>
+        <collision name='front left leg'>
+          <pose frame=''>0.128 0.153 0.034 0 -0 0</pose>
+          <geometry>
+            <cylinder>
+              <radius>0.015</radius>
+              <length>0.048</length>
+            </cylinder>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+            <friction>
+              <torsional>
+                <ode/>
+              </torsional>
+              <ode/>
+            </friction>
+          </surface>
+        </collision>
+        <collision name='front right leg'>
+          <pose frame=''>-0.128 0.153 0.034 0 -0 0</pose>
+          <geometry>
+            <cylinder>
+              <radius>0.015</radius>
+              <length>0.048</length>
+            </cylinder>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+            <friction>
+              <torsional>
+                <ode/>
+              </torsional>
+              <ode/>
+            </friction>
+          </surface>
+        </collision>
+        <collision name='back left leg'>
+          <pose frame=''>0.128 -0.153 0.034 0 -0 0</pose>
+          <geometry>
+            <cylinder>
+              <radius>0.015</radius>
+              <length>0.048</length>
+            </cylinder>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+            <friction>
+              <torsional>
+                <ode/>
+              </torsional>
+              <ode/>
+            </friction>
+          </surface>
+        </collision>
+        <collision name='back right leg'>
+          <pose frame=''>-0.128 -0.153 0.034 0 -0 0</pose>
+          <geometry>
+            <cylinder>
+              <radius>0.015</radius>
+              <length>0.048</length>
+            </cylinder>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+            <friction>
+              <torsional>
+                <ode/>
+              </torsional>
+              <ode/>
+            </friction>
+          </surface>
+        </collision>
+        <visual name='visual'>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>model://CSSD Tray/meshes/Tray_Assem_Locating_Stand-off.STL</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+      <link name='aruco_tag'>
+        <pose frame=''>-0.154 0 0.0824 0 -1.57 0</pose>
+        <inertial>
+          <mass>0.01</mass>
+          <inertia>
+            <ixx>0.001</ixx>
+            <iyy>0.001</iyy>
+            <izz>0.001</izz>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyz>0</iyz>
+          </inertia>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+        </inertial>
+        <visual name='marker'>
+          <geometry>
+            <box>
+              <size>0.04 0.04 1e-05</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://aruco_visual_marker_0/materials/scripts</uri>
+              <uri>model://aruco_visual_marker_0/materials/textures</uri>
+              <name>ArucoVisualMarker0/Marker</name>
+            </script>
+            <ambient>1 1 1 1</ambient>
+            <diffuse>1 1 1 1</diffuse>
+            <specular>0 0 0 1</specular>
+            <emissive>1 1 1 0</emissive>
+            <shader type='vertex'>
+              <normal_map>__default__</normal_map>
+            </shader>
+          </material>
+          <cast_shadows>1</cast_shadows>
+          <transparency>0</transparency>
+        </visual>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+      <joint name='aruco_tag_joint' type='revolute'>
+        <parent>base::tray</parent>
+        <child>aruco_tag</child>
+        <axis>
+          <limit>
+            <lower>0</lower>
+            <upper>0</upper>
+          </limit>
+          <xyz>0 0 1</xyz>
+          <use_parent_model_frame>0</use_parent_model_frame>
+          <dynamics>
+            <spring_reference>0</spring_reference>
+            <spring_stiffness>0</spring_stiffness>
+          </dynamics>
+        </axis>
+      </joint>
+    </model>
+    <model name='CSSD Tray 1'>
+      <allow_auto_disable>0</allow_auto_disable>
+      <static>0</static>
+      <static>0</static>
+      <link name='base::tray'>
+        <pose frame=''>0 0 0 0 -0 3.14</pose>
+        <inertial>
+          <mass>5.5</mass>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <inertia>
+            <ixx>0.1026</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>0.206</iyy>
+            <iyz>0</iyz>
+            <izz>0.155</izz>
+          </inertia>
+        </inertial>
+        <collision name='tray floor'>
+          <pose frame=''>0 0 0.06 0 -0 0</pose>
+          <geometry>
+            <box>
+              <size>0.3 0.35 0.004</size>
+            </box>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+            <friction>
+              <torsional>
+                <ode/>
+              </torsional>
+              <ode/>
+            </friction>
+          </surface>
+        </collision>
+        <collision name='tray pegs'>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>model://CSSD Tray/meshes/tray_pegs.stl</uri>
+            </mesh>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+            <friction>
+              <torsional>
+                <ode/>
+              </torsional>
+              <ode/>
+            </friction>
+          </surface>
+        </collision>
+        <collision name='front left leg'>
+          <pose frame=''>0.128 0.153 0.034 0 -0 0</pose>
+          <geometry>
+            <cylinder>
+              <radius>0.015</radius>
+              <length>0.048</length>
+            </cylinder>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+            <friction>
+              <torsional>
+                <ode/>
+              </torsional>
+              <ode/>
+            </friction>
+          </surface>
+        </collision>
+        <collision name='front right leg'>
+          <pose frame=''>-0.128 0.153 0.034 0 -0 0</pose>
+          <geometry>
+            <cylinder>
+              <radius>0.015</radius>
+              <length>0.048</length>
+            </cylinder>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+            <friction>
+              <torsional>
+                <ode/>
+              </torsional>
+              <ode/>
+            </friction>
+          </surface>
+        </collision>
+        <collision name='back left leg'>
+          <pose frame=''>0.128 -0.153 0.034 0 -0 0</pose>
+          <geometry>
+            <cylinder>
+              <radius>0.015</radius>
+              <length>0.048</length>
+            </cylinder>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+            <friction>
+              <torsional>
+                <ode/>
+              </torsional>
+              <ode/>
+            </friction>
+          </surface>
+        </collision>
+        <collision name='back right leg'>
+          <pose frame=''>-0.128 -0.153 0.034 0 -0 0</pose>
+          <geometry>
+            <cylinder>
+              <radius>0.015</radius>
+              <length>0.048</length>
+            </cylinder>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+            <friction>
+              <torsional>
+                <ode/>
+              </torsional>
+              <ode/>
+            </friction>
+          </surface>
+        </collision>
+        <visual name='visual'>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>model://CSSD Tray/meshes/Tray_Assem_Locating_Stand-off.STL</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+      <link name='aruco_tag'>
+        <pose frame=''>-0.154 0 0.0824 0 -1.57 0</pose>
+        <inertial>
+          <mass>0.01</mass>
+          <inertia>
+            <ixx>0.001</ixx>
+            <iyy>0.001</iyy>
+            <izz>0.001</izz>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyz>0</iyz>
+          </inertia>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+        </inertial>
+        <visual name='marker'>
+          <geometry>
+            <box>
+              <size>0.04 0.04 1e-05</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://aruco_visual_marker_1/materials/scripts</uri>
+              <uri>model://aruco_visual_marker_1/materials/textures</uri>
+              <name>ArucoVisualMarker1/Marker</name>
+            </script>
+            <ambient>1 1 1 1</ambient>
+            <diffuse>1 1 1 1</diffuse>
+            <specular>0 0 0 1</specular>
+            <emissive>1 1 1 0</emissive>
+            <shader type='vertex'>
+              <normal_map>__default__</normal_map>
+            </shader>
+          </material>
+          <cast_shadows>1</cast_shadows>
+          <transparency>0</transparency>
+        </visual>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+      <joint name='aruco_tag_joint' type='revolute'>
+        <parent>base::tray</parent>
+        <child>aruco_tag</child>
+        <axis>
+          <limit>
+            <lower>0</lower>
+            <upper>0</upper>
+          </limit>
+          <xyz>0 0 1</xyz>
+          <use_parent_model_frame>0</use_parent_model_frame>
+          <dynamics>
+            <spring_reference>0</spring_reference>
+            <spring_stiffness>0</spring_stiffness>
+          </dynamics>
+        </axis>
+      </joint>
+    </model>
+    <model name='CSSD Tray 2'>
+      <allow_auto_disable>0</allow_auto_disable>
+      <static>0</static>
+      <static>0</static>
+      <link name='base::tray'>
+        <pose frame=''>0 0 0 0 -0 3.14</pose>
+        <inertial>
+          <mass>5.5</mass>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <inertia>
+            <ixx>0.1026</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>0.206</iyy>
+            <iyz>0</iyz>
+            <izz>0.155</izz>
+          </inertia>
+        </inertial>
+        <collision name='tray floor'>
+          <pose frame=''>0 0 0.06 0 -0 0</pose>
+          <geometry>
+            <box>
+              <size>0.3 0.35 0.004</size>
+            </box>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+            <friction>
+              <torsional>
+                <ode/>
+              </torsional>
+              <ode/>
+            </friction>
+          </surface>
+        </collision>
+        <collision name='tray pegs'>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>model://CSSD Tray/meshes/tray_pegs.stl</uri>
+            </mesh>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+            <friction>
+              <torsional>
+                <ode/>
+              </torsional>
+              <ode/>
+            </friction>
+          </surface>
+        </collision>
+        <collision name='front left leg'>
+          <pose frame=''>0.128 0.153 0.034 0 -0 0</pose>
+          <geometry>
+            <cylinder>
+              <radius>0.015</radius>
+              <length>0.048</length>
+            </cylinder>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+            <friction>
+              <torsional>
+                <ode/>
+              </torsional>
+              <ode/>
+            </friction>
+          </surface>
+        </collision>
+        <collision name='front right leg'>
+          <pose frame=''>-0.128 0.153 0.034 0 -0 0</pose>
+          <geometry>
+            <cylinder>
+              <radius>0.015</radius>
+              <length>0.048</length>
+            </cylinder>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+            <friction>
+              <torsional>
+                <ode/>
+              </torsional>
+              <ode/>
+            </friction>
+          </surface>
+        </collision>
+        <collision name='back left leg'>
+          <pose frame=''>0.128 -0.153 0.034 0 -0 0</pose>
+          <geometry>
+            <cylinder>
+              <radius>0.015</radius>
+              <length>0.048</length>
+            </cylinder>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+            <friction>
+              <torsional>
+                <ode/>
+              </torsional>
+              <ode/>
+            </friction>
+          </surface>
+        </collision>
+        <collision name='back right leg'>
+          <pose frame=''>-0.128 -0.153 0.034 0 -0 0</pose>
+          <geometry>
+            <cylinder>
+              <radius>0.015</radius>
+              <length>0.048</length>
+            </cylinder>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+            <friction>
+              <torsional>
+                <ode/>
+              </torsional>
+              <ode/>
+            </friction>
+          </surface>
+        </collision>
+        <visual name='visual'>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>model://CSSD Tray/meshes/Tray_Assem_Locating_Stand-off.STL</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+      <link name='aruco_tag'>
+        <pose frame=''>-0.154 0 0.0824 0 -1.57 0</pose>
+        <inertial>
+          <mass>0.01</mass>
+          <inertia>
+            <ixx>0.001</ixx>
+            <iyy>0.001</iyy>
+            <izz>0.001</izz>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyz>0</iyz>
+          </inertia>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+        </inertial>
+        <visual name='marker'>
+          <geometry>
+            <box>
+              <size>0.04 0.04 1e-05</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://aruco_visual_marker_2/materials/scripts</uri>
+              <uri>model://aruco_visual_marker_2/materials/textures</uri>
+              <name>ArucoVisualMarker2/Marker</name>
+            </script>
+            <ambient>1 1 1 1</ambient>
+            <diffuse>1 1 1 1</diffuse>
+            <specular>0 0 0 1</specular>
+            <emissive>1 1 1 0</emissive>
+            <shader type='vertex'>
+              <normal_map>__default__</normal_map>
+            </shader>
+          </material>
+          <cast_shadows>1</cast_shadows>
+          <transparency>0</transparency>
+        </visual>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+      <joint name='aruco_tag_joint' type='revolute'>
+        <parent>base::tray</parent>
+        <child>aruco_tag</child>
+        <axis>
+          <limit>
+            <lower>0</lower>
+            <upper>0</upper>
+          </limit>
+          <xyz>0 0 1</xyz>
+          <use_parent_model_frame>0</use_parent_model_frame>
+          <dynamics>
+            <spring_reference>0</spring_reference>
+            <spring_stiffness>0</spring_stiffness>
+          </dynamics>
+        </axis>
+      </joint>
+    </model>
+    <model name='CSSD Tray 3'>
+      <allow_auto_disable>0</allow_auto_disable>
+      <static>0</static>
+      <static>0</static>
+      <link name='base::tray'>
+        <pose frame=''>0 0 0 0 -0 3.14</pose>
+        <inertial>
+          <mass>5.5</mass>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <inertia>
+            <ixx>0.1026</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>0.206</iyy>
+            <iyz>0</iyz>
+            <izz>0.155</izz>
+          </inertia>
+        </inertial>
+        <collision name='tray floor'>
+          <pose frame=''>0 0 0.06 0 -0 0</pose>
+          <geometry>
+            <box>
+              <size>0.3 0.35 0.004</size>
+            </box>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+            <friction>
+              <torsional>
+                <ode/>
+              </torsional>
+              <ode/>
+            </friction>
+          </surface>
+        </collision>
+        <collision name='tray pegs'>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>model://CSSD Tray/meshes/tray_pegs.stl</uri>
+            </mesh>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+            <friction>
+              <torsional>
+                <ode/>
+              </torsional>
+              <ode/>
+            </friction>
+          </surface>
+        </collision>
+        <collision name='front left leg'>
+          <pose frame=''>0.128 0.153 0.034 0 -0 0</pose>
+          <geometry>
+            <cylinder>
+              <radius>0.015</radius>
+              <length>0.048</length>
+            </cylinder>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+            <friction>
+              <torsional>
+                <ode/>
+              </torsional>
+              <ode/>
+            </friction>
+          </surface>
+        </collision>
+        <collision name='front right leg'>
+          <pose frame=''>-0.128 0.153 0.034 0 -0 0</pose>
+          <geometry>
+            <cylinder>
+              <radius>0.015</radius>
+              <length>0.048</length>
+            </cylinder>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+            <friction>
+              <torsional>
+                <ode/>
+              </torsional>
+              <ode/>
+            </friction>
+          </surface>
+        </collision>
+        <collision name='back left leg'>
+          <pose frame=''>0.128 -0.153 0.034 0 -0 0</pose>
+          <geometry>
+            <cylinder>
+              <radius>0.015</radius>
+              <length>0.048</length>
+            </cylinder>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+            <friction>
+              <torsional>
+                <ode/>
+              </torsional>
+              <ode/>
+            </friction>
+          </surface>
+        </collision>
+        <collision name='back right leg'>
+          <pose frame=''>-0.128 -0.153 0.034 0 -0 0</pose>
+          <geometry>
+            <cylinder>
+              <radius>0.015</radius>
+              <length>0.048</length>
+            </cylinder>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+            <friction>
+              <torsional>
+                <ode/>
+              </torsional>
+              <ode/>
+            </friction>
+          </surface>
+        </collision>
+        <visual name='visual'>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>model://CSSD Tray/meshes/Tray_Assem_Locating_Stand-off.STL</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+      <link name='aruco_tag'>
+        <pose frame=''>-0.154 0 0.0824 0 -1.57 0</pose>
+        <inertial>
+          <mass>0.01</mass>
+          <inertia>
+            <ixx>0.001</ixx>
+            <iyy>0.001</iyy>
+            <izz>0.001</izz>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyz>0</iyz>
+          </inertia>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+        </inertial>
+        <visual name='marker'>
+          <geometry>
+            <box>
+              <size>0.04 0.04 1e-05</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://aruco_visual_marker_3/materials/scripts</uri>
+              <uri>model://aruco_visual_marker_3/materials/textures</uri>
+              <name>ArucoVisualMarker3/Marker</name>
+            </script>
+            <ambient>1 1 1 1</ambient>
+            <diffuse>1 1 1 1</diffuse>
+            <specular>0 0 0 1</specular>
+            <emissive>1 1 1 0</emissive>
+            <shader type='vertex'>
+              <normal_map>__default__</normal_map>
+            </shader>
+          </material>
+          <cast_shadows>1</cast_shadows>
+          <transparency>0</transparency>
+        </visual>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+      <joint name='aruco_tag_joint' type='revolute'>
+        <parent>base::tray</parent>
+        <child>aruco_tag</child>
+        <axis>
+          <limit>
+            <lower>0</lower>
+            <upper>0</upper>
+          </limit>
+          <xyz>0 0 1</xyz>
+          <use_parent_model_frame>0</use_parent_model_frame>
+          <dynamics>
+            <spring_reference>0</spring_reference>
+            <spring_stiffness>0</spring_stiffness>
+          </dynamics>
+        </axis>
+      </joint>
+    </model>
+    <model name='MiRCartWithTrayPlacement'>
+      <allow_auto_disable>0</allow_auto_disable>
+      <static>1</static>
+      <static>1</static>
+      <link name='base::body'>
+        <pose frame=''>0 0 0 0 -0 0</pose>
+        <visual name='visual'>
+          <geometry>
+            <mesh>
+              <uri>model://MiRCart/meshes/cart.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name='collision'>
+          <geometry>
+            <mesh>
+              <uri>model://MiRCart/meshes/cart.obj</uri>
+            </mesh>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+            <friction>
+              <torsional>
+                <ode/>
+              </torsional>
+              <ode/>
+            </friction>
+          </surface>
+        </collision>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+      <static>1</static>
+      <link name='tray_placement::base'>
+        <pose frame=''>0 0 0 1.57 -0 0</pose>
+        <collision name='collision'>
+          <geometry>
+            <mesh>
+              <scale>0.001 0.001 0.001</scale>
+              <uri>model://MiRCartTrayPlacement/meshes/tray_placement.STL</uri>
+            </mesh>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+            <friction>
+              <torsional>
+                <ode/>
+              </torsional>
+              <ode/>
+            </friction>
+          </surface>
+        </collision>
+        <visual name='visual'>
+          <geometry>
+            <mesh>
+              <scale>0.001 0.001 0.001</scale>
+              <uri>model://MiRCartTrayPlacement/meshes/tray_placement.STL</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+      <link name='aruco_tag_100'>
+        <pose frame=''>0.405 0.25 0.5 0 -1.57 3.14</pose>
+        <inertial>
+          <mass>0.01</mass>
+          <inertia>
+            <ixx>0.001</ixx>
+            <iyy>0.001</iyy>
+            <izz>0.001</izz>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyz>0</iyz>
+          </inertia>
+        </inertial>
+        <visual name='marker_100'>
+          <geometry>
+            <box>
+              <size>0.04 0.04 1e-05</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://aruco_visual_marker_100/materials/scripts</uri>
+              <uri>model://aruco_visual_marker_100/materials/textures</uri>
+              <name>ArucoVisualMarker100/Marker</name>
+            </script>
+            <ambient>1 1 1 1</ambient>
+            <diffuse>1 1 1 1</diffuse>
+            <specular>0 0 0 1</specular>
+            <emissive>1 1 1 0</emissive>
+            <shader type='vertex'>
+              <normal_map>__default__</normal_map>
+            </shader>
+          </material>
+          <cast_shadows>1</cast_shadows>
+          <transparency>0</transparency>
+        </visual>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+      <link name='aruco_tag_101'>
+        <pose frame=''>0.405 -0.25 0.5 0 -1.57 3.14</pose>
+        <inertial>
+          <mass>0.01</mass>
+          <inertia>
+            <ixx>0.001</ixx>
+            <iyy>0.001</iyy>
+            <izz>0.001</izz>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyz>0</iyz>
+          </inertia>
+        </inertial>
+        <visual name='marker_101'>
+          <geometry>
+            <box>
+              <size>0.04 0.04 1e-05</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://aruco_visual_marker_101/materials/scripts</uri>
+              <uri>model://aruco_visual_marker_101/materials/textures</uri>
+              <name>ArucoVisualMarker101/Marker</name>
+            </script>
+            <ambient>1 1 1 1</ambient>
+            <diffuse>1 1 1 1</diffuse>
+            <specular>0 0 0 1</specular>
+            <emissive>1 1 1 0</emissive>
+            <shader type='vertex'>
+              <normal_map>__default__</normal_map>
+            </shader>
+          </material>
+          <cast_shadows>1</cast_shadows>
+          <transparency>0</transparency>
+        </visual>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+      <joint name='aruco_tag_joint' type='revolute'>
+        <parent>base::body</parent>
+        <child>aruco_tag_100</child>
+        <axis>
+          <limit>
+            <lower>0</lower>
+            <upper>0</upper>
+          </limit>
+          <xyz>0 0 1</xyz>
+          <use_parent_model_frame>0</use_parent_model_frame>
+          <dynamics>
+            <spring_reference>0</spring_reference>
+            <spring_stiffness>0</spring_stiffness>
+          </dynamics>
+        </axis>
+      </joint>
+      <joint name='aruco_tag_joint2' type='revolute'>
+        <parent>base::body</parent>
+        <child>aruco_tag_101</child>
+        <axis>
+          <limit>
+            <lower>0</lower>
+            <upper>0</upper>
+          </limit>
+          <xyz>0 0 1</xyz>
+          <use_parent_model_frame>0</use_parent_model_frame>
+          <dynamics>
+            <spring_reference>0</spring_reference>
+            <spring_stiffness>0</spring_stiffness>
+          </dynamics>
+        </axis>
+      </joint>
+      <joint name='tray_placement_joint' type='revolute'>
+        <parent>base::body</parent>
+        <child>tray_placement</child>
+        <axis>
+          <limit>
+            <lower>0</lower>
+            <upper>0</upper>
+          </limit>
+          <xyz>0 0 1</xyz>
+          <use_parent_model_frame>0</use_parent_model_frame>
+          <dynamics>
+            <spring_reference>0</spring_reference>
+            <spring_stiffness>0</spring_stiffness>
+          </dynamics>
+        </axis>
+      </joint>
+    </model>
+    <state world_name='default'>
+      <sim_time>575 37000000</sim_time>
+      <real_time>65 688908650</real_time>
+      <wall_time>1568708787 752130377</wall_time>
+      <iterations>19508</iterations>
+      <model name='CSSD Shelf'>
+        <pose frame=''>0.998619 0.100342 0.01 1.57 0 -1.57</pose>
+        <scale>1 1 1</scale>
+        <link name='link'>
+          <pose frame=''>0.998619 0.100342 0.01 1.57 0 -1.57</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link>
+      </model>
+      <model name='CSSD Shelf_0'>
+        <pose frame=''>0.979023 2.1897 0.016568 1.5708 -0.007993 -1.57116</pose>
+        <scale>1 1 1</scale>
+        <link name='link'>
+          <pose frame=''>0.979023 2.1897 0.016568 1.5708 -0.007993 -1.57116</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link>
+      </model>
+      <model name='CSSD Tray 0'>
+        <pose frame=''>0.870121 -0.155288 0.794097 -3.2e-05 0.000797 0.010435</pose>
+        <scale>1 1 1</scale>
+        <link name='aruco_tag'>
+          <pose frame=''>0.716195 -0.156891 0.87662 -0.02023 -1.5692 0.030666</pose>
+          <velocity>9.8e-05 0.005311 -0.000241 -0.07336 0.001363 5.9e-05</velocity>
+          <acceleration>0.145099 7.73081 4.99346 -3.12229 1.08258 -3.05573</acceleration>
+          <wrench>0.001451 0.077308 0.049935 0 -0 0</wrench>
+        </link>
+        <link name='base::tray'>
+          <pose frame=''>0.870121 -0.155288 0.794097 3.3e-05 -0.000797 -3.13275</pose>
+          <velocity>-1.4e-05 -0.000734 -0.000568 -0.073357 0.001363 5.8e-05</velocity>
+          <acceleration>-0.024927 -1.0689 4.50529 -3.09546 1.55641 -3.02698</acceleration>
+          <wrench>-0.137101 -5.87895 24.7791 0 -0 0</wrench>
+        </link>
+      </model>
+      <model name='CSSD Tray 1'>
+        <pose frame=''>0.869034 0.360239 0.791635 1e-06 0.000797 0.002389</pose>
+        <scale>1 1 1</scale>
+        <link name='aruco_tag'>
+          <pose frame=''>0.715101 0.359871 0.874158 0.001055 -1.5692 0.001334</pose>
+          <velocity>0 0 -0 0 1e-06 -1e-06</velocity>
+          <acceleration>0.000635 0.000304 -8.5e-05 -0.001609 0.004306 -0.002423</acceleration>
+          <wrench>6e-06 3e-06 -1e-06 0 -0 0</wrench>
+        </link>
+        <link name='base::tray'>
+          <pose frame=''>0.869034 0.360239 0.791635 0 -0.000797 -3.1408</pose>
+          <velocity>-0 0 -0 0 -0 0</velocity>
+          <acceleration>-1e-06 0 -3e-06 2e-06 3.4e-05 7e-06</acceleration>
+          <wrench>-6e-06 1e-06 -1.6e-05 0 -0 0</wrench>
+        </link>
+      </model>
+      <model name='CSSD Tray 2'>
+        <pose frame=''>0.869299 0.360239 1.12363 1e-06 0.000797 0.002389</pose>
+        <scale>1 1 1</scale>
+        <link name='aruco_tag'>
+          <pose frame=''>0.715365 0.359871 1.20616 0.000613 -1.5692 0.001776</pose>
+          <velocity>-0 -0 0 -1e-05 -0 1e-06</velocity>
+          <acceleration>0 0 -0 0.000389 -0 -1e-06</acceleration>
+          <wrench>0 0 -0 0 -0 0</wrench>
+        </link>
+        <link name='base::tray'>
+          <pose frame=''>0.869299 0.360239 1.12363 0 -0.000797 -3.1408</pose>
+          <velocity>0 -0 0 0 -0 0</velocity>
+          <acceleration>-0 -0 -0 0 -0 0</acceleration>
+          <wrench>-0 -0 -0 0 -0 0</wrench>
+        </link>
+      </model>
+      <model name='CSSD Tray 3'>
+        <pose frame=''>0.869563 0.360239 1.45564 1e-06 0.000797 0.002389</pose>
+        <scale>1 1 1</scale>
+        <link name='aruco_tag'>
+          <pose frame=''>0.715629 0.359872 1.53816 0.000546 -1.5692 0.001842</pose>
+          <velocity>-7e-06 -1.5e-05 -1e-06 9.5e-05 6e-06 -7e-06</velocity>
+          <acceleration>-0.007246 -0.015087 -0.001512 0.283504 0.006694 -0.006604</acceleration>
+          <wrench>-7.2e-05 -0.000151 -1.5e-05 0 -0 0</wrench>
+        </link>
+        <link name='base::tray'>
+          <pose frame=''>0.869563 0.360239 1.45564 0 -0.000797 -3.1408</pose>
+          <velocity>0 -0 0 0 -2e-06 0</velocity>
+          <acceleration>2e-05 -1.5e-05 0.000268 -5.3e-05 -0.002118 -0.000134</acceleration>
+          <wrench>0.00011 -8.5e-05 0.001471 0 -0 0</wrench>
+        </link>
+      </model>
+      <model name='MiRCartWithTrayPlacement'>
+        <pose frame=''>-0.089603 1.208 0 0 0 -1.57</pose>
+        <scale>1 1 1</scale>
+        <link name='aruco_tag_100'>
+          <pose frame=''>0.160719 0.803195 0.5 -0 -1.57 1.57</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link>
+        <link name='aruco_tag_101'>
+          <pose frame=''>-0.339281 0.802797 0.5 -0 -1.57 1.57</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link>
+        <link name='base::body'>
+          <pose frame=''>-0.089603 1.208 0 0 0 -1.57</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link>
+        <link name='tray_placement::base'>
+          <pose frame=''>-0.089603 1.208 0 1.57 0 -1.57</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link>
+      </model>
+      <model name='Robot1'>
+        <pose frame=''>-0 0 0.8 6.9e-05 8e-06 4e-06</pose>
+        <scale>1 1 1</scale>
+        <link name='base_link'>
+          <pose frame=''>-0 0 0.805 6.9e-05 8e-06 4e-06</pose>
+          <velocity>-3.2e-05 4.7e-05 -0.000197 0.001322 -0.005632 -0.000761</velocity>
+          <acceleration>-0.056207 0.100353 -0.385339 2.97929 0.955312 -1.64648</acceleration>
+          <wrench>-0.224827 0.401413 -1.54136 0 -0 0</wrench>
+        </link>
+        <link name='forearm_link'>
+          <pose frame=''>-0.312697 0.049435 1.45835 -0.000663 1.25857 -0.001575</pose>
+          <velocity>-0.006979 0.011576 0.001252 -0.009039 0.001601 -0.042006</velocity>
+          <acceleration>-13.6047 1.94854 2.26127 0.501051 -0.281824 2.04425</acceleration>
+          <wrench>-52.6503 7.54087 8.75111 0 -0 0</wrench>
+        </link>
+        <link name='shoulder_link'>
+          <pose frame=''>1e-06 -9e-06 0.9323 -0.000147 -1.6e-05 -0.000946</pose>
+          <velocity>0.000441 -0.001973 0.000358 0.001996 0.015142 -0.051282</velocity>
+          <acceleration>0.563993 -4.20936 0.700015 -2.41554 -1.12866 -1.66733</acceleration>
+          <wrench>4.38674 -32.7404 5.44472 0 -0 0</wrench>
+        </link>
+        <link name='upper_arm_link'>
+          <pose frame=''>0.000211 0.220932 0.932263 -0.000229 -0.536367 -0.000836</pose>
+          <velocity>0.013228 -0.00167 0.005106 0.008704 -0.020757 -0.053631</velocity>
+          <acceleration>15.3746 8.68555 3.53397 3.01517 0.690042 -0.087843</acceleration>
+          <wrench>198.794 112.304 45.6942 0 -0 0</wrench>
+        </link>
+        <link name='wrist_1_link'>
+          <pose frame=''>0.231932 0.048957 1.63415 -3.14139 -0.042106 3.14064</pose>
+          <velocity>-0.006562 -0.009175 0.001592 -0.005582 0.357346 -0.035152</velocity>
+          <acceleration>-12.9617 -17.8709 3.92956 -1.29067 -0.164292 -0.614416</acceleration>
+          <wrench>-25.4048 -35.027 7.70193 0 -0 0</wrench>
+        </link>
+        <link name='wrist_2_link'>
+          <pose frame=''>0.232041 0.163857 1.63413 -3.09951 0.000213 1.56982</pose>
+          <velocity>-0.002058 -0.008952 0.005134 0.080907 0.335204 1.03378</velocity>
+          <acceleration>-3.5204 -17.4261 11.5587 1.07944 -0.345052 -0.965285</acceleration>
+          <wrench>-6.89998 -34.1551 22.655 0 -0 0</wrench>
+        </link>
+        <link name='wrist_3_link'>
+          <pose frame=''>0.227175 0.163835 1.51853 -3.09955 0.000493 1.56983</pose>
+          <velocity>-0.040447 -0.004347 0.00882 -3.00987 0.29959 0.900636</velocity>
+          <acceleration>-54.7198 22.8432 -76.663 2.76648 -1.19675 1.06473</acceleration>
+          <wrench>-105.773 44.1559 -148.189 0 -0 0</wrench>
+        </link>
+      </model>
+      <model name='Robot2'>
+        <pose frame=''>-0.000267 1.99977 0.800147 -0.000929 0.000383 0.001294</pose>
+        <scale>1 1 1</scale>
+        <link name='base_link'>
+          <pose frame=''>-0.000265 1.99978 0.805147 -0.000929 0.000383 0.001294</pose>
+          <velocity>0.011521 0.002859 0.004271 -0.380549 0.047022 -0.069795</velocity>
+          <acceleration>-39.301 -30.4746 24.1346 2.07807 0.094565 -2.13041</acceleration>
+          <wrench>-157.204 -121.898 96.5383 0 -0 0</wrench>
+        </link>
+        <link name='forearm_link'>
+          <pose frame=''>-0.312888 2.04958 1.45846 -0.000911 1.25923 -0.002509</pose>
+          <velocity>0.011496 0.000797 -0.042449 0.094896 -0.115335 0.015039</velocity>
+          <acceleration>-0.934363 -3.61935 16.7553 1.19728 1.31343 -1.22285</acceleration>
+          <wrench>-3.61599 -14.0069 64.8432 0 -0 0</wrench>
+        </link>
+        <link name='shoulder_link'>
+          <pose frame=''>-0.000179 1.99987 0.932462 -0.00025 -0.000113 -0.001395</pose>
+          <velocity>0.034738 0.067796 -0.000183 0.021695 -0.024332 -0.182746</velocity>
+          <acceleration>7.2718 46.9103 24.6022 0.147091 -1.10205 -0.359619</acceleration>
+          <wrench>56.56 364.868 191.356 0 -0 0</wrench>
+        </link>
+        <link name='upper_arm_link'>
+          <pose frame=''>0.000161 2.22081 0.932371 -0.000396 -0.536426 -0.001382</pose>
+          <velocity>0.062764 0.064434 0.008737 0.135442 -0.09311 -0.013861</velocity>
+          <acceleration>25.3373 31.5442 7.87126 -0.61903 -1.10317 -1.49748</acceleration>
+          <wrench>327.612 407.867 101.775 0 -0 0</wrench>
+        </link>
+        <link name='wrist_1_link'>
+          <pose frame=''>0.231856 2.04873 1.6339 -3.14133 -0.043503 3.13993</pose>
+          <velocity>-0.008649 -0.00544 0.020616 0.095813 0.262655 0.017366</velocity>
+          <acceleration>-9.51526 -25.6927 43.6922 1.67712 1.15801 -1.13044</acceleration>
+          <wrench>-18.6499 -50.3577 85.6367 0 -0 0</wrench>
+        </link>
+        <link name='wrist_2_link'>
+          <pose frame=''>0.232043 2.16363 1.63387 -3.09814 0.000195 1.5695</pose>
+          <velocity>-0.011976 -0.004467 0.031776 0.06789 0.261229 -0.907339</velocity>
+          <acceleration>-3.87311 -25.788 56.0536 3.04908 -0.160693 -1.92887</acceleration>
+          <wrench>-7.59129 -50.5445 109.865 0 -0 0</wrench>
+        </link>
+        <link name='wrist_3_link'>
+          <pose frame=''>0.227017 2.16361 1.51829 -3.09822 0.000234 1.56952</pose>
+          <velocity>-0.043026 0.013562 0.033311 -3.09655 0.269096 -0.73138</velocity>
+          <acceleration>-64.2385 1.64938 -22.8106 0.508686 1.49274 2.86049</acceleration>
+          <wrench>-124.173 3.18826 -44.0928 0 -0 0</wrench>
+        </link>
+      </model>
+      <model name='UR10Base'>
+        <pose frame=''>-0.4 -0.35 -0.48 0 -0 0</pose>
+        <scale>1 1 1</scale>
+        <link name='link'>
+          <pose frame=''>-0.4 -0.35 -0.48 0 -0 0</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link>
+      </model>
+      <model name='UR10Base_0'>
+        <pose frame=''>-0.441656 1.6483 -0.472958 0 -0 0</pose>
+        <scale>1 1 1</scale>
+        <link name='link'>
+          <pose frame=''>-0.441656 1.6483 -0.472958 0 -0 0</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link>
+      </model>
+      <model name='ground_plane'>
+        <pose frame=''>0 0 0 0 -0 0</pose>
+        <scale>1 1 1</scale>
+        <link name='link'>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link>
+      </model>
+      <light name='sun'>
+        <pose frame=''>0 0 10 0 -0 0</pose>
+      </light>
+    </state>
+    <gui fullscreen='0'>
+      <camera name='user_camera'>
+        <pose frame=''>-5.20511 1.6091 2.0284 0 0.121798 0.216166</pose>
+        <view_controller>orbit</view_controller>
+        <projection_type>perspective</projection_type>
+      </camera>
+    </gui>
+    <model name='Robot1'>
+      <link name='base_link'>
+        <pose frame=''>0 0 0.005 0 -0 0</pose>
+        <inertial>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <mass>4</mass>
+          <inertia>
+            <ixx>0.00610633</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>0.00610633</iyy>
+            <iyz>0</iyz>
+            <izz>0.01125</izz>
+          </inertia>
+        </inertial>
+        <collision name='base_link_collision'>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/home/christopher/catkin_ws/src/universal_robot/ur_description/meshes/ur10/collision/base.stl</uri>
+            </mesh>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+            <friction>
+              <torsional>
+                <ode/>
+              </torsional>
+              <ode/>
+            </friction>
+          </surface>
+        </collision>
+        <visual name='base_link_visual'>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/home/christopher/catkin_ws/src/universal_robot/ur_description/meshes/ur10/visual/base.dae</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+      <joint name='world_joint' type='fixed'>
+        <child>base_link</child>
+        <parent>world</parent>
+      </joint>
+      <link name='shoulder_link'>
+        <pose frame=''>0 0 0.1323 0 -0 0</pose>
+        <inertial>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <mass>7.778</mass>
+          <inertia>
+            <ixx>0.0314743</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>0.0314743</iyy>
+            <iyz>0</iyz>
+            <izz>0.0218756</izz>
+          </inertia>
+        </inertial>
+        <collision name='shoulder_link_collision'>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/home/christopher/catkin_ws/src/universal_robot/ur_description/meshes/ur10/collision/shoulder.stl</uri>
+            </mesh>
+          </geometry>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <friction>
+              <ode/>
+              <torsional>
+                <ode/>
+              </torsional>
+            </friction>
+            <bounce/>
+          </surface>
+          <max_contacts>10</max_contacts>
+        </collision>
+        <visual name='shoulder_link_visual'>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/home/christopher/catkin_ws/src/universal_robot/ur_description/meshes/ur10/visual/shoulder.dae</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <script>
+              <uri>__default__</uri>
+              <name>__default__</name>
+            </script>
+          </material>
+        </visual>
+        <gravity>1</gravity>
+        <velocity_decay/>
+        <self_collide>1</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+      <joint name='shoulder_pan_joint' type='revolute'>
+        <child>shoulder_link</child>
+        <parent>base_link</parent>
+        <axis>
+          <xyz>0 0 1</xyz>
+          <limit>
+            <lower>-6.28319</lower>
+            <upper>6.28319</upper>
+            <effort>330</effort>
+            <velocity>2.16</velocity>
+          </limit>
+          <dynamics>
+            <damping>0</damping>
+            <friction>0</friction>
+            <spring_reference>0</spring_reference>
+            <spring_stiffness>0</spring_stiffness>
+          </dynamics>
+          <use_parent_model_frame>1</use_parent_model_frame>
+        </axis>
+      </joint>
+      <link name='upper_arm_link'>
+        <pose frame=''>0 0.220941 0.1323 3.14159 1.57079 3.14159</pose>
+        <inertial>
+          <pose frame=''>0 0 0.306 0 -0 0</pose>
+          <mass>12.93</mass>
+          <inertia>
+            <ixx>0.421754</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>0.421754</iyy>
+            <iyz>0</iyz>
+            <izz>0.0363656</izz>
+          </inertia>
+        </inertial>
+        <collision name='upper_arm_link_collision'>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/home/christopher/catkin_ws/src/universal_robot/ur_description/meshes/ur10/collision/upperarm.stl</uri>
+            </mesh>
+          </geometry>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <friction>
+              <ode/>
+              <torsional>
+                <ode/>
+              </torsional>
+            </friction>
+            <bounce/>
+          </surface>
+          <max_contacts>10</max_contacts>
+        </collision>
+        <visual name='upper_arm_link_visual'>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/home/christopher/catkin_ws/src/universal_robot/ur_description/meshes/ur10/visual/upperarm.dae</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <script>
+              <uri>__default__</uri>
+              <name>__default__</name>
+            </script>
+          </material>
+        </visual>
+        <gravity>1</gravity>
+        <velocity_decay/>
+        <self_collide>1</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+      <joint name='shoulder_lift_joint' type='revolute'>
+        <child>upper_arm_link</child>
+        <parent>shoulder_link</parent>
+        <axis>
+          <xyz>0 1 0</xyz>
+          <limit>
+            <lower>-6.28319</lower>
+            <upper>6.28319</upper>
+            <effort>330</effort>
+            <velocity>2.16</velocity>
+          </limit>
+          <dynamics>
+            <damping>0</damping>
+            <friction>0</friction>
+            <spring_reference>0</spring_reference>
+            <spring_stiffness>0</spring_stiffness>
+          </dynamics>
+          <use_parent_model_frame>1</use_parent_model_frame>
+        </axis>
+      </joint>
+      <link name='forearm_link'>
+        <pose frame=''>0.612 0.049041 0.1323 3.14159 1.57079 3.14159</pose>
+        <inertial>
+          <pose frame=''>0 0 0.28615 0 -0 0</pose>
+          <mass>3.87</mass>
+          <inertia>
+            <ixx>0.11107</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>0.11107</iyy>
+            <iyz>0</iyz>
+            <izz>0.0108844</izz>
+          </inertia>
+        </inertial>
+        <collision name='forearm_link_collision'>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/home/christopher/catkin_ws/src/universal_robot/ur_description/meshes/ur10/collision/forearm.stl</uri>
+            </mesh>
+          </geometry>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <friction>
+              <ode/>
+              <torsional>
+                <ode/>
+              </torsional>
+            </friction>
+            <bounce/>
+          </surface>
+          <max_contacts>10</max_contacts>
+        </collision>
+        <visual name='forearm_link_visual'>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/home/christopher/catkin_ws/src/universal_robot/ur_description/meshes/ur10/visual/forearm.dae</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <script>
+              <uri>__default__</uri>
+              <name>__default__</name>
+            </script>
+          </material>
+        </visual>
+        <gravity>1</gravity>
+        <velocity_decay/>
+        <self_collide>1</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+      <joint name='elbow_joint' type='revolute'>
+        <child>forearm_link</child>
+        <parent>upper_arm_link</parent>
+        <axis>
+          <xyz>0 1 0</xyz>
+          <limit>
+            <lower>-3.14159</lower>
+            <upper>3.14159</upper>
+            <effort>150</effort>
+            <velocity>3.15</velocity>
+          </limit>
+          <dynamics>
+            <damping>0</damping>
+            <friction>0</friction>
+            <spring_reference>0</spring_reference>
+            <spring_stiffness>0</spring_stiffness>
+          </dynamics>
+          <use_parent_model_frame>1</use_parent_model_frame>
+        </axis>
+      </joint>
+      <link name='wrist_1_link'>
+        <pose frame=''>1.1843 0.049041 0.1323 3.14159 -0 3.14159</pose>
+        <inertial>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <mass>1.96</mass>
+          <inertia>
+            <ixx>0.00510825</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>0.00510825</iyy>
+            <iyz>0</iyz>
+            <izz>0.0055125</izz>
+          </inertia>
+        </inertial>
+        <collision name='wrist_1_link_collision'>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/home/christopher/catkin_ws/src/universal_robot/ur_description/meshes/ur10/collision/wrist1.stl</uri>
+            </mesh>
+          </geometry>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <friction>
+              <ode/>
+              <torsional>
+                <ode/>
+              </torsional>
+            </friction>
+            <bounce/>
+          </surface>
+          <max_contacts>10</max_contacts>
+        </collision>
+        <visual name='wrist_1_link_visual'>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/home/christopher/catkin_ws/src/universal_robot/ur_description/meshes/ur10/visual/wrist1.dae</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <script>
+              <uri>__default__</uri>
+              <name>__default__</name>
+            </script>
+          </material>
+        </visual>
+        <gravity>1</gravity>
+        <velocity_decay/>
+        <self_collide>1</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+      <joint name='wrist_1_joint' type='revolute'>
+        <child>wrist_1_link</child>
+        <parent>forearm_link</parent>
+        <axis>
+          <xyz>0 1 0</xyz>
+          <limit>
+            <lower>-6.28319</lower>
+            <upper>6.28319</upper>
+            <effort>54</effort>
+            <velocity>3.2</velocity>
+          </limit>
+          <dynamics>
+            <damping>0</damping>
+            <friction>0</friction>
+            <spring_reference>0</spring_reference>
+            <spring_stiffness>0</spring_stiffness>
+          </dynamics>
+          <use_parent_model_frame>1</use_parent_model_frame>
+        </axis>
+      </joint>
+      <link name='wrist_2_link'>
+        <pose frame=''>1.1843 0.163941 0.1323 3.14159 -0 3.14159</pose>
+        <inertial>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <mass>1.96</mass>
+          <inertia>
+            <ixx>0.00510825</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>0.00510825</iyy>
+            <iyz>0</iyz>
+            <izz>0.0055125</izz>
+          </inertia>
+        </inertial>
+        <collision name='wrist_2_link_collision'>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/home/christopher/catkin_ws/src/universal_robot/ur_description/meshes/ur10/collision/wrist2.stl</uri>
+            </mesh>
+          </geometry>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <friction>
+              <ode/>
+              <torsional>
+                <ode/>
+              </torsional>
+            </friction>
+            <bounce/>
+          </surface>
+          <max_contacts>10</max_contacts>
+        </collision>
+        <visual name='wrist_2_link_visual'>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/home/christopher/catkin_ws/src/universal_robot/ur_description/meshes/ur10/visual/wrist2.dae</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <script>
+              <uri>__default__</uri>
+              <name>__default__</name>
+            </script>
+          </material>
+        </visual>
+        <gravity>1</gravity>
+        <velocity_decay/>
+        <self_collide>1</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+      <joint name='wrist_2_joint' type='revolute'>
+        <child>wrist_2_link</child>
+        <parent>wrist_1_link</parent>
+        <axis>
+          <xyz>0 0 -1</xyz>
+          <limit>
+            <lower>-6.28319</lower>
+            <upper>6.28319</upper>
+            <effort>54</effort>
+            <velocity>3.2</velocity>
+          </limit>
+          <dynamics>
+            <damping>0</damping>
+            <friction>0</friction>
+            <spring_reference>0</spring_reference>
+            <spring_stiffness>0</spring_stiffness>
+          </dynamics>
+          <use_parent_model_frame>1</use_parent_model_frame>
+        </axis>
+      </joint>
+      <link name='wrist_3_link'>
+        <pose frame=''>1.1843 0.163941 0.0166 3.14159 -0 3.14159</pose>
+        <inertial>
+          <pose frame=''>-0.001791 0.143495 -0.041193 0 -0 0</pose>
+          <mass>1.933</mass>
+          <inertia>
+            <ixx>0.016483</ixx>
+            <ixy>0.000363842</ixy>
+            <ixz>-0.000139209</ixz>
+            <iyy>0.00763783</iyy>
+            <iyz>0.00115146</iyz>
+            <izz>0.0211551</izz>
+          </inertia>
+        </inertial>
+        <collision name='wrist_3_link_collision'>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/home/christopher/catkin_ws/src/universal_robot/ur_description/meshes/ur10/collision/wrist3.stl</uri>
+            </mesh>
+          </geometry>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <friction>
+              <ode/>
+              <torsional>
+                <ode/>
+              </torsional>
+            </friction>
+            <bounce/>
+          </surface>
+          <max_contacts>10</max_contacts>
+        </collision>
+        <collision name='wrist_3_link_fixed_joint_lump__ee_link_collision_1'>
+          <pose frame=''>-0 0.0822 0 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>0.01 0.01 0.01</size>
+            </box>
+          </geometry>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <friction>
+              <ode/>
+              <torsional>
+                <ode/>
+              </torsional>
+            </friction>
+            <bounce/>
+          </surface>
+          <max_contacts>10</max_contacts>
+        </collision>
+        <collision name='wrist_3_link_fixed_joint_lump__end_effector_link_collision_2'>
+          <pose frame=''>0 0.0922 0 3.14 -0 1.5708</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/home/christopher/catkin_ws/src/robot_arm_workcell_manager/cssdbot_description/meshes/collision/end_effector_holes.stl</uri>
+            </mesh>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+            <friction>
+              <torsional>
+                <ode/>
+              </torsional>
+              <ode/>
+            </friction>
+          </surface>
+        </collision>
+        <collision name='wrist_3_link_fixed_joint_lump__end_effector_link_collision_3'>
+          <pose frame=''>0 0.20405 0.046 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>0.1987 0.11346 0.006</size>
+            </box>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+            <friction>
+              <torsional>
+                <ode/>
+              </torsional>
+              <ode/>
+            </friction>
+          </surface>
+        </collision>
+        <collision name='wrist_3_link_fixed_joint_lump__end_effector_link_collision_4'>
+          <pose frame=''>0 0.25918 0.046 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>0.08844 0.17288 0.006</size>
+            </box>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+            <friction>
+              <torsional>
+                <ode/>
+              </torsional>
+              <ode/>
+            </friction>
+          </surface>
+        </collision>
+        <visual name='wrist_3_link_visual'>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/home/christopher/catkin_ws/src/universal_robot/ur_description/meshes/ur10/visual/wrist3.dae</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <script>
+              <uri>__default__</uri>
+              <name>__default__</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='wrist_3_link_fixed_joint_lump__end_effector_link_visual_1'>
+          <pose frame=''>0 0.0922 0 3.14 -0 1.5708</pose>
+          <geometry>
+            <mesh>
+              <scale>0.001 0.001 0.001</scale>
+              <uri>/home/christopher/catkin_ws/src/robot_arm_workcell_manager/cssdbot_description/meshes/visual/end_effector.STL</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <velocity_decay/>
+        <velocity_decay/>
+        <self_collide>1</self_collide>
+        <gravity>1</gravity>
+        <velocity_decay/>
+        <sensor name='camera1' type='camera'>
+          <update_rate>30</update_rate>
+          <camera name='camera_head'>
+            <horizontal_fov>1.57</horizontal_fov>
+            <image>
+              <width>3840</width>
+              <height>1080</height>
+              <format>R8G8B8</format>
+            </image>
+            <clip>
+              <near>0.02</near>
+              <far>300</far>
+            </clip>
+            <noise>
+              <type>gaussian</type>
+              <mean>0</mean>
+              <stddev>0.007</stddev>
+            </noise>
+          </camera>
+          <plugin name='camera_controller' filename='libgazebo_ros_camera.so'>
+            <alwaysOn>1</alwaysOn>
+            <updateRate>30</updateRate>
+            <cameraName/>
+            <imageTopicName>/image</imageTopicName>
+            <cameraInfoTopicName>/camera_info</cameraInfoTopicName>
+            <frameName>camera_link</frameName>
+            <hackBaseline>0.07</hackBaseline>
+            <distortionK1>0.0</distortionK1>
+            <distortionK2>0.0</distortionK2>
+            <distortionK3>0.0</distortionK3>
+            <distortionT1>0.0</distortionT1>
+            <distortionT2>0.0</distortionT2>
+            <robotNamespace>/arm1/</robotNamespace>
+          </plugin>
+          <pose frame=''>-0.06 0.1472 0.0825 0 -0 1.5708</pose>
+        </sensor>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+      <joint name='wrist_3_joint' type='revolute'>
+        <child>wrist_3_link</child>
+        <parent>wrist_2_link</parent>
+        <axis>
+          <xyz>0 1 0</xyz>
+          <limit>
+            <lower>-6.28319</lower>
+            <upper>6.28319</upper>
+            <effort>54</effort>
+            <velocity>3.2</velocity>
+          </limit>
+          <dynamics>
+            <damping>0</damping>
+            <friction>0</friction>
+            <spring_reference>0</spring_reference>
+            <spring_stiffness>0</spring_stiffness>
+          </dynamics>
+          <use_parent_model_frame>1</use_parent_model_frame>
+        </axis>
+      </joint>
+      <static>0</static>
+      <plugin name='ros_control' filename='libgazebo_ros_control.so'>
+        <robotNamespace>/arm1/</robotNamespace>
+      </plugin>
+      <pose frame=''>0 0 0.8 0 -0 0</pose>
+    </model>
+    <model name='Robot2'>
+      <link name='base_link'>
+        <pose frame=''>0 0 0.005 0 -0 0</pose>
+        <inertial>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <mass>4</mass>
+          <inertia>
+            <ixx>0.00610633</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>0.00610633</iyy>
+            <iyz>0</iyz>
+            <izz>0.01125</izz>
+          </inertia>
+        </inertial>
+        <collision name='base_link_collision'>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/home/christopher/catkin_ws/src/universal_robot/ur_description/meshes/ur10/collision/base.stl</uri>
+            </mesh>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+            <friction>
+              <torsional>
+                <ode/>
+              </torsional>
+              <ode/>
+            </friction>
+          </surface>
+        </collision>
+        <visual name='base_link_visual'>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/home/christopher/catkin_ws/src/universal_robot/ur_description/meshes/ur10/visual/base.dae</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+      <joint name='world_joint' type='fixed'>
+        <child>base_link</child>
+        <parent>world</parent>
+      </joint>
+      <link name='shoulder_link'>
+        <pose frame=''>0 0 0.1323 0 -0 0</pose>
+        <inertial>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <mass>7.778</mass>
+          <inertia>
+            <ixx>0.0314743</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>0.0314743</iyy>
+            <iyz>0</iyz>
+            <izz>0.0218756</izz>
+          </inertia>
+        </inertial>
+        <collision name='shoulder_link_collision'>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/home/christopher/catkin_ws/src/universal_robot/ur_description/meshes/ur10/collision/shoulder.stl</uri>
+            </mesh>
+          </geometry>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <friction>
+              <ode/>
+              <torsional>
+                <ode/>
+              </torsional>
+            </friction>
+            <bounce/>
+          </surface>
+          <max_contacts>10</max_contacts>
+        </collision>
+        <visual name='shoulder_link_visual'>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/home/christopher/catkin_ws/src/universal_robot/ur_description/meshes/ur10/visual/shoulder.dae</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <script>
+              <uri>__default__</uri>
+              <name>__default__</name>
+            </script>
+          </material>
+        </visual>
+        <gravity>1</gravity>
+        <velocity_decay/>
+        <self_collide>1</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+      <joint name='shoulder_pan_joint' type='revolute'>
+        <child>shoulder_link</child>
+        <parent>base_link</parent>
+        <axis>
+          <xyz>0 0 1</xyz>
+          <limit>
+            <lower>-6.28319</lower>
+            <upper>6.28319</upper>
+            <effort>330</effort>
+            <velocity>2.16</velocity>
+          </limit>
+          <dynamics>
+            <damping>0</damping>
+            <friction>0</friction>
+            <spring_reference>0</spring_reference>
+            <spring_stiffness>0</spring_stiffness>
+          </dynamics>
+          <use_parent_model_frame>1</use_parent_model_frame>
+        </axis>
+      </joint>
+      <link name='upper_arm_link'>
+        <pose frame=''>0 0.220941 0.1323 3.14159 1.57079 3.14159</pose>
+        <inertial>
+          <pose frame=''>0 0 0.306 0 -0 0</pose>
+          <mass>12.93</mass>
+          <inertia>
+            <ixx>0.421754</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>0.421754</iyy>
+            <iyz>0</iyz>
+            <izz>0.0363656</izz>
+          </inertia>
+        </inertial>
+        <collision name='upper_arm_link_collision'>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/home/christopher/catkin_ws/src/universal_robot/ur_description/meshes/ur10/collision/upperarm.stl</uri>
+            </mesh>
+          </geometry>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <friction>
+              <ode/>
+              <torsional>
+                <ode/>
+              </torsional>
+            </friction>
+            <bounce/>
+          </surface>
+          <max_contacts>10</max_contacts>
+        </collision>
+        <visual name='upper_arm_link_visual'>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/home/christopher/catkin_ws/src/universal_robot/ur_description/meshes/ur10/visual/upperarm.dae</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <script>
+              <uri>__default__</uri>
+              <name>__default__</name>
+            </script>
+          </material>
+        </visual>
+        <gravity>1</gravity>
+        <velocity_decay/>
+        <self_collide>1</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+      <joint name='shoulder_lift_joint' type='revolute'>
+        <child>upper_arm_link</child>
+        <parent>shoulder_link</parent>
+        <axis>
+          <xyz>0 1 0</xyz>
+          <limit>
+            <lower>-6.28319</lower>
+            <upper>6.28319</upper>
+            <effort>330</effort>
+            <velocity>2.16</velocity>
+          </limit>
+          <dynamics>
+            <damping>0</damping>
+            <friction>0</friction>
+            <spring_reference>0</spring_reference>
+            <spring_stiffness>0</spring_stiffness>
+          </dynamics>
+          <use_parent_model_frame>1</use_parent_model_frame>
+        </axis>
+      </joint>
+      <link name='forearm_link'>
+        <pose frame=''>0.612 0.049041 0.1323 3.14159 1.57079 3.14159</pose>
+        <inertial>
+          <pose frame=''>0 0 0.28615 0 -0 0</pose>
+          <mass>3.87</mass>
+          <inertia>
+            <ixx>0.11107</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>0.11107</iyy>
+            <iyz>0</iyz>
+            <izz>0.0108844</izz>
+          </inertia>
+        </inertial>
+        <collision name='forearm_link_collision'>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/home/christopher/catkin_ws/src/universal_robot/ur_description/meshes/ur10/collision/forearm.stl</uri>
+            </mesh>
+          </geometry>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <friction>
+              <ode/>
+              <torsional>
+                <ode/>
+              </torsional>
+            </friction>
+            <bounce/>
+          </surface>
+          <max_contacts>10</max_contacts>
+        </collision>
+        <visual name='forearm_link_visual'>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/home/christopher/catkin_ws/src/universal_robot/ur_description/meshes/ur10/visual/forearm.dae</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <script>
+              <uri>__default__</uri>
+              <name>__default__</name>
+            </script>
+          </material>
+        </visual>
+        <gravity>1</gravity>
+        <velocity_decay/>
+        <self_collide>1</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+      <joint name='elbow_joint' type='revolute'>
+        <child>forearm_link</child>
+        <parent>upper_arm_link</parent>
+        <axis>
+          <xyz>0 1 0</xyz>
+          <limit>
+            <lower>-3.14159</lower>
+            <upper>3.14159</upper>
+            <effort>150</effort>
+            <velocity>3.15</velocity>
+          </limit>
+          <dynamics>
+            <damping>0</damping>
+            <friction>0</friction>
+            <spring_reference>0</spring_reference>
+            <spring_stiffness>0</spring_stiffness>
+          </dynamics>
+          <use_parent_model_frame>1</use_parent_model_frame>
+        </axis>
+      </joint>
+      <link name='wrist_1_link'>
+        <pose frame=''>1.1843 0.049041 0.1323 3.14159 -0 3.14159</pose>
+        <inertial>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <mass>1.96</mass>
+          <inertia>
+            <ixx>0.00510825</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>0.00510825</iyy>
+            <iyz>0</iyz>
+            <izz>0.0055125</izz>
+          </inertia>
+        </inertial>
+        <collision name='wrist_1_link_collision'>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/home/christopher/catkin_ws/src/universal_robot/ur_description/meshes/ur10/collision/wrist1.stl</uri>
+            </mesh>
+          </geometry>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <friction>
+              <ode/>
+              <torsional>
+                <ode/>
+              </torsional>
+            </friction>
+            <bounce/>
+          </surface>
+          <max_contacts>10</max_contacts>
+        </collision>
+        <visual name='wrist_1_link_visual'>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/home/christopher/catkin_ws/src/universal_robot/ur_description/meshes/ur10/visual/wrist1.dae</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <script>
+              <uri>__default__</uri>
+              <name>__default__</name>
+            </script>
+          </material>
+        </visual>
+        <gravity>1</gravity>
+        <velocity_decay/>
+        <self_collide>1</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+      <joint name='wrist_1_joint' type='revolute'>
+        <child>wrist_1_link</child>
+        <parent>forearm_link</parent>
+        <axis>
+          <xyz>0 1 0</xyz>
+          <limit>
+            <lower>-6.28319</lower>
+            <upper>6.28319</upper>
+            <effort>54</effort>
+            <velocity>3.2</velocity>
+          </limit>
+          <dynamics>
+            <damping>0</damping>
+            <friction>0</friction>
+            <spring_reference>0</spring_reference>
+            <spring_stiffness>0</spring_stiffness>
+          </dynamics>
+          <use_parent_model_frame>1</use_parent_model_frame>
+        </axis>
+      </joint>
+      <link name='wrist_2_link'>
+        <pose frame=''>1.1843 0.163941 0.1323 3.14159 -0 3.14159</pose>
+        <inertial>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <mass>1.96</mass>
+          <inertia>
+            <ixx>0.00510825</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>0.00510825</iyy>
+            <iyz>0</iyz>
+            <izz>0.0055125</izz>
+          </inertia>
+        </inertial>
+        <collision name='wrist_2_link_collision'>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/home/christopher/catkin_ws/src/universal_robot/ur_description/meshes/ur10/collision/wrist2.stl</uri>
+            </mesh>
+          </geometry>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <friction>
+              <ode/>
+              <torsional>
+                <ode/>
+              </torsional>
+            </friction>
+            <bounce/>
+          </surface>
+          <max_contacts>10</max_contacts>
+        </collision>
+        <visual name='wrist_2_link_visual'>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/home/christopher/catkin_ws/src/universal_robot/ur_description/meshes/ur10/visual/wrist2.dae</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <script>
+              <uri>__default__</uri>
+              <name>__default__</name>
+            </script>
+          </material>
+        </visual>
+        <gravity>1</gravity>
+        <velocity_decay/>
+        <self_collide>1</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+      <joint name='wrist_2_joint' type='revolute'>
+        <child>wrist_2_link</child>
+        <parent>wrist_1_link</parent>
+        <axis>
+          <xyz>0 0 -1</xyz>
+          <limit>
+            <lower>-6.28319</lower>
+            <upper>6.28319</upper>
+            <effort>54</effort>
+            <velocity>3.2</velocity>
+          </limit>
+          <dynamics>
+            <damping>0</damping>
+            <friction>0</friction>
+            <spring_reference>0</spring_reference>
+            <spring_stiffness>0</spring_stiffness>
+          </dynamics>
+          <use_parent_model_frame>1</use_parent_model_frame>
+        </axis>
+      </joint>
+      <link name='wrist_3_link'>
+        <pose frame=''>1.1843 0.163941 0.0166 3.14159 -0 3.14159</pose>
+        <inertial>
+          <pose frame=''>-0.001791 0.143495 -0.041193 0 -0 0</pose>
+          <mass>1.933</mass>
+          <inertia>
+            <ixx>0.016483</ixx>
+            <ixy>0.000363842</ixy>
+            <ixz>-0.000139209</ixz>
+            <iyy>0.00763783</iyy>
+            <iyz>0.00115146</iyz>
+            <izz>0.0211551</izz>
+          </inertia>
+        </inertial>
+        <collision name='wrist_3_link_collision'>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/home/christopher/catkin_ws/src/universal_robot/ur_description/meshes/ur10/collision/wrist3.stl</uri>
+            </mesh>
+          </geometry>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <friction>
+              <ode/>
+              <torsional>
+                <ode/>
+              </torsional>
+            </friction>
+            <bounce/>
+          </surface>
+          <max_contacts>10</max_contacts>
+        </collision>
+        <collision name='wrist_3_link_fixed_joint_lump__ee_link_collision_1'>
+          <pose frame=''>-0 0.0822 0 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>0.01 0.01 0.01</size>
+            </box>
+          </geometry>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <friction>
+              <ode/>
+              <torsional>
+                <ode/>
+              </torsional>
+            </friction>
+            <bounce/>
+          </surface>
+          <max_contacts>10</max_contacts>
+        </collision>
+        <collision name='wrist_3_link_fixed_joint_lump__end_effector_link_collision_2'>
+          <pose frame=''>0 0.0922 0 3.14 -0 1.5708</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/home/christopher/catkin_ws/src/robot_arm_workcell_manager/cssdbot_description/meshes/collision/end_effector_holes.stl</uri>
+            </mesh>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+            <friction>
+              <torsional>
+                <ode/>
+              </torsional>
+              <ode/>
+            </friction>
+          </surface>
+        </collision>
+        <collision name='wrist_3_link_fixed_joint_lump__end_effector_link_collision_3'>
+          <pose frame=''>0 0.20405 0.046 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>0.1987 0.11346 0.006</size>
+            </box>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+            <friction>
+              <torsional>
+                <ode/>
+              </torsional>
+              <ode/>
+            </friction>
+          </surface>
+        </collision>
+        <collision name='wrist_3_link_fixed_joint_lump__end_effector_link_collision_4'>
+          <pose frame=''>0 0.25918 0.046 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>0.08844 0.17288 0.006</size>
+            </box>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+            <friction>
+              <torsional>
+                <ode/>
+              </torsional>
+              <ode/>
+            </friction>
+          </surface>
+        </collision>
+        <visual name='wrist_3_link_visual'>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/home/christopher/catkin_ws/src/universal_robot/ur_description/meshes/ur10/visual/wrist3.dae</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <script>
+              <uri>__default__</uri>
+              <name>__default__</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='wrist_3_link_fixed_joint_lump__end_effector_link_visual_1'>
+          <pose frame=''>0 0.0922 0 3.14 -0 1.5708</pose>
+          <geometry>
+            <mesh>
+              <scale>0.001 0.001 0.001</scale>
+              <uri>/home/christopher/catkin_ws/src/robot_arm_workcell_manager/cssdbot_description/meshes/visual/end_effector.STL</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <velocity_decay/>
+        <velocity_decay/>
+        <self_collide>1</self_collide>
+        <gravity>1</gravity>
+        <velocity_decay/>
+        <sensor name='camera1' type='camera'>
+          <update_rate>30</update_rate>
+          <camera name='camera_head'>
+            <horizontal_fov>1.57</horizontal_fov>
+            <image>
+              <width>3840</width>
+              <height>1080</height>
+              <format>R8G8B8</format>
+            </image>
+            <clip>
+              <near>0.02</near>
+              <far>300</far>
+            </clip>
+            <noise>
+              <type>gaussian</type>
+              <mean>0</mean>
+              <stddev>0.007</stddev>
+            </noise>
+          </camera>
+          <plugin name='camera_controller' filename='libgazebo_ros_camera.so'>
+            <alwaysOn>1</alwaysOn>
+            <updateRate>30</updateRate>
+            <cameraName/>
+            <imageTopicName>/image</imageTopicName>
+            <cameraInfoTopicName>/camera_info</cameraInfoTopicName>
+            <frameName>camera_link</frameName>
+            <hackBaseline>0.07</hackBaseline>
+            <distortionK1>0.0</distortionK1>
+            <distortionK2>0.0</distortionK2>
+            <distortionK3>0.0</distortionK3>
+            <distortionT1>0.0</distortionT1>
+            <distortionT2>0.0</distortionT2>
+            <robotNamespace>/arm2/</robotNamespace>
+          </plugin>
+          <pose frame=''>-0.06 0.1472 0.0825 0 -0 1.5708</pose>
+        </sensor>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+      <joint name='wrist_3_joint' type='revolute'>
+        <child>wrist_3_link</child>
+        <parent>wrist_2_link</parent>
+        <axis>
+          <xyz>0 1 0</xyz>
+          <limit>
+            <lower>-6.28319</lower>
+            <upper>6.28319</upper>
+            <effort>54</effort>
+            <velocity>3.2</velocity>
+          </limit>
+          <dynamics>
+            <damping>0</damping>
+            <friction>0</friction>
+            <spring_reference>0</spring_reference>
+            <spring_stiffness>0</spring_stiffness>
+          </dynamics>
+          <use_parent_model_frame>1</use_parent_model_frame>
+        </axis>
+      </joint>
+      <static>0</static>
+      <plugin name='ros_control' filename='libgazebo_ros_control.so'>
+        <robotNamespace>/arm2/</robotNamespace>
+      </plugin>
+      <pose frame=''>0 2 0.8 0 -0 0</pose>
+    </model>
+    <model name='CSSD Shelf_0'>
+      <static>1</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry>
+            <mesh>
+              <scale>0.001 0.001 0.001</scale>
+              <uri>model://CSSD Shelf/meshes/Abdullah's rack.STL</uri>
+            </mesh>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+            <friction>
+              <torsional>
+                <ode/>
+              </torsional>
+              <ode/>
+            </friction>
+          </surface>
+        </collision>
+        <visual name='visual'>
+          <geometry>
+            <mesh>
+              <scale>0.001 0.001 0.001</scale>
+              <uri>model://CSSD Shelf/meshes/Abdullah's rack.STL</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+      <pose frame=''>0.575359 4.26235 0 0 -0 0</pose>
+    </model>
+    <model name='UR10Base_0'>
+      <static>1</static>
+      <link name='link'>
+        <pose frame=''>0 0 0 0 -0 0</pose>
+        <visual name='visual'>
+          <geometry>
+            <mesh>
+              <scale>0.001 0.001 0.001</scale>
+              <uri>model://UR10Base/meshes/base.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name='collision'>
+          <geometry>
+            <mesh>
+              <scale>0.001 0.001 0.001</scale>
+              <uri>model://UR10Base/meshes/base.obj</uri>
+            </mesh>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+            <friction>
+              <torsional>
+                <ode/>
+              </torsional>
+              <ode/>
+            </friction>
+          </surface>
+        </collision>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+      <pose frame=''>-1.5205 3.66972 0 0 -0 0</pose>
+    </model>
+  </world>
+</sdf>

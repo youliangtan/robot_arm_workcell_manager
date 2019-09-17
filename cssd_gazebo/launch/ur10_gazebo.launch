@@ -1,22 +1,14 @@
+<?xml version="1.0"?>
 <launch>
 
   <!--              ************************************************************************************              -->
-  <!--              ******************************** UR10 Gazebo Stuffs ********************************              -->
+  <!--              ******************************** UR10 ONE ARM LAUNCH********************************              -->
   <!--              ************************************************************************************              -->
-
-
+  <arg name="robot_name"/>
+  <arg name="init_pose"/>
   <arg name="limited" default="false"  doc="If true, limits joint range [-PI, PI] on all joints." />
-  <arg name="gui" default="true" doc="Starts gazebo gui" />
-
-  <!-- startup simulated world -->
-  <include file="$(find gazebo_ros)/launch/empty_world.launch">
-   <arg name="world_name" default="$(find cssd_gazebo)/worlds/cssd.world"/>
-    <env name="GAZEBO_MODEL_PATH" value="$(find cssd_gazebo)/models" />
-    <arg name="paused" value="true"/>
-    <arg name="gui" value="$(arg gui)"/>
-  </include>
-
-
+  
+  
   <!-- send robot URDF to param server -->
   <include file="$(find cssdbot_description)/launch/ur10_upload.launch">
     <arg name="limited" value="$(arg limited)"/>
@@ -26,14 +18,14 @@
   <!-- push robot_description to factory and spawn robot in gazebo -->
   <!-- Note: The robot hovers 1mm above the ground to avoid collisions with the groun plane -->
   <node name="spawn_gazebo_model" pkg="gazebo_ros" type="spawn_model"
-        args="-urdf -param robot_description -model robot
+        args="-urdf -param robot_description -model $(arg robot_name)
           -J shoulder_pan_joint 0
           -J shoulder_lift_joint -2.107
           -J elbow_joint 1.795
           -J wrist_1_joint 0.354
           -J wrist_2_joint 1.571
           -J wrist_3_joint 0
-          -z 0.8 "
+          $(arg init_pose) "
         respawn="false" output="screen"
   />
 
@@ -57,13 +49,5 @@
    -->
   <node name="gazebo_warm_start" pkg="cssd_gazebo" type="warm_start" args="-d 6.0 -i 5 -w 1.0" output="screen"/>
 
-  <!--              ************************************************************************************              -->
-  <!--              ******************************** RAWM Spawner **************************************              -->
-  <!--              ************************************************************************************              -->
-  <include file="$(find robot_arm_workcell_manager)/launch/demo.launch">
-    <arg name='enable_usb_cam'  value='false'/>
-    <arg name="enable_fake_joints_execution" value="false"/>
-    <arg name="load_robot_description" value="false"/>
-  </include>
 
 </launch>
