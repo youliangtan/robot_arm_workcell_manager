@@ -11,7 +11,9 @@ Robot arm manipulation manager package is one of the module for the Central ster
 
 4. attempt to clean up moveit_config (should be standalone) [ongoing]
 
-5. etc
+5. clean up cssdbot urdf [onging]
+
+6. add ur10e with end effector [ongoing]
 
 **STILL IN DEVELOPMENT!!!**
 
