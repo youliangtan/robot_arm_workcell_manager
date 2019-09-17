@@ -12,20 +12,22 @@ marker_id:
   marker_103: {type: "compartment_marker" }
 
 marker_extended_frames:
-  tray_marker:        [pre-pick, insert, lift, post-pick]
-  compartment_marker: [pre-place, insert, drop, post-place]
+  tray_marker:        [rescan_pos, pre_pick, insert, lift, post_pick]
+  compartment_marker: [rescan_pos, pre_place, insert, drop, post_place]
 
-markers_extended_tf:
+markers_extended_tf:  # orien is opencv image convention
   tray_marker:
-    pre-pick:   [0,   0.004,   0.33,   1.57,   -1.57,    0]
-    insert:     [0,   0.004,   0.023,     1.57,   -1.57,    0]
-    lift:       [0,   -0.05,   0.023,     1.57,   -1.57,    0]
-    post-pick:  [0,   -0.02,   0.38,   1.57,   -1.57,    0]
+    rescan_pos: [0,   -0.10,   0.35,   1.57,   -1.57,    0]
+    pre_pick:   [0,   -0.002,   0.33,   1.57,   -1.57,    0]
+    insert:     [0,   -0.002,   0.023,  1.57,   -1.57,    0]
+    lift:       [0,   -0.05,   0.023,  1.57,   -1.57,    0]
+    post_pick:  [0,   -0.07,   0.42,   1.57,   -1.57,    0]
   compartment_marker:     
-    pre-place:  [0,   -0.2,   0.33,   1.57,   -1.57,    0]
+    rescan_pos: [0,   -0.10,   0.35,   1.57,   -1.57,    0]
+    pre_place:  [0,   -0.2,   0.33,   1.57,   -1.57,    0]
     insert:     [0,   -0.2,   0,     1.57,   -1.57,    0]
     drop:       [0,   -0.15,  0,     1.57,   -1.57,    0]
-    post-place: [0,   -0.15,  0.33,   1.57,   -1.57,    0]
+    post_place: [0,   -0.15,  0.38,   1.57,   -1.57,    0]
 
 # TODO
 eef_to_tool_offset: 0.043

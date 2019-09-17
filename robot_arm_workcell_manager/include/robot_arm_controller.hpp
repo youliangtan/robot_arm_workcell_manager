@@ -48,7 +48,6 @@ class RobotArmController{
         bool moveToEefTarget(const geometry_msgs::Pose _eef_target_pose, double vel_factor);
 
         // TODO: Sub IO from UR10, Stop all motion
-    
 
     protected:
         bool loadParameters();
@@ -65,4 +64,4 @@ class RobotArmController{
 };
 
 
-#endif 
+#endif

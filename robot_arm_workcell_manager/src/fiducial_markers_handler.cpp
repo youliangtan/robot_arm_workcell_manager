@@ -49,8 +49,6 @@ bool FiducialMarkersHandler::loadParameters(){
         nh_.param<bool>("/flip_marker", is_marker_flipped_, false);
     }
 
-
-
     std::string _yaml_path = "";
     if (nh_.getParam("/marker_tf_path", _yaml_path)){
       ROS_INFO(" [PARAM] Got path param: %s", _yaml_path.c_str());
@@ -73,9 +71,7 @@ bool FiducialMarkersHandler::loadParameters(){
 }
 
 
-
 //-----------------------------------------------------------------------------
-
 
 // TODO, work on the mode: rosparam
 // To reOrientate Marker's frame to the correct convention
@@ -92,14 +88,10 @@ tf::Quaternion FiducialMarkersHandler::reorientateMarker(tf::Quaternion quat){
 }
 
 
-
 //--------------------------------------------------------------------------------
 
-
-
-
 // Get transform 
-bool FiducialMarkersHandler::getTransformPose(tf::Transform *target_transform, std::string target_frame_id, std::string frame_id){
+bool FiducialMarkersHandler::getTransformPose(std::string target_frame_id, std::string frame_id, tf::Transform *target_transform){
     ROS_INFO("Looking up TF between frame: %s and %s", target_frame_id.c_str(), frame_id.c_str());
 
     //get transform of marker relative to base link
@@ -125,15 +117,6 @@ bool FiducialMarkersHandler::getTransformPose(tf::Transform *target_transform, s
 }
 
 
-// Get Markers's transfrom the tf between 2 frames
-bool FiducialMarkersHandler::getMarkerTransformPose( tf::Transform *target_marker_transform, std::string marker_id, std::string frame_id="base_link"){    
-    ROS_INFO("Providing marker's pose");
-    return getTransformPose( target_marker_transform, marker_id, frame_id);
-}
-
-
-
-
 // @ return marker type, failed then return ""
 std::string FiducialMarkersHandler::setTargetMarker(std::string marker_id ){
     
@@ -150,7 +133,6 @@ std::string FiducialMarkersHandler::setTargetMarker(std::string marker_id ){
         ROS_ERROR("YAML ERROR!! Unable to get marker type from marker ID, or unable to get Extended Frame array");
         return "";
     }
-
 
     try {
         // Create and array of extended_markers tf, and stored in under member func
@@ -173,13 +155,12 @@ std::string FiducialMarkersHandler::setTargetMarker(std::string marker_id ){
         std::cout << " Done with creating Markers Extended TFs " << std::endl;
         marker_extended_tf_timer_ = nh_.createTimer(ros::Duration(0.4), &FiducialMarkersHandler::MarkerExtendedTfTimerCallback, this);
         return marker_type;
-    
-    }
-    catch (std::exception& err){
-        ROS_ERROR("YAML ERROR!! Exception Raise while reading  '%s frame' in YAML config:  %s", extended_frame.c_str(), err.what());
-        return "";
     }
 
+    catch (std::exception& err){
+        ROS_ERROR("YAML ERROR!! Exception Raise while reading  '%s' frame in YAML config:  %s", extended_frame.c_str(), err.what());
+        return "";
+    }
 }
 
 
@@ -191,11 +172,7 @@ bool FiducialMarkersHandler::removeTargetMarker(){
 }
 
 
-
-
 // ------------------------------------------- ROS Callback Zone ------------------------------------------------
-
-
 
 // Periodic callback to pub marker extended tfs to /tf
 void FiducialMarkersHandler::MarkerExtendedTfTimerCallback(const ros::TimerEvent& event) {
@@ -204,10 +181,7 @@ void FiducialMarkersHandler::MarkerExtendedTfTimerCallback(const ros::TimerEvent
         markers_extended_tf_array_[i].stamp_ = ros::Time::now();
         tf_broadcaster_.sendTransform( markers_extended_tf_array_[i] );
     }
-
 }
-
-
 
 // Update all fiducial arrays to /tf, and name markers according to their marker's id
 void FiducialMarkersHandler::updateFiducialArrayCallback(const fiducial_msgs::FiducialTransformArrayConstPtr& _msg){
@@ -235,15 +209,12 @@ void FiducialMarkersHandler::updateFiducialArrayCallback(const fiducial_msgs::Fi
 
         tf_broadcaster_.sendTransform(tf::StampedTransform(transform, ros::Time::now(), camera_frame_id_, marker_frame_id));
     }
-
 }
-
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // ----------------------------------------------- MAIN ------------------------------------------------------
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
 
 int main(int argc, char** argv){
@@ -265,7 +236,7 @@ int main(int argc, char** argv){
         
         std::cout << "************ Check target Pose [insert, marker_0]************" << std::endl;
         tf::Transform *target_transform (new tf::Transform);
-        if ( aruco_markers.getTransformPose(target_transform, "insert", "camera") == true ){
+        if ( aruco_markers.getTransformPose("insert", "camera", target_transform) == true ){
             std::cout <<    std::to_string(target_transform->getOrigin().x() ) << " " << 
                             std::to_string(target_transform->getOrigin().y() ) << " " <<   
                             std::to_string(target_transform->getOrigin().z() ) << std::endl;
@@ -280,5 +251,4 @@ int main(int argc, char** argv){
         aruco_markers.removeTargetMarker();
         std::this_thread::sleep_for (std::chrono::seconds(10));
     }
-
 }

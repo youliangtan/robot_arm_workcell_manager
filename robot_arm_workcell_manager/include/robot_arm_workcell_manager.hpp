@@ -93,8 +93,7 @@ class RobotArmWorkcellManager{
         // local lib stuffs
         RobotArmController arm_controller_;
         FiducialMarkersHandler markers_detector_;
-
+        
 };
 
-
-#endif 
+#endif
