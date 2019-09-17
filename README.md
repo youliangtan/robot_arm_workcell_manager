@@ -1,6 +1,18 @@
 # robot_arm_workcell_manager (RAWM)
 Robot arm manipulation manager package is one of the module for the Central sterile services department (cssd) workcell application. This package will act as a standalone workcell (aka: Dispenser Robot), which handles the robotics aspect of cssd_workcell. When a `DispenserRequest` is being sent out by a user to RAWM, this workcell will begin executing the task, starting with the picking motion of custom design instrument tray from a medical rack, then end it by placing the tray on MIR cart (follow-up delivery task by MIR). Fiducial Aruco markers will function as locating visual markers for pose estimation. Aruco markers are attached to the trays and MIR cart. Current package is developed and tested on `ros-melodic` and `gazebo 9.1`. 
 
+## TO-DO DEVELOPMENT ON THIS BRANCH
+
+1. Two arm launch in gazebo [ongoing]
+
+2. Two arm launch rviz/RAWM namespaced [ongoing]
+
+3. clean up gazebo launch [ongoing]
+
+4. attempt to clean up moveit_config (should be standalone) [ongoing]
+
+5. etc
+
 **STILL IN DEVELOPMENT!!!**
 
 ![alt text](/documentations/gazebo_test.png?)
