@@ -115,6 +115,18 @@ roslaunch robot_arm_workcell_manager robot_arm_workcell_manager.launch
 - Dispenser req will be received by RAWM, id: with convention of `marker_{$fiducial_id}`
 - Use Ros_bridge/SOSS to link ros1 msg to ros2, eventually communicates with a ``cssd_workcell_manager`
 
+## Possible errors
+- Error building due to gazebo::transport::node TryInit function not found
+```
+sudo sh -c 'echo "deb http://packages.osrfoundation.org/gazebo/ubuntu-stable `lsb_release -cs` main" > /etc/apt/sources.list.d/gazebo-stable.list'
+
+wget http://packages.osrfoundation.org/gazebo.key -O - | sudo apt-key add -
+
+sudo apt-get update
+
+sudo apt-get upgrade
+
+```
 
 ## TODO
 - Code clean up!!
