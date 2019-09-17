@@ -42,7 +42,6 @@ bool RobotArmWorkcellManager::loadParameters(){
         return false;
     }
 
-
     if (nh_.getParam("/motion_pause_time", motion_pause_time_)){
         ROS_INFO(" [PARAM] Got Motion Pause Time param: %d", motion_pause_time_);
     }
@@ -50,7 +49,6 @@ bool RobotArmWorkcellManager::loadParameters(){
         ROS_ERROR(" [PARAM] Failed to get param 'motion_pause_time'");
         return false;
     }
-
 
     std::string _yaml_path = "";
     if (nh_.getParam("/arm_mission_path", _yaml_path)){
@@ -66,7 +64,7 @@ bool RobotArmWorkcellManager::loadParameters(){
 
 
 
-//-------------------------------------------------------- Callback Zone -----------------------------------------------------
+// ---------------------------------- Callback Zone ----------------------------------
 
 
 
@@ -75,13 +73,10 @@ void RobotArmWorkcellManager::dispenserRequestCallback(const rmf_msgs::Dispenser
     
     ROS_INFO(" \n --------- Received 1 Job request with id: %s -----------\n", _msg->request_id.c_str() );
 
-
     if (_msg->dispenser_name != dispenser_name_){
         std::cout << " Invalid Dispenser Name..." << std::endl;
         return;
     }
-
-    std::cout << "Here" << std::endl;
 
     // already performing this request
     if (_msg->request_id == dispenser_curr_task_.request_id){
@@ -91,7 +86,8 @@ void RobotArmWorkcellManager::dispenserRequestCallback(const rmf_msgs::Dispenser
 
     // already made a request, publish results, TODO
     if (dispenser_completed_request_ids_.find(_msg->request_id) != dispenser_completed_request_ids_.end()) {
-        std::cout << " Task Request has been requested previously, with success result of: " << dispenser_completed_request_ids_[_msg->request_id] << std::endl;
+        std::cout << " Task Request has been requested previously, with success result of: " 
+                    << dispenser_completed_request_ids_[_msg->request_id] << std::endl;
         publishDispenserResult(_msg->request_id, dispenser_completed_request_ids_[_msg->request_id]);
         return;
     }
@@ -104,17 +100,16 @@ void RobotArmWorkcellManager::dispenserRequestCallback(const rmf_msgs::Dispenser
         return;
     }
     
-    // // TODO: check dispenser_req queue, if request_id existed
-    // std::unique_lock<std::mutex> queue_lock(dispenser_task_queue_mutex_); //TODO
-    // for (rmf_msgs::DispenserRequest& task_in_queue : dispenser_task_queue_
-    // ){
-    //     if (_msg->request_id == task_in_queue.request_id){
-    //         std::cout << "    found duplicate task in queue, updating task."  << std::endl;
-    //         dispenser_task_queue_.erase(dispenser_task_queue_.begin());
-    //         dispenser_task_queue_.push_back(*_msg);
-    //         return;
-    //     }
-    // }  
+    // Check dispenser_req queue, if request_id existed (dulplication)
+    std::unique_lock<std::mutex> queue_lock(dispenser_task_queue_mutex_); 
+    for (rmf_msgs::DispenserRequest& task_in_queue : dispenser_task_queue_){
+        if (_msg->request_id == task_in_queue.request_id){
+            std::cout << "    found duplicate task in queue, updating task."  << std::endl;
+            dispenser_task_queue_.erase(dispenser_task_queue_.begin());
+            dispenser_task_queue_.push_back(*_msg);
+            return;
+        }
+    }  
 
     for (auto task_in_queue = dispenser_task_queue_.begin(); task_in_queue != dispenser_task_queue_.end(); ) {
         if (_msg->request_id == task_in_queue->request_id) {
@@ -134,20 +129,11 @@ void RobotArmWorkcellManager::dispenserRequestCallback(const rmf_msgs::Dispenser
 }
 
 
-
-
-
-
-
-// ------------------------------------------------------ Task Handler ------------------------------------------------
-
-
+// ----------------------------------Task Handler ----------------------------------
 
 
 // TODO!!!!!
 bool RobotArmWorkcellManager::getNextTaskFromQueue(){
-
-    // std::cout<< "[TASK_EXECUTOR] Update current task from Queue" <<std::endl;
 
     std::unique_lock<std::mutex> queue_lock(dispenser_task_queue_mutex_, std::defer_lock);
     if (!queue_lock.try_lock())
@@ -167,7 +153,6 @@ bool RobotArmWorkcellManager::getNextTaskFromQueue(){
         dispenser_task_queue_.pop_front();
         return true;
     }
-
 }
 
 
@@ -196,8 +181,17 @@ void RobotArmWorkcellManager::spinRosThread(){
     ROS_ERROR("Nodehandler is Not Okay =(");
 }
 
-// --------------------------------------------------------------- ROBOT_ARM_MISSION_CONTROL ------------------------------------------------------------------
 
+void RobotArmWorkcellManager::publishDispenserResult(std::string request_id, bool success){
+    dispenser_result_msg_.dispenser_time = ros::Time::now();
+    dispenser_result_msg_.dispenser_name = dispenser_name_;
+    dispenser_result_msg_.request_id = request_id;
+    dispenser_result_msg_.success = success;
+    dispenser_result_pub_.publish(dispenser_result_msg_);
+}
+
+
+// ---------------------------------- ROBOT_ARM_MISSION_CONTROL ----------------------------------
 
 void RobotArmWorkcellManager::dispenserTaskExecutionThread(){
 
@@ -217,10 +211,12 @@ void RobotArmWorkcellManager::dispenserTaskExecutionThread(){
             loop_rate.sleep();
 
             if (mission_success){
-                ROS_INFO("\n *************** Done with Task with Request ID: %s *************** \n", dispenser_curr_task_.request_id.c_str());
+                ROS_INFO("\n *************** Done with Task with Request ID: %s *************** \n", 
+                    dispenser_curr_task_.request_id.c_str());
             }
             else{
-                ROS_ERROR("\n *************** Task Failed for Request ID: %s *************** \n", dispenser_curr_task_.request_id.c_str());
+                ROS_ERROR("\n *************** Task Failed for Request ID: %s *************** \n", 
+                    dispenser_curr_task_.request_id.c_str());
             }
             
             dispenser_completed_request_ids_[dispenser_curr_task_.request_id] =  mission_success;
@@ -230,44 +226,45 @@ void RobotArmWorkcellManager::dispenserTaskExecutionThread(){
 }
 
 
-void RobotArmWorkcellManager::publishDispenserResult(std::string request_id, bool success){
-    dispenser_result_msg_.dispenser_time = ros::Time::now();
-    dispenser_result_msg_.dispenser_name = dispenser_name_;
-    dispenser_result_msg_.request_id = request_id;
-    dispenser_result_msg_.success = success;
-    dispenser_result_pub_.publish(dispenser_result_msg_);
-}
-
-
-
+// Execute Pick and place motion of arm, according to `markers_tf.yaml`, @Return success
 // TODO: tidy and handle fail senario
 bool RobotArmWorkcellManager::executePickPlaceMotion( std::vector<std::string> frame_array, std::string marker_frame_id ){
 
-    std::vector<tf::Transform *> tf_array;
-    tf::Transform *marker_transform (new tf::Transform);
+    std::vector<tf::Transform *> _tf_array;
+    geometry_msgs::Pose *_eef_target_pose (new geometry_msgs::Pose);
+    tf::Transform *target_tf (new tf::Transform);
 
-    if (! markers_detector_.getTransformPose( marker_transform, "base_link", marker_frame_id) ) return false;
+    // check if can find marker
+    if (! markers_detector_.getTransformPose( "base_link", marker_frame_id ) ) return false;
 
     markers_detector_.setTargetMarker(marker_frame_id);
     std::this_thread::sleep_for (std::chrono::seconds(motion_pause_time_));
- 
-    // Get transform from tf detection
-    for (std::string frame : frame_array){
-        tf::Transform *target_tf (new tf::Transform);
-        if (! markers_detector_.getTransformPose( target_tf, "base_link", frame ) ) return false;
-        tf_array.push_back(target_tf);
-    }
 
+    // Reposition to 'rescan_pos' (front of marker), and reupdate  fiducial marker positon, ensures low deviation
+    if (! markers_detector_.getTransformPose( "base_link", "rescan_pos", target_tf ) ) return false;
+    tf::poseTFToMsg(*target_tf, *_eef_target_pose);
+    if (! arm_controller_.moveToEefTarget(*_eef_target_pose, 0.15) ) return false;
+    
+    // Reset target marker position
+    markers_detector_.removeTargetMarker();
+    markers_detector_.setTargetMarker(marker_frame_id);
+    std::this_thread::sleep_for (std::chrono::seconds(motion_pause_time_));
+ 
+    // Get transform from tf detection, and store in local var
+    for (std::string frame : frame_array){
+        target_tf = new tf::Transform;
+        if (! markers_detector_.getTransformPose( "base_link", frame,  target_tf ) ) return false;
+        _tf_array.push_back(target_tf);
+    }
     markers_detector_.removeTargetMarker();
 
-    // Execute all motion
+    // Execute all motions in 'frame_array'
     int idx = 0;
-    for (const auto& target_tf : tf_array){
-        geometry_msgs::Pose _eef_target_pose;
-        tf::poseTFToMsg(*target_tf, _eef_target_pose);
-
+    for (const auto& tf : _tf_array){
+        _eef_target_pose = new geometry_msgs::Pose;
+        tf::poseTFToMsg(*tf, *_eef_target_pose);
         ROS_INFO(" **Executing Pick Place Motion**  tf_frame: %s ", frame_array.at(idx).c_str());
-        if (! arm_controller_.moveToEefTarget(_eef_target_pose, 0.15) ) return false;  //TODO: all vel factor is in config file, or rosparam
+        if (! arm_controller_.moveToEefTarget(*_eef_target_pose, 0.15) ) return false;  //TODO: all vel factor is in config file, or rosparam
         std::this_thread::sleep_for (std::chrono::seconds(motion_pause_time_));
         idx++;
     }
@@ -276,10 +273,7 @@ bool RobotArmWorkcellManager::executePickPlaceMotion( std::vector<std::string> f
 }
 
 
-
-
-// --------------------------------------------------------------- ROBOT_ARM_MISSION_CONTROL: EXECUTION ------------------------------------------------------------------
-
+// ---------------------------------- ROBOT_ARM_MISSION_CONTROL: EXECUTION ----------------------------------
 
 // // TODO: Mission sequences, TBC: name as Task
 // // Make it to a config file @_@
@@ -289,46 +283,48 @@ bool RobotArmWorkcellManager::executeRobotArmMission(){
     bool motion_is_success;
     std::vector<tf::Transform *> tf_array;
     rmf_msgs::DispenserRequestItem requested_item = dispenser_curr_task_.items[0] ;
-    int rack_level = 0;
-    tf::Transform *marker_transform (new tf::Transform);
+    tf::Transform *marker_transform (new tf::Transform); //TODO re-new
 
     // FOR NOW, TODO: No hard coding
-    std::vector<std::string> picking_frame_array = {"pre-pick", "insert", "lift", "post-pick"};
-    std::vector<std::string> placing_frame_array = {"pre-place", "insert", "drop", "post-place"};
+    std::vector<std::string> picking_frame_array = {"pre_pick", "insert", "lift", "post_pick"};
+    std::vector<std::string> placing_frame_array = {"pre_place", "insert", "drop", "post_place"};
 
-    // home
-    if (! arm_controller_.moveToNamedTarget("home_position") ) return false;
-
-    // TODO: Lookup for target marker at different picking lvl
-    while (! markers_detector_.getTransformPose( marker_transform, "base_link", requested_item.item_type) ){
+    // Lookup for target marker at different Rack Level (0, 1, 2...)
+    for (int rack_level=0; !markers_detector_.getTransformPose( "base_link", requested_item.item_type) ; rack_level++ ){
         ROS_ERROR("Going to rack level: %s ", std::to_string(rack_level).c_str() );
-        if (arm_controller_.moveToNamedTarget("rack_level_" + std::to_string(rack_level)) )  rack_level++;
-        else return false;
+        if (! arm_controller_.moveToNamedTarget("rack_level_" + std::to_string(rack_level)) ) return false;
     }
 
     // picking, e.g: requested_item.item_type = "marker_X" 
     if (! executePickPlaceMotion(picking_frame_array , requested_item.item_type ) ) return false;
 
+    // home position facing rack
+    if (! arm_controller_.moveToNamedTarget("rack_home_position") ) return false;
+
     // turn to face trolley
     if (! arm_controller_.moveToNamedTarget("mir_facing_home") ) return false;
 
     // Lower the position
-    if (! arm_controller_.moveToNamedTarget("pre_place_position") ) return false;
-
+    if (! arm_controller_.moveToNamedTarget("mir_place_position") ) return false;
+    
+    // TODO: Scanning feature here... Yaw
+    
     // placing, e.g: requested_item.compartment_name = "marker_X"
     if (! executePickPlaceMotion(placing_frame_array , requested_item.compartment_name) ) return false;
 
     // back lower home 
-    if (! arm_controller_.moveToNamedTarget("pre_place_position") ) return false;
+    if (! arm_controller_.moveToNamedTarget("mir_place_position") ) return false;
 
     // turn to face trolley
     if (! arm_controller_.moveToNamedTarget("mir_facing_home") ) return false;
+
+    // Back home position facing rack
+    if (! arm_controller_.moveToNamedTarget("rack_home_position") ) return false;
 
     ROS_INFO("\n ***** Done with Task with request_id: %s *****", dispenser_curr_task_.request_id.c_str());
     
     return true;
 }
-    
 
 
 //-----------------------------------------------------------------------------
@@ -344,78 +340,5 @@ int main(int argc, char** argv){
     ros::AsyncSpinner ros_async_spinner(1);
     std::cout<< " RAWM Node is now Running...."<<std::endl;
     ros_async_spinner.start();
-    ros::waitForShutdown();
-    
+    ros::waitForShutdown();    
 }
-
-
-
-
-
-
-
-
-
-//     // move to home
-//     moveToNamedTarget("home_position");
-
-//     // scan to find marker
-//     while(lvl_idx < num_of_lvl){
-//         if (no_markers)
-//             moveToNamedTarget("shelf_scan_lvl" + lvl_idx);
-//     }
-//     else{
-//         return false
-//     }
-
-//     setTargetMarker();
-
-//     // marker's front rest point
-//     pose = getTransformPose("baselink", "pre-pick");
-//     moveToJointsTarget(pose)
-    
-//     // insert
-//     pose = getTransformPose("baselink", "insert")
-//     moveToEefTarget(pose)
-
-//     // lift tray
-//     pose = getTransformPose("baselink", "lift")
-//     moveToEefTarget(pose)
-
-//     // marker's front rest point
-//     pose = getTransformPose("baselink", "pick_pose", marker_id)
-//     moveToEefTarget(pose)
-
-//     // move to home
-//     moveToNamedTarget("home_position_cartesian");
-
-//     // move to facing mobile trolley
-//     moveToNamedTarget("trolley_scan");
-
-//     if (no_marker)
-//         return false;
-
-//     // front of placing point
-//     pose = getTransformPose("baselink", "pre-place");
-//     moveToEefTarget(pose)
-
-//     // insert
-//     pose = getTransformPose("baselink", "insert");
-//     moveToEefTarget(pose)
-
-//     // place tray
-//     pose = getTransformPose("baselink", "drop");
-//     moveToEefTarget(pose)
-
-//     // front of placing point
-//     pose = getTransformPose("baselink", "post-place");
-//     moveToEefTarget(pose)
-
-//     // move to facing mobile trolley
-//     moveToNamedTarget("trolley_scan");
-
-//     // move to home
-//     moveToNamedTarget("home_position");
-
-
-// }

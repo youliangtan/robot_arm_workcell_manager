@@ -201,10 +201,10 @@
       </model>
 
       <model name='CSSD Tray 0'>
-        <pose frame=''>0.869524 0.361542 0.463367 -0.002949 -0.017358 0.010598</pose>
+        <pose frame=''>0.87 -0.155 0.85 -0.002949 -0.017358 0.010598</pose>
         <scale>1 1 1</scale>
         <link name='tray'>
-          <pose frame=''>0.869524 0.361542 0.463367 0.002922 0.017363 -3.13259</pose>
+          <pose frame=''>0.87 -0.155 0.85 0.002922 0.017363 -3.13259</pose>
           <velocity>0 0 0 0 0 0</velocity>
           <acceleration>0 0 0 0 0 0</acceleration>
           <wrench>0 0 0 0 0 0</wrench>

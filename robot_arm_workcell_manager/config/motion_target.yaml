@@ -2,10 +2,13 @@
 # Check YAML: http://www.yamllint.com/
 
 named_target:
-  home_position:        {type: "joint_space_goal", values: [0, -2.107, 1.795, 0.354, 1.571,0],   velFactor: 0.2}
-  rack_level_0:         {type: "joint_space_goal", values: [0, -2.107, 2.22, -0.13, 1.571,0], velFactor: 0.2}
-  # rack_level_1:         {type: "joint_space_goal", values: [0, -2.107, 2.42, -0.33, 1.571,0], velFactor: 0.2}
-  rack_level_1:         {type: "joint_space_goal", values: [0, -1.7, 2.62, -0.93, 1.571,0], velFactor: 0.2}
-  mir_facing_home:      {type: "joint_space_goal", values: [1.550,-2.027,2.079,-0.062,1.614,  0], velFactor: 0.2}
-  pre_place_position:   {type: "joint_space_goal", values: [1.550,-0.7,2.379,-1.7,1.614, 0], velFactor: 0.2}
-  pre_place_pose:       {type: "eef_pose_goal", values: [0.3,0.3,1,0,0,1.5], velFactor: 0.4}
+  rack_home_position:   {type: "joint_space_goal", values: [0,-2.55,2.6,-0.062,1.614,  0],   velFactor: 0.2}
+  rack_level_0:         {type: "joint_space_goal", values: [0, -2.207, 1.595, 0.554, 1.571,0], velFactor: 0.2}
+  rack_level_1:         {type: "joint_space_goal", values: [0, -2.107, 2.22, -0.13, 1.571,0], velFactor: 0.2}
+  rack_level_2:         {type: "joint_space_goal", values: [0, -1.7, 2.62, -0.93, 1.571,0], velFactor: 0.2}
+  mir_facing_home:      {type: "joint_space_goal", values: [1.550,-2.427,2.479,-0.062,1.614, 0], velFactor: 0.2}
+  mir_place_position:   {type: "joint_space_goal", values: [1.550,-0.7,2.379,-1.7,1.614, 0], velFactor: 0.2}
+  # TODO: extensions
+  mir_facing_left:      {type: "joint_space_goal", values: [1.550,-2.427,2.479,-0.062,1.614, 0], velFactor: 0.2}
+  mir_facing_right:      {type: "joint_space_goal", values: [1.550,-2.427,2.479,-0.062,1.614, 0], velFactor: 0.2}
+  mir_place_pose:       {type: "eef_pose_goal", values: [0.3,0.3,1,0,0,1.5], velFactor: 0.4}
