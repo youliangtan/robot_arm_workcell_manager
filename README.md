@@ -3,7 +3,16 @@ Robot arm manipulation manager package is one of the module for the Central ster
 
 ## TO-DO DEVELOPMENT ON THIS BRANCH
 
-1. Two arm launch in gazebo [ongoing]
+1. Two arm launch in gazebo [done, for now]
+   [main changes done]
+   - added ur10e urdf.xacro model with end effector to cssdbot_description/urdf/ur10e (altered it minorly to support     velocityController) 
+   - new saved gazebo world "cssd_two_arms.world" with one more arm and one more rack
+   - namespaced two arms in gazebo -> "/arm1" and "/arm2"
+   - main.launch gives you an option to choose ur10 or ur10e as the second arm, refer to arg="mode"
+   - added a few urdf files from universal_robot/ur_description & ur_e_description to cssdbot_description to make it a more standalone pkg. (It still depends on meshes for the arm in universal_robot's pkg tho. Thinking to move it over.)
+   
+   [some more improvements to be done]
+   - tune the PID/ and physics params for physical models, seems to jitter slightly.
 
 2. Two arm launch rviz/RAWM namespaced [ongoing]
 
