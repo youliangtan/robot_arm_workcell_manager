@@ -2,7 +2,7 @@
 <launch>
 
   <!--              ************************************************************************************              -->
-  <!--              ******************************** UR10 ONE ARM LAUNCH********************************              -->
+  <!--              ******************************** UR10e ONE ARM LAUNCH********************************              -->
   <!--              ************************************************************************************              -->
   <arg name="robot_name"/>
   <arg name="init_pose"/>
@@ -10,7 +10,7 @@
   
   
   <!-- send robot URDF to param server -->
-  <include file="$(find cssdbot_description)/launch/ur10_upload.launch">
+  <include file="$(find cssdbot_description)/launch/ur10e_upload.launch">
     <arg name="limited" value="$(arg limited)"/>
     <arg name="transmission_hw_interface" value="hardware_interface/VelocityJointInterface"/>
   </include>
