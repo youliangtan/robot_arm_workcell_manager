@@ -10,20 +10,29 @@ Robot arm manipulation manager package is one of the module for the Central ster
    - new saved gazebo world "cssd_two_arms.world" with one more arm and one more rack
    - namespaced two arms in gazebo -> "/arm1" and "/arm2"
    - main.launch gives you an option to choose ur10 or ur10e as the second arm, refer to arg="mode"
-   - added a few urdf files from universal_robot/ur_description & ur_e_description to cssdbot_description to make it a more standalone pkg. (It still depends on meshes for the arm in universal_robot's pkg tho. Thinking to move it over.)
+   - added a few urdf files from universal_robot/ur_description & ur_e_description to cssdbot_description to make it a more standalone pkg.
+   - added ur10 and ur10e meshes into package
    
    [some more improvements to be done]
    - tune the PID for the arms / and physics params for physical models, seems to jitter slightly.
 
 2. Two arm launch rviz/RAWM namespaced [ongoing]
 
-3. clean up gazebo launch [ongoing]
+3. clean up gazebo launch [partially done]
 
-4. attempt to clean up moveit_config (should be standalone) [ongoing]
+4. attempt to clean up moveit_config (should be standalone) [partially done]
+   - generated own standalone moveit config pkgs for ur10 and ur10e using setup assistant with cssdbot_description's urdf
+   - included limited joints option since universal_robot' ori pkg supports.
+   - included srdf, different default poses!
+   
+   [to-do]
+   - check with coffeebot's to check for anymore insights
+   - check own concern - that universal_robot's moveit_config was generated using an older version of setup assistant since 
+     some params give out warnings on the new moveit - signalling depreciation of some params.
 
 5. clean up cssdbot urdf [onging]
 
-6. add ur10e with end effector [ongoing]
+6. add ur10e with end effector [done]
 
 **STILL IN DEVELOPMENT!!!**
 
