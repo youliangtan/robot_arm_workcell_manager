@@ -1,9 +1,7 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://ros.org/wiki/xacro"
        name="ur10e" >
-  
-  <xacro:arg name="transmission_hw_interface" default="hardware_interface/PositionJointInterface"/>
-  
+
   <!-- common stuff -->
   <xacro:include filename="$(find cssdbot_description)/urdf/ur10e/common.gazebo.xacro" />
 
@@ -11,7 +9,7 @@
   <xacro:include filename="$(find cssdbot_description)/urdf/ur10e/ur10e.urdf.xacro" />
 
   <!-- arm -->
-  <xacro:ur10e_robot prefix="" joint_limited="false" transmission_hw_interface="$(arg transmission_hw_interface)"/>
+  <xacro:ur10e_robot prefix="" joint_limited="false" />
 
   <link name="world" />
 
