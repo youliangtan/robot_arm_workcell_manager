@@ -109,6 +109,13 @@ roslaunch robot_arm_workcell_manager robot_arm_workcell_manager.launch
 
 ---
 
+## Running on hardware
+
+1. Download [ur_modern_driver with e series](https://github.com/AdmiralWall/ur_modern_driver/tree/kinetic_ur_5_4) 
+2. `roslaunch robot_arm_workcell_manager demo.launch enable_fake_joints_execution:=false`
+3. Run script (e.g. RAWM) to move the robot: `roslaunch robot_arm_workcell_manager robot_arm_workcell_manager.launch`
+
+---
 
 ## Notes
 - A custom designed "fork-lift" end effector is used in this process
@@ -117,6 +124,7 @@ roslaunch robot_arm_workcell_manager robot_arm_workcell_manager.launch
 - Camera calib is tuned, and written here: `/config/usb_cam.yaml`
 - Dispenser req will be received by RAWM, id: with convention of `marker_{$fiducial_id}`
 - Use Ros_bridge/SOSS to link ros1 msg to ros2, eventually communicates with a ``cssd_workcell_manager`
+- master branch for `ur_modern_driver` currently doesnt support UR-E series
 
 ## Possible errors
 - Error building due to gazebo::transport::node TryInit function not found
