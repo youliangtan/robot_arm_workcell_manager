@@ -1,0 +1,42 @@
+<launch>
+
+    <arg name="debug" default="false" />
+    <arg name="limited" default="false"/>
+    <arg name="enable_fake_joints_execution" default="true"/>
+    <arg name="load_robot_description" default="true"/>
+  
+    <arg name="arm_type" default="ur10"/>
+  
+  
+    <!--              ************************************************************************************              -->
+    <!--              ******************************** Robot Arm Launcher ********************************              -->
+    <!--              ************************************************************************************              -->
+    
+    <!-- UR10 -->
+    <group if="$(eval arm_type == 'ur10')">
+        <include file="$(find cssdbot_ur10_moveit_config)/launch/hardware_minimal.launch">
+            <arg name="sim" value="true"/>
+        </include> 
+    </group>
+  
+    <!-- UR10e -->
+    <group if="$(eval arm_type == 'ur10e')">
+        <include file="$(find cssdbot_ur10e_moveit_config)/launch/hardware_minimal.launch">
+            <arg name="sim" value="true"/>
+        </include> 
+    </group>
+  
+  
+    <!--              **********************************************************************************              -->
+    <!--              ****************************** Fiducial Marker handler *****************************              -->
+    <!--              ************************************************************************************              -->
+  
+    <arg name="enable_usb_cam" default="true"/>
+  
+    <include file="$(find robot_arm_workcell_manager )/launch/markers_detector.launch">
+      <arg name="camSelect"      default="/dev/video1"/>
+      <arg name="enable_usb_cam" value="$(arg enable_usb_cam)"/>
+    </include>
+  
+  </launch>
+  

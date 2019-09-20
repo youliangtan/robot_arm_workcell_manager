@@ -52,4 +52,13 @@
   <!-- Static tf to fix tf_prefixed world frame-->
   <node pkg="tf" type="static_transform_publisher" name="$(arg robot_name)_static_tf" args="0 0 0 0 0 0 /world /$(arg robot_name)_tf/world 10"/> 
 
+
+    <!-- Launch Rviz and MoveIt!-->
+    <include file="$(find robot_arm_workcell_manager)/launch/demo.launch">
+      <arg name='enable_usb_cam'  value='false'/>
+      <arg name="enable_fake_joints_execution" value="false"/>
+      <arg name="load_robot_description" value="false"/>
+      <arg name="arm_type" default="ur10e"/>
+    </include>
+
 </launch>

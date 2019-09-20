@@ -16,7 +16,6 @@
     <!-- "ur10" for arm2 / "ur10e" for arm2 -->
     <arg name="mode" value="ur10"/>
   </include>
-  
-  <!-- trying to remap world -->
+
 
 </launch>
