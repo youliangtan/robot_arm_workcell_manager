@@ -109,6 +109,11 @@ roslaunch robot_arm_workcell_manager robot_arm_workcell_manager.launch
 
 ---
 
+## Running on hardware
+
+1. Download [ur_modern_driver with e series](https://github.com/AdmiralWall/ur_modern_driver/tree/kinetic_ur_5_4) 
+2. `roslaunch robot_arm_workcell_manager demo.launch`
+3. Run script to move robot
 
 ## Notes
 - A custom designed "fork-lift" end effector is used in this process
