@@ -13,7 +13,7 @@ For ur10e,
 roslaunch ur_modern_driver ur10e_bringup.launch robot_ip:=198.168.88.XX
 ```
 
-In Terminal B:
+In Terminal B (MOVEIT & RVIZ):
 
 For ur10,
 ```
