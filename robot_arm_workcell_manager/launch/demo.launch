@@ -2,17 +2,16 @@
 
   <arg name="debug" default="false" />
   <arg name="limited" default="false"/>
-  <arg name="enable_fake_joints_execution" default="false"/>
+  <arg name="enable_fake_joints_execution" default="true"/>
   <arg name="load_robot_description" default="true"/>
-  <arg name="enable_hardware" default="true"/>
-
+  
 
   <!--              ************************************************************************************              -->
   <!--              ****************************** Robot Arm Fake Joint Pub ****************************              -->
   <!--              ************************************************************************************              -->
-<group unless="$(arg enable_hardware)">
 
-  <remap unless="$(arg enable_fake_joints_execution)" from="/follow_joint_trajectory" to="/arm_controller/follow_joint_trajectory"/>
+  <!-- To Be Tested On Hardware -->
+  <!-- <remap unless="$(arg enable_fake_joints_execution)" from="/follow_joint_trajectory" to="/arm_controller/follow_joint_trajectory"/> -->
 
   <group if="$(arg enable_fake_joints_execution)">
 
@@ -25,8 +24,6 @@
     <!-- Given the published joint states, publish tf for the robot links -->
     <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="true" output="screen" />
   </group>
-
-</group>
 
 
   <!--              ************************************************************************************              -->
