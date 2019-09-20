@@ -27,9 +27,13 @@ roslaunch cssdbot_ur10e_moveit_config hardware_minimal.launch
 
 BONUS! EASING YOUR PAIN IN TESTING!
 
-!!!PLAN BEFORE EXECUTING. SCALE YORU VELOCITY. REMEMBER CURRENT STATE SHOULD ALWAYS BE :<current_state>!!!
+!!!PLAN BEFORE EXECUTING. SCALE YORU VELOCITY.!!!
+
+!!!REMEMBER CURRENT STATE SHOULD ALWAYS BE :<current_state>!!!
 
 ![alt text](/documentations/rviz.gif?)
+
+NOTE: JOINT STATES FOR POSES CAN BE ALTERNED IN cssdbot_urxx_moveit_config/config/urxx.srdf
 
 ## TO-DO DEVELOPMENT ON THIS BRANCH
 
