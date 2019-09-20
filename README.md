@@ -20,10 +20,11 @@ Robot arm manipulation manager package is one of the module for the Central ster
 
 3. clean up gazebo launch [partially done]
 
-4. attempt to clean up moveit_config (should be standalone) [partially done]
+4. moveit_config folders (should be standalone) [partially done]
    - generated own standalone moveit config pkgs for ur10 and ur10e using setup assistant with cssdbot_description's urdf
    - included limited joints option since universal_robot' ori pkg supports.
    - included srdf, different default poses!
+   - included another launch file for launches for hardware - hardware_minimal.launch
    
    [to-do]
    - check with coffeebot's to check for anymore insights
