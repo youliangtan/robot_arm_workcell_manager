@@ -1,5 +1,5 @@
 <launch>
-
+<group ns="arm1">
   <arg name="limited" default="false"/>
   <arg name="use_gui" default="false" />
   <arg name="debug" default="false" />
@@ -30,5 +30,5 @@
   <!-- I dont think by default there's a robot state publisher given the joint states -->
   <!-- Given the published joint states, publish tf for the robot links -->
   <!--node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="true" output="screen" /-->
-
+</group>
 </launch>

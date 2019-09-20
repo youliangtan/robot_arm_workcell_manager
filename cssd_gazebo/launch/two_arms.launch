@@ -14,11 +14,11 @@
   </group>
 
   <!-- ARM 2-->
+   <!--Placed 2.25 meters apart in the y axis from arm 1-->
   <group ns="arm2">
     <arg name="name" value="arm2" />
     <param name="tf_prefix" value="$(arg name)_tf" />
     <include file="$(find cssd_gazebo)/launch/$(arg mode)_arm.launch">
-      <!--Placed 2.25 meters apart in the y axis from arm 1-->
       <arg name="init_pose" value="-z 0.8 -y 2.25" />
       <arg name="robot_name"  value="$(arg name)"/>
     </include>
