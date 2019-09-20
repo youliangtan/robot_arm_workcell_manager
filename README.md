@@ -31,6 +31,8 @@ BONUS! EASING YOUR PAIN IN TESTING!
 
 !!!REMEMBER CURRENT STATE SHOULD ALWAYS BE :<current_state>!!!
 
+!!!REMEMBER GROUP SHOULD BE: MANIPULATOR!!!
+
 ![alt text](/documentations/rviz.gif?)
 
 NOTE: JOINT STATES FOR POSES CAN BE ALTERNED IN cssdbot_urxx_moveit_config/config/urxx.srdf
