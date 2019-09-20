@@ -2,6 +2,10 @@
 
   <arg name="limited" default="false"/>
   <arg name="use_gui" default="false" />
+  <arg name="sim" default="false" />
+
+  <!-- Remap follow_joint_trajectory -->
+  <remap if="$(arg sim)" from="/follow_joint_trajectory" to="/arm_controller/follow_joint_trajectory"/>
 
   <!-- By default, we do not start a database (it can be large) -->
   <arg name="db" default="false" />
@@ -16,17 +20,16 @@
     <arg name="limited" value="$(arg limited)"/>
   </include>
 
-  <!-- If needed, broadcast static tf for robot root -->
-
-  <!-- NOTE!!!! We do not have a robot connected, so publish fake joint states -->
-  <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
-    <param name="/use_gui" value="false"/>
-    <rosparam param="/source_list">[/move_group/fake_controller_joint_states]</rosparam>
-  </node>
+  <!-- We do not have a robot connected, so publish fake joint states -->
+  <!--node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
+    <param name="use_gui" value="$(arg use_gui)"/>
+    <rosparam param="source_list">[move_group/fake_controller_joint_states]</rosparam>
+  </node-->
 
 
   <!-- Run the main MoveIt! executable without trajectory execution (we do not have controllers configured by default) -->
   <include file="$(find cssdbot_ur10_moveit_config)/launch/move_group.launch">
+    <arg name="limited" value="true"/>
     <arg name="allow_trajectory_execution" value="true"/>
     <arg name="fake_execution" value="true"/>
     <arg name="info" value="true"/>
