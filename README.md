@@ -1,9 +1,39 @@
-# robot_arm_workcell_manager (RAWM)
-Robot arm manipulation manager package is one of the module for the Central sterile services department (cssd) workcell application. This package will act as a standalone workcell (aka: Dispenser Robot), which handles the robotics aspect of cssd_workcell. When a `DispenserRequest` is being sent out by a user to RAWM, this workcell will begin executing the task, starting with the picking motion of custom design instrument tray from a medical rack, then end it by placing the tray on MIR cart (follow-up delivery task by MIR). Fiducial Aruco markers will function as locating visual markers for pose estimation. Aruco markers are attached to the trays and MIR cart. Current package is developed and tested on `ros-melodic` and `gazebo 9.1`. 
+# TESTING MOVEIT with HARDWARE!
+
+PLEASE KEEP YOUR HANDS ON THE BIG RED BUTTON!
+
+In Terminal A (HARDWARE BRINGUP):
+For ur10,
+```
+roslaunch ur_modern_driver ur10_bringup.launch robot_ip:=198.168.88.XX
+```
+
+For ur10e,
+```
+roslaunch ur_modern_driver ur10e_bringup.launch robot_ip:=198.168.88.XX
+```
+
+In Terminal B:
+
+For ur10,
+```
+roslaunch cssdbot_ur10_moveit_config hardware_minimal.launch
+```
+
+For ur10e,
+```
+roslaunch cssdbot_ur10e_moveit_config hardware_minimal.launch
+```
+
+BONUS! EASING YOUR PAIN IN TESTING!
+
+!!!PLAN BEFORE EXECUTING. SCALE YORU VELOCITY. REMEMBER CURRENT STATE SHOULD ALWAYS BE :<current_state>!!!
+
+![alt text](/documentations/rviz.gif?)
 
 ## TO-DO DEVELOPMENT ON THIS BRANCH
 
-1. Two arm launch in gazebo [done, for now]
+### 1. Two arm launch in gazebo [done, for now]
 
    [main changes done]
    - added ur10e urdf.xacro model with end effector to cssdbot_description/urdf/ur10e (altered it minorly to support     velocityController) 
@@ -16,11 +46,11 @@ Robot arm manipulation manager package is one of the module for the Central ster
    [some more improvements to be done]
    - tune the PID for the arms / and physics params for physical models, seems to jitter slightly.
 
-2. Two arm launch rviz/RAWM namespaced [ongoing]
+### 2. Two arm launch rviz/RAWM namespaced [ongoing]
 
-3. clean up gazebo launch [partially done]
+### 3. clean up gazebo launch [partially done]
 
-4. moveit_config folders (should be standalone) [partially done]
+### 4. moveit_config folders (should be standalone) [partially done]
    - generated own standalone moveit config pkgs for ur10 and ur10e using setup assistant with cssdbot_description's urdf
    - included limited joints option since universal_robot' ori pkg supports.
    - included srdf, different default poses!
@@ -31,9 +61,13 @@ Robot arm manipulation manager package is one of the module for the Central ster
    - check own concern - that universal_robot's moveit_config was generated using an older version of setup assistant since 
      some params give out warnings on the new moveit - signalling depreciation of some params.
 
-5. clean up cssdbot urdf [onging]
+#### 5. clean up cssdbot urdf [onging]
 
-6. add ur10e with end effector [done]
+#### 6. add ur10e with end effector [done]
+
+
+# robot_arm_workcell_manager (RAWM)
+Robot arm manipulation manager package is one of the module for the Central sterile services department (cssd) workcell application. This package will act as a standalone workcell (aka: Dispenser Robot), which handles the robotics aspect of cssd_workcell. When a `DispenserRequest` is being sent out by a user to RAWM, this workcell will begin executing the task, starting with the picking motion of custom design instrument tray from a medical rack, then end it by placing the tray on MIR cart (follow-up delivery task by MIR). Fiducial Aruco markers will function as locating visual markers for pose estimation. Aruco markers are attached to the trays and MIR cart. Current package is developed and tested on `ros-melodic` and `gazebo 9.1`. 
 
 **STILL IN DEVELOPMENT!!!**
 
