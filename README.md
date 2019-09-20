@@ -127,16 +127,12 @@ roslaunch robot_arm_workcell_manager robot_arm_workcell_manager.launch
 - master branch for `ur_modern_driver` currently doesnt support UR-E series
 
 ## Possible errors
-- Error building due to gazebo::transport::node TryInit function not found
+- Error building due to `gazebo::transport::node TryInit function not found`
 ```
 sudo sh -c 'echo "deb http://packages.osrfoundation.org/gazebo/ubuntu-stable `lsb_release -cs` main" > /etc/apt/sources.list.d/gazebo-stable.list'
-
 wget http://packages.osrfoundation.org/gazebo.key -O - | sudo apt-key add -
-
 sudo apt-get update
-
 sudo apt-get upgrade
-
 ```
 
 ## TODO
