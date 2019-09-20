@@ -1,5 +1,5 @@
 controller_list:
-  - name: fake_manipulator_controller
+  - name: arm_controller
     joints:
       - shoulder_pan_joint
       - shoulder_lift_joint

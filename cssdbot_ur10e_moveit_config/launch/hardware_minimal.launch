@@ -4,7 +4,7 @@
   <arg name="limited" default="false"/>
   <arg name="use_gui" default="false" />
   <arg name="debug" default="false" />
-  <arg name="sim" default="false" />
+  <arg name="sim" default="true" />
 
   <!-- Remember to launch ur bring up!-->
 
@@ -24,7 +24,7 @@
   <include file="$(find cssdbot_ur10e_moveit_config)/launch/ur10e_moveit_planning_execution.launch">
     <arg name="limited" value="$(arg limited)"/>
     <arg name="debug" value="$(arg debug)"/>
-    <arg name="sim" default="$(arg sim)" />
+    <arg name="sim" value="$(arg sim)" />
   </include>
 
   <!-- I THINK you would need this for hardware. Not too sure!-->
