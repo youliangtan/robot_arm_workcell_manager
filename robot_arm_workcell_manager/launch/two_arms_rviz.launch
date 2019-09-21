@@ -1,41 +1,54 @@
 <launch>
+    <arg name="arm_1_option" default="ur10"/>
+    <arg name="arm_2_option" default="ur10e"/>
+    <arg name="arm_1_ns" default="arm1"/>
+    <arg name="arm_2_ns" default="arm2"/>
 
+    <arg name="sim" default="true"/>
     <arg name="debug" default="false" />
     <arg name="limited" default="false"/>
-    <arg name="load_robot_description" default="true"/>
-    <arg name="sim" default="true"/>
+
+    <arg name="enable_usb_cam" default="false"/>
+
+    <!-- ARM 1 -->
+    <group ns="$(arg arm_1_ns)">
+
+        <arg name= "arm_1_moveit_config" value="cssdbot_$(arg arm_1_option)_moveit_config"/>
+        <include file="$(eval find(arm_1_moveit_config)+ '/launch/realistic_minimal.launch')">
+            <arg name="ns" value="$(arg arm_1_ns)" />
+            <arg name="sim" value="$(arg sim)" />
+            <arg name="limited" value="$(arg limited)"/>
+            <arg name="debug" value="$(arg debug)" />
+        </include> 
+
+        <include file="$(find robot_arm_workcell_manager )/launch/markers_detector.launch">
+        <arg name="ns" value="$(arg arm_1_ns)"/>
+        <arg name="camSelect"      default="/dev/video0"/>
+        <arg name="enable_usb_cam" value="$(arg enable_usb_cam)"/>
+        </include>
+
+         <node pkg="tf" type="static_transform_publisher" name="eef_to_camera_tf" args="0 0 0 -1.57 0 -1.57 $(arg arm_1_ns)_tf/camera_link_optical $(arg arm_1_ns)_tf/camera 15" />  
+    </group>
   
-    <!--              ************************************************************************************              -->
-    <!--              ******************************** Robot Arm Launcher ********************************              -->
-    <!--              ************************************************************************************              -->
+    <!-- ARM 2 -->
+    <group ns="$(arg arm_2_ns)">
+
+        <arg name= "arm_2_moveit_config" value="cssdbot_$(arg arm_2_option)_moveit_config"/>
+        <include file="$(eval find(arm_2_moveit_config)+ '/launch/realistic_minimal.launch')">
+            <arg name="ns" value="$(arg arm_2_ns)" />
+            <arg name="sim" value="$(arg sim)" />
+            <arg name="limited" value="$(arg limited)"/>
+            <arg name="debug" value="$(arg debug)" />
+        </include> 
     
-    <!-- UR10 -->
-    <group ns="arm1">
-        <include file="$(find cssdbot_ur10_moveit_config)/launch/hardware_minimal.launch">
-            <arg name="sim" value="$(arg sim)"/>
-            <arg name="fake_execution" value="false" />
-        </include> 
+        <include file="$(find robot_arm_workcell_manager )/launch/markers_detector.launch">
+        <arg name="ns" value="$(arg arm_2_ns)"/>
+        <arg name="camSelect"      default="/dev/video1"/>
+        <arg name="enable_usb_cam" value="$(arg enable_usb_cam)"/>
+        </include>
+
+        <node pkg="tf" type="static_transform_publisher" name="eef_to_camera_tf" args="0 0 0 -1.57 0 -1.57 $(arg arm_2_ns)_tf/camera_link_optical $(arg arm_2_ns)_tf/camera 15" /> 
     </group>
-  
-    <!-- UR10e -->
-    <group ns="arm2">
-        <include file="$(find cssdbot_ur10e_moveit_config)/launch/hardware_minimal.launch">
-            <arg name="sim" value="$(arg sim)"/>
-            <arg name="fake_execution" value="false" />
-        </include> 
-    </group>
-  
-  
-    <!--              **********************************************************************************              -->
-    <!--              ****************************** Fiducial Marker handler *****************************              -->
-    <!--              ************************************************************************************              -->
-  
-    <!--arg name="enable_usb_cam" default="true"/>
-  
-    <include file="$(find robot_arm_workcell_manager )/launch/markers_detector.launch">
-      <arg name="camSelect"      default="/dev/video1"/>
-      <arg name="enable_usb_cam" value="$(arg enable_usb_cam)"/>
-    </include-->
   
   </launch>
   

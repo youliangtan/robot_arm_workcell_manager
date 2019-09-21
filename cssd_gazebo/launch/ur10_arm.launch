@@ -47,16 +47,5 @@
     w: How long to wait between warm-up steps (this gives time for the simulation to talk to the control_manager)
    -->
   <node name="gazebo_warm_start" pkg="cssd_gazebo" type="warm_start" args="-d 6.0 -i 5 -w 1.0" output="screen"/>
-  
-  <!-- Static tf to fix tf_prefixed world frame-->
-  <node pkg="tf" type="static_transform_publisher" name="$(arg robot_name)_static_tf" args="0 0 0 0 0 0 /world /$(arg robot_name)_tf/world 10"/> 
-
-  <!-- Launch Rviz and MoveIt!-->
-  <!--include file="$(find robot_arm_workcell_manager)/launch/main.launch">
-    <arg name="enable_usb_cam"  value="false"/>
-    <arg name="load_robot_description" value="false"/>
-    <arg name="arm_type" value="ur10"/>
-    <arg name="sim" value="true"/>
-  </include-->
 
 </launch>

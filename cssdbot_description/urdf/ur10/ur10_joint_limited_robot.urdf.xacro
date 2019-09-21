@@ -3,7 +3,7 @@
        name="ur10" >
 
   <xacro:arg name="transmission_hw_interface" default="hardware_interface/PositionJointInterface"/>
-
+  <xacro:arg name="robot_ns" default=""/>
   <!-- common stuff -->
   <xacro:include filename="$(find cssdbot_description)/urdf/ur10/common.gazebo.xacro" />
 

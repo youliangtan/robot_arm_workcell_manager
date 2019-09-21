@@ -410,20 +410,20 @@
 <!--end of end effector-->
 
 <!-- start of camera -->
-  <joint name="camera_optical_joint" type="fixed">
+  <joint name="${prefix}camera_optical_joint" type="fixed">
     <!-- satisfy both gazebo convention and aruco pkg convetion. looking from x axis and z axis respectively. -->
     <origin xyz=" 0.055 0.06 0.0825" rpy="0 0.0 0" />>
-    <parent link="end_effector_link"/>
-    <child link="camera_link_optical"/>
+    <parent link="${prefix}end_effector_link"/>
+    <child link="${prefix}camera_link_optical"/>
   </joint>
 
- <link name="camera_link_optical">
+ <link name="${prefix}camera_link_optical">
   </link>
 
-<gazebo reference="camera_link_optical">
+<gazebo reference="${prefix}camera_link_optical">
     <sensor type="camera" name="camera1">
       <update_rate>30.0</update_rate>
-      <camera name="camera_head">
+      <camera name="${prefix}camera_head">
         <horizontal_fov>1.57</horizontal_fov>
         <image>
           <width>3840</width>
@@ -444,7 +444,8 @@
           <stddev>0.007</stddev>
         </noise>
       </camera>
-      <plugin name="camera_controller" filename="libgazebo_ros_camera.so">
+      <plugin name="${prefix}camera_controller" filename="libgazebo_ros_camera.so">
+        <robotNamespace>$(arg robot_ns)</robotNamespace>
         <alwaysOn>true</alwaysOn>
         <updateRate>30</updateRate>
         <cameraName></cameraName>

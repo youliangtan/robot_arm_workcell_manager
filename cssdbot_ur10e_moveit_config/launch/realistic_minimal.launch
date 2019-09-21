@@ -1,12 +1,18 @@
+<!--This launch file is for launching moveit! in accordance with ur10e with realistic conditions. -->
+<!--It can be used for simulation OR w. real hardware conditions. -->
+<!--For simulation, "sim" should be true. For hardware "sim" should be false. -->
+
+<!--It also introduces a namespace argument "ns", currently a minimally "dirty" way...-->
+<!-- ...in handling the shortcomings of remapping "namespaced" topics in roslaunch files. -->
 <launch>
+
+  <arg name="ns" default="" />
+
+  <arg name="sim" default="false" />
   <arg name="limited" default="false"/>
-  <arg name="use_gui" default="false" />
   <arg name="debug" default="false" />
-  <arg name="sim" default="true" />
-  <arg name="fake_execution" default="false" />
 
   <!-- Remember to launch ur bring up!-->
-
   <!-- Load the URDF, SRDF and other .yaml configuration files on the param server -->
   <include file="$(find cssdbot_ur10e_moveit_config)/launch/planning_context.launch">
     <arg name="load_robot_description" value="true"/>
@@ -19,16 +25,18 @@
     <arg name="debug" value="$(arg debug)"/>
   </include>
 
-  <!-- Run planning execution, essential for hardware to work! -->
+  <!-- Run planning execution, this is where the traj action server is remapped...  -->
+  <!-- ...depending if it's a simulation or with real hardware.  -->
   <include file="$(find cssdbot_ur10e_moveit_config)/launch/ur10e_moveit_planning_execution.launch">
+    <arg name="sim" value="$(arg sim)"/>
     <arg name="limited" value="$(arg limited)"/>
     <arg name="debug" value="$(arg debug)"/>
-    <arg name="sim" value="$(arg sim)" />
-    <arg name="fake_execution" default="false" />
+    <arg name="ns" value="$(arg ns)"/>
   </include>
 
-  <!-- I THINK you would need this for hardware. Not too sure!-->
+  <!-- I THINK you would need this for hardware. -->
   <!-- I dont think by default there's a robot state publisher given the joint states -->
   <!-- Given the published joint states, publish tf for the robot links -->
   <!--node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="true" output="screen" /-->
+  
 </launch>
