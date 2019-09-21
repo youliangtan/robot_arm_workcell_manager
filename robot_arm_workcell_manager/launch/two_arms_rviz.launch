@@ -21,11 +21,11 @@
             <arg name="debug" value="$(arg debug)" />
         </include> 
 
-        <!--include file="$(find robot_arm_workcell_manager )/launch/markers_detector.launch">
+        <include file="$(find robot_arm_workcell_manager )/launch/markers_detector.launch">
         <arg name="ns" value="$(arg arm_1_ns)"/>
         <arg name="camSelect"      default="/dev/video0"/>
         <arg name="enable_usb_cam" value="$(arg enable_usb_cam)"/>
-        </include-->
+        </include>
 
          <node pkg="tf" type="static_transform_publisher" name="eef_to_camera_tf" args="0 0 0 -1.57 0 -1.57 $(arg arm_1_ns)_tf/camera_link_optical $(arg arm_1_ns)_tf/camera 15" />  
     </group>
@@ -41,11 +41,11 @@
             <arg name="debug" value="$(arg debug)" />
         </include> 
     
-        <!--include file="$(find robot_arm_workcell_manager )/launch/markers_detector.launch">
+        <include file="$(find robot_arm_workcell_manager )/launch/markers_detector.launch">
         <arg name="ns" value="$(arg arm_2_ns)"/>
         <arg name="camSelect"      default="/dev/video1"/>
         <arg name="enable_usb_cam" value="$(arg enable_usb_cam)"/>
-        </include-->
+        </include>
 
         <node pkg="tf" type="static_transform_publisher" name="eef_to_camera_tf" args="0 0 0 -1.57 0 -1.57 $(arg arm_2_ns)_tf/camera_link_optical $(arg arm_2_ns)_tf/camera 15" /> 
     </group>
