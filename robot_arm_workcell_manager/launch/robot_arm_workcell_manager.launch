@@ -1,5 +1,4 @@
 <launch>
-
     <arg name="motion_target_file"  default="$(find robot_arm_workcell_manager)/config/motion_target.yaml" />
     <arg name="markers_config_file"  default="$(find robot_arm_workcell_manager)/config/markers_tf.yaml" />
 
@@ -8,11 +7,20 @@
     <param name="arm_mission_path" type='string' value="pending" />
     
     <param name="camera_frame_id" value="camera" />
-    <param name="group_name" type="string" value="manipulator" />
     <param name="dispenser_state_pub_rate" type="double" value="0.5" />
     <param name="motion_pause_time" type="int" value="1" />
     <param name="flip_marker" type="bool" value="true" />
+    <param name="group_name" type="string" value="manipulator" />
 
-    <node pkg="robot_arm_workcell_manager" type="robot_arm_workcell_manager" name="robot_arm_workcell_manager_node" respawn="true" output="screen"></node>
 
+    <node pkg="robot_arm_workcell_manager"
+    type="robot_arm_workcell_manager"
+    name="robot_arm_workcell_manager_node"
+    respawn="true"
+    output="screen">
+    <!-- tobe fixed-->
+    <param name="group_name" type="string" value="manipulator" />
+    <param name="arm_namespace" value="" />
+    <param name="dispenser_name" type="string" value="ur10_001" />
+    </node>
 </launch>

@@ -67,7 +67,6 @@ class RobotArmWorkcellManager{
 
     private:
         std::string dispenser_name_;   //TODO load with ros param        
-
         // Thread Stuffs
         std::thread dispenser_task_execution_thread_;
         std::thread spin_ros_thread_;

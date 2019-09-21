@@ -4,6 +4,7 @@
   <!--              ********************************* USB Camera Input *********************************              -->
   <!--              ************************************************************************************              -->
 
+  <!-- IGNORING THIS SECTION NOW-->
   <arg name="enable_usb_cam"  default="true"/>
   <arg name="camSelect"       default="/dev/video0"/>
   <arg name="pixelFormat"     default="yuyv"/>    <!-- refer to usb_cam ros documentation -->
@@ -36,7 +37,7 @@
   <!--              ************************************************************************************              -->
   <!--              ******************************** Aruco Detector node *******************************              -->
   <!--              ************************************************************************************              -->
-
+  <!-- you might need ros-melodic-image-transport-plugins -->
   <arg name="ns" default=""/>
 
   <!-- Run the aruco_detect node -->
@@ -58,8 +59,13 @@
     <param name="do_pose_estimation" value="$(arg do_pose_estimation)"/>
     <param name="ignore_fiducials" value="$(arg ignore_fiducials)"/>
     <param name="fiducial_len_override" value="$(arg fiducial_len_override)"/>
-    <remap from="/camera/compressed" to="$(arg ns)/$(arg image)/$(arg transport)"/>
-    <remap from="/camera_info" to="$(arg ns)/camera_info"/>
+    <!-- There might be conflicts in dependencies either on my laptop / aruco_marker-->
+    <!-- Topics vary between launches. So, to make sure-->
+    <remap from="/$(arg ns)/camera/compressed" to= "/$(arg ns)/image"/>
+    <remap from="/$(arg ns)/camera" to= "/$(arg ns)/image"/>
+    <remap from="/$(arg ns)/camera" to= "/$(arg ns)/image"/>
+    <!--remap from="/camera/compressed" to="$(arg ns)/$(arg image)/$(arg transport)"/-->
+    <!--remap from="/camera_info" to="$(arg ns)/camera_info"/-->
   </node>
 
 </launch>

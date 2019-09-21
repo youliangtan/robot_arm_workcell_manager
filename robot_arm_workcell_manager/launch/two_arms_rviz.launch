@@ -23,7 +23,7 @@
 
         <include file="$(find robot_arm_workcell_manager )/launch/markers_detector.launch">
         <arg name="ns" value="$(arg arm_1_ns)"/>
-        <arg name="camSelect"      default="/dev/video0"/>
+        <arg name="camSelect"      default="/dev/video1"/>
         <arg name="enable_usb_cam" value="$(arg enable_usb_cam)"/>
         </include>
 

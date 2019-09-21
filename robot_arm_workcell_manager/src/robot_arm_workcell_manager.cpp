@@ -334,11 +334,8 @@ int main(int argc, char** argv){
     std::cout<<" YoYoYo!, Arm Workcell Manager is alive!!!"<< std::endl;
     
     ros::init(argc, argv, "robot_arm_workcell_manager", ros::init_options::NoSigintHandler);
-    
     RobotArmWorkcellManager ur10_workcell("ur10_001");
-
     ros::AsyncSpinner ros_async_spinner(1);
-    std::cout<< " RAWM Node is now Running...."<<std::endl;
     ros_async_spinner.start();
     ros::waitForShutdown();    
 }

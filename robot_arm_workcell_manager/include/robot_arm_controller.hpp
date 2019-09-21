@@ -59,6 +59,7 @@ class RobotArmController{
         bool load_complete_ = false;  //TBC
         moveit::planning_interface::MoveGroupInterface::Plan motion_plan_;
 
+        std::string arm_namespace_;
         ros::NodeHandle nh_;
         YAML::Node NAMED_TARGET_CONFIG_;
 };

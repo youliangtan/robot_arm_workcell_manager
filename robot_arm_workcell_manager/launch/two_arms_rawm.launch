@@ -1,32 +1,34 @@
 <launch>
-  
-    <!--              ************************************************************************************              -->
-    <!--              ******************************** Robot Arm Launcher ********************************              -->
-    <!--              ************************************************************************************              -->
+    <arg name="ns" default=""/>
+    <arg name="motion_target_file"  default="$(find robot_arm_workcell_manager)/config/motion_target.yaml" />
+    <arg name="markers_config_file"  default="$(find robot_arm_workcell_manager)/config/markers_tf.yaml" />
+
+    <param name="marker_tf_path" value="$(arg markers_config_file)"/>
+    <param name="motion_target_yaml_path" type="string" value="$(arg motion_target_file)" />
+    <param name="arm_mission_path" type='string' value="pending" />
     
-    <!-- UR10 -->
-    <group ns="arm1">
-        <include file="$(find robot_arm_workcell_manager)/launch/robot_arm_workcell_manager.launch">
-        </include> 
-    </group>
-  
-    <!-- UR10e -->
-    <group ns="arm2">
-        <include file="$(find robot_arm_workcell_manager)/launch/robot_arm_workcell_manager.launch">
-        </include> 
-    </group>
-  
-  
-    <!--              **********************************************************************************              -->
-    <!--              ****************************** Fiducial Marker handler *****************************              -->
-    <!--              ************************************************************************************              -->
-  
-    <!--arg name="enable_usb_cam" default="true"/>
-  
-    <include file="$(find robot_arm_workcell_manager )/launch/markers_detector.launch">
-      <arg name="camSelect"      default="/dev/video1"/>
-      <arg name="enable_usb_cam" value="$(arg enable_usb_cam)"/>
-    </include-->
-  
-  </launch>
-  
+    <param name="camera_frame_id" value="camera" />
+    <param name="dispenser_state_pub_rate" type="double" value="0.5" />
+    <param name="motion_pause_time" type="int" value="1" />
+    <param name="flip_marker" type="bool" value="true" />
+    <param name="group_name" type="string" value="manipulator" />
+
+
+    <node pkg="robot_arm_workcell_manager"
+    type="robot_arm_workcell_manager"
+    name="robot_arm_workcell_manager_node"
+    respawn="true"
+    output="screen">
+    <param name="arm_namespace" value="arm1" />
+    <param name="group_name" type="string" value="manipulator" />
+    </node>
+
+    <node pkg="robot_arm_workcell_manager"
+    type="robot_arm_workcell_manager"
+    name="robot_arm_workcell_manager_node2"
+    respawn="true"
+    output="screen">
+    <param name="arm_namespace" value="arm2" />
+    <param name="group_name" type="string" value="manipulator" />
+    </node>
+</launch>
