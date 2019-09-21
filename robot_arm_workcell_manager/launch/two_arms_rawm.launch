@@ -1,29 +1,18 @@
 <launch>
-
-    <arg name="debug" default="false" />
-    <arg name="limited" default="false"/>
-    <arg name="load_robot_description" default="true"/>
-  
-    <arg name="arm_type" default="ur10"/>
-    <arg name="sim" default="false"/>
   
     <!--              ************************************************************************************              -->
     <!--              ******************************** Robot Arm Launcher ********************************              -->
     <!--              ************************************************************************************              -->
     
     <!-- UR10 -->
-    <group if="$(eval arm_type == 'ur10')">
-        <include file="$(find cssdbot_ur10_moveit_config)/launch/hardware_minimal.launch">
-            <arg name="sim" value="$(arg sim)"/>
-            <arg name="fake_execution" value="false" />
+    <group ns="arm1">
+        <include file="$(find robot_arm_workcell_manager)/launch/robot_arm_workcell_manager.launch">
         </include> 
     </group>
   
     <!-- UR10e -->
-    <group if="$(eval arm_type == 'ur10e')">
-        <include file="$(find cssdbot_ur10e_moveit_config)/launch/hardware_minimal.launch">
-            <arg name="sim" value="$(arg sim)"/>
-            <arg name="fake_execution" value="false" />
+    <group ns="arm2">
+        <include file="$(find robot_arm_workcell_manager)/launch/robot_arm_workcell_manager.launch">
         </include> 
     </group>
   
@@ -32,12 +21,12 @@
     <!--              ****************************** Fiducial Marker handler *****************************              -->
     <!--              ************************************************************************************              -->
   
-    <arg name="enable_usb_cam" default="true"/>
+    <!--arg name="enable_usb_cam" default="true"/>
   
     <include file="$(find robot_arm_workcell_manager )/launch/markers_detector.launch">
       <arg name="camSelect"      default="/dev/video1"/>
       <arg name="enable_usb_cam" value="$(arg enable_usb_cam)"/>
-    </include>
+    </include-->
   
   </launch>
   

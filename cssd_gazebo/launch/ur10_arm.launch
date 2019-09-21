@@ -8,7 +8,6 @@
   <arg name="init_pose"/>
   <arg name="limited" default="false"  doc="If true, limits joint range [-PI, PI] on all joints." />
   
-  
   <!-- send robot URDF to param server -->
   <include file="$(find cssdbot_description)/launch/ur10_upload.launch">
     <arg name="limited" value="$(arg limited)"/>
@@ -54,8 +53,10 @@
 
   <!-- Launch Rviz and MoveIt!-->
   <!--include file="$(find robot_arm_workcell_manager)/launch/main.launch">
-    <arg name='enable_usb_cam'  value='false'/>
-    <arg name="arm_type" default="ur10"/>
+    <arg name="enable_usb_cam"  value="false"/>
+    <arg name="load_robot_description" value="false"/>
+    <arg name="arm_type" value="ur10"/>
+    <arg name="sim" value="true"/>
   </include-->
 
 </launch>

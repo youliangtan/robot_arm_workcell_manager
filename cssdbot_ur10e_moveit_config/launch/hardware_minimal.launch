@@ -1,10 +1,9 @@
 <launch>
-
-  <group ns="arm2">
   <arg name="limited" default="false"/>
   <arg name="use_gui" default="false" />
   <arg name="debug" default="false" />
   <arg name="sim" default="true" />
+  <arg name="fake_execution" default="false" />
 
   <!-- Remember to launch ur bring up!-->
 
@@ -25,13 +24,11 @@
     <arg name="limited" value="$(arg limited)"/>
     <arg name="debug" value="$(arg debug)"/>
     <arg name="sim" value="$(arg sim)" />
+    <arg name="fake_execution" default="false" />
   </include>
 
   <!-- I THINK you would need this for hardware. Not too sure!-->
   <!-- I dont think by default there's a robot state publisher given the joint states -->
   <!-- Given the published joint states, publish tf for the robot links -->
   <!--node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="true" output="screen" /-->
-
-  </group>
-
 </launch>

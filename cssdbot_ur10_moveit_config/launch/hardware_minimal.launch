@@ -1,13 +1,13 @@
 <launch>
-<group ns="arm1">
+
+
   <arg name="limited" default="false"/>
   <arg name="use_gui" default="false" />
   <arg name="debug" default="false" />
-  <arg name="sim" default="true" />
-  <arg name="fake_execution" default="true" />
+  <arg name="sim" default="false" />
+  <arg name="fake_execution" default="false" />
 
   <!-- Remember to launch ur bring up!-->
-
   <!-- Load the URDF, SRDF and other .yaml configuration files on the param server -->
   <include file="$(find cssdbot_ur10_moveit_config)/launch/planning_context.launch">
     <arg name="load_robot_description" value="true"/>
@@ -32,5 +32,4 @@
   <!-- I dont think by default there's a robot state publisher given the joint states -->
   <!-- Given the published joint states, publish tf for the robot links -->
   <!--node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="true" output="screen" /-->
-</group>
 </launch>

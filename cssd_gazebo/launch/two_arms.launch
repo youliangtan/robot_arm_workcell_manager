@@ -1,15 +1,16 @@
 <?xml version="1.0"?>
 <launch>
 
-<arg name="mode" default="ur10"/>
+<arg name="first_arm_option" default="ur10"/>
+<arg name="second_arm_option" default="ur10e"/>
 
   <!-- ARM 1-->
   <group ns="arm1">
     <arg name="name" value="arm1" />
     <param name="tf_prefix" value="$(arg name)_tf" />
-    <include file="$(find cssd_gazebo)/launch/ur10_arm.launch" >
+    <include file="$(find cssd_gazebo)/launch/$(arg first_arm_option)_arm.launch" >
       <arg name="init_pose" value="-z 0.8" />
-      <arg name="robot_name"  value= "$(arg name)" />
+      <arg name="robot_name"  value="$(arg name)" />
     </include>
   </group>
 
@@ -18,7 +19,7 @@
   <group ns="arm2">
     <arg name="name" value="arm2" />
     <param name="tf_prefix" value="$(arg name)_tf" />
-    <include file="$(find cssd_gazebo)/launch/$(arg mode)_arm.launch">
+    <include file="$(find cssd_gazebo)/launch/$(arg second_arm_option)_arm.launch">
       <arg name="init_pose" value="-z 0.8 -y 2.25" />
       <arg name="robot_name"  value="$(arg name)"/>
     </include>

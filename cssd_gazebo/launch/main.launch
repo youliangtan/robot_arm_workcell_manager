@@ -14,7 +14,8 @@
   <!-- include our robots -->
   <include file="$(find cssd_gazebo)/launch/two_arms.launch" >
     <!-- "ur10" for arm2 / "ur10e" for arm2 -->
-    <arg name="mode" value="ur10e"/>
+    <arg name="first_arm_option" value="ur10"/>
+    <arg name="second_arm_option" value="ur10e"/>
   </include>
 
 
