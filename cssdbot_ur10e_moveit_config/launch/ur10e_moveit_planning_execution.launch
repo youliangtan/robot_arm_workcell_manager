@@ -7,6 +7,7 @@
   <arg name="fake_execution" default="false" />
 
  <!-- Remap follow_joint_trajectory -->
+ <!-- "dirty" way to deal with namespaces -->
   <remap if="$(arg sim)" from="/follow_joint_trajectory" to="/$(arg ns)/arm_controller/follow_joint_trajectory"/>
 
   <!-- Launch moveit -->

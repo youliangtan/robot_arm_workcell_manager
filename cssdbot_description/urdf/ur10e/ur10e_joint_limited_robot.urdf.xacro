@@ -3,7 +3,6 @@
        name="ur10e" >
   
   <xacro:arg name="transmission_hw_interface" default="hardware_interface/PositionJointInterface"/>
-  <xacro:arg name="robot_ns" default=""/>
   <!-- common stuff -->
   <xacro:include filename="$(find cssdbot_description)/urdf/ur10e/common.gazebo.xacro" />
 
@@ -25,7 +24,7 @@
 
   <joint name="world_joint" type="fixed">
     <parent link="world" />
-    <child link = "${robot_ns}base_link" />
+    <child link = "base_link" />
     <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
   </joint>
 

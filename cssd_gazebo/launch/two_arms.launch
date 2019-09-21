@@ -25,7 +25,7 @@
   <!--Placed 2.25 meters apart in the y axis from arm 1-->
   <group ns="$(arg arm_2_ns)">
     <param name="tf_prefix" value="$(arg arm_2_ns)_tf" />
-    <include file="$(find cssd_gazebo)/launch/$(arg arm_1_option)_arm.launch">
+    <include file="$(find cssd_gazebo)/launch/$(arg arm_2_option)_arm.launch">
       <arg name="init_pose" value="-z 0.8 -y 2.25" />
       <arg name="robot_name"  value="$(arg arm_2_ns)"/>
     </include>
