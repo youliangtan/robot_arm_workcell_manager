@@ -1,41 +1,16 @@
-# TESTING MOVEIT with HARDWARE!
 
-PLEASE KEEP YOUR HANDS ON THE BIG RED BUTTON!
+# robot_arm_workcell_manager (RAWM)
+Robot arm manipulation manager package is one of the module for the Central sterile services department (cssd) workcell application. This package will act as a standalone workcell (aka: Dispenser Robot), which handles the robotics aspect of cssd_workcell. When a `DispenserRequest` is being sent out by a user to RAWM, this workcell will begin executing the task, starting with the picking motion of custom design instrument tray from a medical rack, then end it by placing the tray on MIR cart (follow-up delivery task by MIR). Fiducial Aruco markers will function as locating visual markers for pose estimation. Aruco markers are attached to the trays and MIR cart. Current package is developed and tested on `ros-melodic` and `gazebo 9.1`. 
 
-In Terminal A (HARDWARE BRINGUP):
-For ur10,
-```
-roslaunch ur_modern_driver ur10_bringup.launch robot_ip:=198.168.88.XX
-```
+**STILL IN DEVELOPMENT!!!**
 
-For ur10e,
-```
-roslaunch ur_modern_driver ur10e_bringup.launch robot_ip:=198.168.88.XX
-```
+![alt text](/documentations/gazebo_test.png?)
 
-In Terminal B (MOVEIT & RVIZ):
+*Full Video Link*, [here](https://drive.google.com/open?id=1dGKh3FVMlUwX8GUMv3mgxQFBm0OnGa8B)
 
-For ur10,
-```
-roslaunch cssdbot_ur10_moveit_config hardware_minimal.launch
-```
 
-For ur10e,
-```
-roslaunch cssdbot_ur10e_moveit_config hardware_minimal.launch
-```
+---
 
-BONUS! EASING YOUR PAIN IN TESTING!
-
-!!!PLAN BEFORE EXECUTING. SCALE YORU VELOCITY.!!!
-
-!!!REMEMBER CURRENT STATE SHOULD ALWAYS BE :<current_state>!!!
-
-!!!REMEMBER GROUP SHOULD BE: MANIPULATOR!!!
-
-![alt text](/documentations/rviz.gif?)
-
-NOTE: JOINT STATES FOR POSES CAN BE ALTERNED IN cssdbot_urxx_moveit_config/config/urxx.srdf
 
 ## TO-DO DEVELOPMENT ON THIS BRANCH
 
@@ -69,17 +44,9 @@ NOTE: JOINT STATES FOR POSES CAN BE ALTERNED IN cssdbot_urxx_moveit_config/confi
 
 #### 5. clean up cssdbot urdf [onging]
 
-#### 6. add ur10e with end effector [done]
+#### 6. TODO:
+In RAWM: Marker Lookup and populate TF with prefix! 
 
-
-# robot_arm_workcell_manager (RAWM)
-Robot arm manipulation manager package is one of the module for the Central sterile services department (cssd) workcell application. This package will act as a standalone workcell (aka: Dispenser Robot), which handles the robotics aspect of cssd_workcell. When a `DispenserRequest` is being sent out by a user to RAWM, this workcell will begin executing the task, starting with the picking motion of custom design instrument tray from a medical rack, then end it by placing the tray on MIR cart (follow-up delivery task by MIR). Fiducial Aruco markers will function as locating visual markers for pose estimation. Aruco markers are attached to the trays and MIR cart. Current package is developed and tested on `ros-melodic` and `gazebo 9.1`. 
-
-**STILL IN DEVELOPMENT!!!**
-
-![alt text](/documentations/gazebo_test.png?)
-
-*Full Video Link*, [here](https://drive.google.com/open?id=1dGKh3FVMlUwX8GUMv3mgxQFBm0OnGa8B)
 
 ---
 
@@ -183,6 +150,40 @@ roslaunch robot_arm_workcell_manager robot_arm_workcell_manager.launch
 
 ---
 
+# TESTING MOVEIT with HARDWARE!
+
+PLEASE KEEP YOUR HANDS ON THE BIG RED BUTTON!
+
+In Terminal A (HARDWARE BRINGUP):
+```
+# For ur10
+roslaunch ur_modern_driver ur10_bringup.launch robot_ip:=198.168.88.XX
+# For ur10e,
+roslaunch ur_modern_driver ur10e_bringup.launch robot_ip:=198.168.88.XX
+```
+
+In Terminal B (MOVEIT & RVIZ):
+
+```
+# For ur10,
+roslaunch cssdbot_ur10_moveit_config hardware_minimal.launch
+# For ur10e,
+roslaunch cssdbot_ur10e_moveit_config hardware_minimal.launch
+```
+
+BONUS! EASING YOUR PAIN IN TESTING with Rviz
+
+!!!PLAN BEFORE EXECUTING. SCALE YORU VELOCITY.!!!
+
+!!!REMEMBER CURRENT STATE SHOULD ALWAYS BE :<current_state>!!!
+
+!!!REMEMBER GROUP SHOULD BE: MANIPULATOR!!!
+
+![alt text](/documentations/rviz.gif?)
+
+NOTE: JOINT STATES FOR POSES CAN BE ALTERNED IN cssdbot_urxx_moveit_config/config/urxx.srdf
+
+---
 
 ## Notes
 - A custom designed "fork-lift" end effector is used in this process

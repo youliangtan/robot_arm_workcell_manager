@@ -18,13 +18,13 @@
       <!-- Arm 1 is mapped to world's 0 0 0 (x y z)-->
       <!-- Omitting z axis init pose to comply with Rviz's robot model spawn-->
       <!-- Static tf to fix tf_prefixed world frame-->
-    <node pkg="tf" type="static_transform_publisher" name="$(arg arm_1_ns)_static_tf" args="0 0 0 0 0 0 /world /$(arg arm_1_ns)_tf/world 10"/> 
+    <node pkg="tf" type="static_transform_publisher" name="$(arg arm_1_ns)_static_tf" args="0 0 0 0 0 0 /world /$(arg arm_1_ns)/world 10"/> 
   </group>
 
   <!-- ARM 2-->
   <!--Placed 2.25 meters apart in the y axis from arm 1-->
   <group ns="$(arg arm_2_ns)">
-    <param name="tf_prefix" value="$(arg arm_2_ns)_tf" />
+    <param name="tf_prefix" value="$(arg arm_2_ns)" />
     <include file="$(find cssd_gazebo)/launch/$(arg arm_2_option)_arm.launch">
       <arg name="init_pose" value="-z 0.8 -y 2.25" />
       <arg name="robot_name"  value="$(arg arm_2_ns)"/>
@@ -34,7 +34,7 @@
       <!-- Arm 2 is mapped to world's 0 2.25 0 (x y z)-->
       <!-- Omitting z axis init pose to comply with Rviz's robot model spawn-->
       <!-- Static tf to fix tf_prefixed world frame-->
-    <node pkg="tf" type="static_transform_publisher" name="$(arg arm_2_ns)_static_tf" args="0 2.25 0 0 0 0 /world /$(arg arm_2_ns)_tf/world 10"/> 
+    <node pkg="tf" type="static_transform_publisher" name="$(arg arm_2_ns)_static_tf" args="0 2.25 0 0 0 0 /world /$(arg arm_2_ns)/world 10"/> 
   </group>
 
 </launch>

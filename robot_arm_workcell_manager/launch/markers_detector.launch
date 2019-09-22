@@ -55,8 +55,8 @@
     <param name="do_pose_estimation" value="$(arg do_pose_estimation)"/>
     <param name="ignore_fiducials" value="$(arg ignore_fiducials)"/>
     <param name="fiducial_len_override" value="$(arg fiducial_len_override)"/>
-    <remap from="/camera/compressed" to="$(arg image)/$(arg transport)"/>  <!-- TODO: Clean up-->
-    <remap from="/camera_info" to="camera_info"/>
+    <remap from="/camera/compressed" to="$(arg ns)/$(arg image)/$(arg transport)"/>  <!-- TODO: Clean up-->
+    <remap from="/camera_info" to="$(arg ns)/camera_info"/>
     <remap from="/fiducial_images" to="fiducial_images"/>
     <remap from="/fiducial_transforms" to="fiducial_transforms"/>
     <remap from="/fiducial_vertices" to="fiducial_vertices"/>
