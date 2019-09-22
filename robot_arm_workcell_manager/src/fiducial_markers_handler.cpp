@@ -21,6 +21,9 @@ FiducialMarkersHandler::FiducialMarkersHandler(): nh_("~"){
     markers_sub_ = nh_.subscribe ("/fiducial_transforms", 10 ,&FiducialMarkersHandler::updateFiducialArrayCallback,this);
     loadParameters();
 
+    // Handle prefix
+    tf_prefix_ = tf_prefix_ + "/";
+
     ROS_INFO("FiducialMarkersHandler::FiducialMarkersHandler() completed!! \n");
 }
 
@@ -42,6 +45,13 @@ bool FiducialMarkersHandler::loadParameters(){
         nh_.param<std::string>("/camera_frame_id", camera_frame_id_, "camera");
     }
 
+    if (nh_.getParam("tf_prefix", tf_prefix_)){
+        ROS_INFO(" [PARAM] Got namespace param: %s", tf_prefix_.c_str());
+    }
+    else{
+        ROS_ERROR(" [PARAM] Failed to get param 'tf_prefix'");
+        return false;
+    }
 
     if (nh_.getParam("flip_marker", is_marker_flipped_)){
       ROS_INFO(" [PARAM] Got flip marker param: %d", is_marker_flipped_);
@@ -96,24 +106,27 @@ tf::Quaternion FiducialMarkersHandler::reorientateMarker(tf::Quaternion quat){
 bool FiducialMarkersHandler::getTransformPose(std::string target_frame_id, std::string frame_id, tf::Transform *target_transform){
     ROS_INFO("Looking up TF between frame: %s and %s", target_frame_id.c_str(), frame_id.c_str());
 
+    std::string prefix_target_frame_id = tf_prefix_ + target_frame_id;
+    std::string prefix_frame_id = tf_prefix_ + frame_id;
+
     //get transform of marker relative to base link
   	tf::StampedTransform stamped_transform;
   	try{
-	  	tf_listener_.waitForTransform(target_frame_id, frame_id, ros::Time::now(), ros::Duration(2) );
-	  	tf_listener_.lookupTransform(target_frame_id, frame_id, ros::Time(0), stamped_transform);
+	  	tf_listener_.waitForTransform(prefix_target_frame_id, prefix_frame_id, ros::Time::now(), ros::Duration(2) );
+	  	tf_listener_.lookupTransform(prefix_target_frame_id, prefix_frame_id, ros::Time(0), stamped_transform);
     }
     catch (tf::TransformException ex) {
         ROS_ERROR(" Get Transform Error!! Most likely tf is not existed between 2 input frames. error:%s",ex.what());
         return false;
     }
 
-    // Expiry time
+    // Check Expiry time, currently 2s 
     ros::Duration diff = ros::Time::now()-stamped_transform.stamp_;
     if (diff.toSec() > 2 ) return false;   // TODO: ROSParam for this thresh
 
   	target_transform->setRotation(stamped_transform.getRotation());
   	target_transform->setOrigin(stamped_transform.getOrigin());
-    ROS_INFO(" - Frame: %s and %s Detected!", target_frame_id.c_str(), frame_id.c_str());
+    ROS_INFO(" - Frame: %s and %s Detected!", prefix_target_frame_id.c_str(), prefix_frame_id.c_str());
 
     return true;
 }
@@ -149,7 +162,7 @@ std::string FiducialMarkersHandler::setTargetMarker(std::string marker_id ){
             quat.setEuler( pose_array[3], pose_array[4], pose_array[5] );
             transform.setRotation(quat);
 
-            tf::StampedTransform extended_tf(transform, ros::Time::now(), marker_id, extended_frame);
+            tf::StampedTransform extended_tf(transform, ros::Time::now(), tf_prefix_ + marker_id, tf_prefix_  + extended_frame);
 
             markers_extended_tf_array_.push_back(extended_tf);
         }
@@ -209,7 +222,7 @@ void FiducialMarkersHandler::updateFiducialArrayCallback(const fiducial_msgs::Fi
         transform.setOrigin(tf::Vector3(pose.translation.x,pose.translation.y,pose.translation.z));
         transform.setRotation(after_rotation);
 
-        tf_broadcaster_.sendTransform(tf::StampedTransform(transform, ros::Time::now(), camera_frame_id_, marker_frame_id));
+        tf_broadcaster_.sendTransform(tf::StampedTransform(transform, ros::Time::now(), tf_prefix_ + camera_frame_id_, tf_prefix_ + marker_frame_id));
     }
 }
 
