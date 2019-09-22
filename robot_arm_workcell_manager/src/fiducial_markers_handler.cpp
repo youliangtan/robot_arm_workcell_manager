@@ -32,7 +32,9 @@ FiducialMarkersHandler::~FiducialMarkersHandler(){
 
 bool FiducialMarkersHandler::loadParameters(){
 
-    if (nh_.getParam("/camera_frame_id", camera_frame_id_)){
+    std::cout << "\n\n NodeHandler NameSpace: " << nh_.getNamespace() << std::endl << std::endl;;
+
+    if (nh_.getParam("camera_frame_id", camera_frame_id_)){
         ROS_INFO(" [PARAM] Got camera frame param: %s", camera_frame_id_.c_str());
     }
     else{
@@ -41,16 +43,16 @@ bool FiducialMarkersHandler::loadParameters(){
     }
 
 
-    if (nh_.getParam("/flip_marker", is_marker_flipped_)){
+    if (nh_.getParam("flip_marker", is_marker_flipped_)){
       ROS_INFO(" [PARAM] Got flip marker param: %d", is_marker_flipped_);
     }
     else{
         ROS_ERROR(" [PARAM] Failed to get param flip marker param, set to default: false");
-        nh_.param<bool>("/flip_marker", is_marker_flipped_, false);
+        nh_.param<bool>("flip_marker", is_marker_flipped_, false);
     }
 
     std::string _yaml_path = "";
-    if (nh_.getParam("/marker_tf_path", _yaml_path)){
+    if (nh_.getParam("marker_tf_path", _yaml_path)){
       ROS_INFO(" [PARAM] Got path param: %s", _yaml_path.c_str());
     }
     else{

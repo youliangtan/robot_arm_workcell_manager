@@ -1,8 +1,8 @@
 <launch>
     <arg name="arm_1_model" default="ur10"/>
     <arg name="arm_2_model" default="ur10e"/>
-    <arg name="arm_1_ns" default="arm1"/>
-    <arg name="arm_2_ns" default="arm2"/>
+    <arg name="arm_1_ns" default="/arm1"/>
+    <arg name="arm_2_ns" default="/arm2"/>
 
     <!-- Dearly Arm 1 -->
     <include file="$(find robot_arm_workcell_manager)/launch/demo.launch">

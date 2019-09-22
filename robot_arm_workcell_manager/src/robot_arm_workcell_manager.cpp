@@ -34,7 +34,9 @@ RobotArmWorkcellManager::~RobotArmWorkcellManager(){
 
 bool RobotArmWorkcellManager::loadParameters(){
 
-    if (nh_.getParam("/dispenser_state_pub_rate", dispenser_pub_rate_)){
+    std::cout << "\n\n NodeHandler NameSpace: " << nh_.getNamespace() << std::endl << std::endl;;
+
+    if (nh_.getParam("dispenser_state_pub_rate", dispenser_pub_rate_)){
         ROS_INFO(" [PARAM] Got path param: %f", dispenser_pub_rate_);
     }
     else{
@@ -42,7 +44,7 @@ bool RobotArmWorkcellManager::loadParameters(){
         return false;
     }
 
-    if (nh_.getParam("/motion_pause_time", motion_pause_time_)){
+    if (nh_.getParam("motion_pause_time", motion_pause_time_)){
         ROS_INFO(" [PARAM] Got Motion Pause Time param: %d", motion_pause_time_);
     }
     else{
@@ -51,7 +53,7 @@ bool RobotArmWorkcellManager::loadParameters(){
     }
 
     std::string _yaml_path = "";
-    if (nh_.getParam("/arm_mission_path", _yaml_path)){
+    if (nh_.getParam("arm_mission_path", _yaml_path)){
         ROS_INFO(" [PARAM] Got path param: %s", _yaml_path.c_str());
     }
     else{
@@ -160,7 +162,7 @@ bool RobotArmWorkcellManager::getNextTaskFromQueue(){
 // TBC: move this under timer???
 void RobotArmWorkcellManager::spinRosThread(){
 
-    ROS_INFO(" Initialize Publishing Dispenser State");
+    ROS_INFO(" Spinning Ros Dispenser Thread...");
     ros::Rate loop_rate(dispenser_pub_rate_);
 
     while(nh_.ok()){
