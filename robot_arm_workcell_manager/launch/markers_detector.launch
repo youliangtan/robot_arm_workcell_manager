@@ -63,7 +63,6 @@
     <!-- Topics vary between launches. So, to make sure-->
     <remap from="/$(arg ns)/camera/compressed" to= "/$(arg ns)/image"/>
     <remap from="/$(arg ns)/camera" to= "/$(arg ns)/image"/>
-    <remap from="/$(arg ns)/camera" to= "/$(arg ns)/image"/>
     <!--remap from="/camera/compressed" to="$(arg ns)/$(arg image)/$(arg transport)"/-->
     <!--remap from="/camera_info" to="$(arg ns)/camera_info"/-->
   </node>

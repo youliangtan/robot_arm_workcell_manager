@@ -19,8 +19,10 @@ RobotArmController::RobotArmController(): nh_("~"){
 
     ros::NodeHandle moveit_nh(arm_namespace_);
     std::string robot_description= arm_namespace_ + "/robot_description";
-    std::cout<<"MY ARM NAMESPACE IS: "<<arm_namespace_<<std::endl;
-    std::cout<<"MY ROBOT DESCRIPTION IS: "<<robot_description<<std::endl;
+    
+    std::cout<<"\n -- MY ARM NAMESPACE IS: "<<arm_namespace_<<std::endl;
+    std::cout<<" -- MY ROBOT DESCRIPTION IS: "<<robot_description<<std::endl;
+
     moveit::planning_interface::MoveGroupInterface::Options options(group_name_,
                                                                 robot_description,
                                                                 moveit_nh);

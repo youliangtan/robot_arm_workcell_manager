@@ -1,100 +1,63 @@
 <launch>
-
+  
+  <arg name="arm_ns" default="/"/>
+  <arg name="arm_type" default="ur10"/>
+  
+  <arg name="sim" default="false"/>
   <arg name="debug" default="false" />
   <arg name="limited" default="false"/>
-  <arg name="enable_fake_joints_execution" default="true"/>
-  <arg name="load_robot_description" default="true"/>
-  <arg name="arm_type" default="ur10"/>
-  <arg name="sim" default="false"/>
-
-
-  <!--              ************************************************************************************              -->
-  <!--              ****************************** Robot Arm Fake Joint Pub ****************************              -->
-  <!--              ************************************************************************************              -->
-
-  <remap if="$(arg sim)" from="follow_joint_trajectory" to="arm_controller/follow_joint_trajectory"/>
-
-  <group if="$(arg enable_fake_joints_execution)">
-
-    <!-- NOTE!!!! We do not have a robot connected, so publish fake joint states -->
-    <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
-      <param name="/use_gui" value="false"/>
-      <rosparam param="/source_list">[/move_group/fake_controller_joint_states]</rosparam>
-    </node>
-
-    <!-- Given the published joint states, publish tf for the robot links -->
-    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="true" output="screen" />
-  </group>
-
-
-  <!--              ************************************************************************************              -->
-  <!--              ******************************** Robot Arm Launcher ********************************              -->
-  <!--              ************************************************************************************              -->
   
-  <!-- UR10 -->
-  <group if="$(eval arm_type == 'ur10')">
-    <!-- Load the URDF, SRDF and other .yaml configuration files on the param server -->
-    <include file="$(find cssdbot_ur10_moveit_config)/launch/planning_context.launch">
-      <!-- <param name="use_sim_time" value="true"/>   -->
-      <arg name="load_robot_description" values="$(arg load_robot_description)"/>
-      <arg name="limited" value="$(arg limited)"/>
-    </include>
+  <arg name="enable_usb_cam" default="false"/>
+  <arg name="enable_fake_joints_execution" default="true"/>
+  
+  <group ns="$(arg arm_ns)">
+      
+      <!--           ******************************************************************************           -->
+      <!--           *************************** Robot Arm Fake Joint Pub *************************           -->
+      <!--           ******************************************************************************           -->
+      
+      <group if="$(arg enable_fake_joints_execution)">
+    
+        <!-- NOTE!!!! We do not have a robot connected, so publish fake joint states -->
+        <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
+          <param name="/use_gui" value="false"/>
+          <rosparam param="/$(arg arm_ns)/source_list">[move_group/fake_controller_joint_states]</rosparam>
+        </node>
+        
+        <!-- Given the published joint states, publish tf for the robot links -->
+        <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="true" output="screen">
+          <param name="/tf_prefix" value="$(arg arm_ns)"/>
+        </node>>
 
-    <!-- Run the main MoveIt executable without trajectory execution (we do not have controllers configured by default) -->
-    <include file="$(find cssdbot_ur10_moveit_config)/launch/move_group.launch">
-      <arg name="allow_trajectory_execution" value="true"/>
-      <arg name="fake_execution" value="$(arg enable_fake_joints_execution)"/>
-      <!-- <arg name="info" value="true"/> -->
-      <arg name="limited" value="$(arg limited)"/>
-      <arg name="debug" value="$(arg debug)"/>
-      <!-- <arg name="planner" value="stomp" /> -->
-    </include>
+      </group>
+  
+      <!--           ******************************************************************************           -->
+      <!--           ***************************** Robot Arm Launcher *****************************           -->
+      <!--           ******************************************************************************           -->
+      
+      <arg name= "arm_moveit_config" value="cssdbot_$(arg arm_type)_moveit_config"/>
 
-    <!-- Run Rviz and load the default config to see the state of the move_group node -->
-    <include file="$(find cssdbot_ur10_moveit_config)/launch/moveit_rviz.launch">
-      <!-- <param name="use_sim_time" value="true"/>  -->
-      <arg name="rviz_config" value="$(find cssdbot_ur10_moveit_config)/launch/moveit.rviz"/>
-      <arg name="debug" value="$(arg debug)"/>
-    </include>
+      <include file="$(eval find(arm_moveit_config)+ '/launch/realistic_minimal.launch')">
+          <arg name="ns" value="$(arg arm_ns)" />
+          <arg name="sim" value="$(arg sim)" />
+          <arg name="fake_execution" value="$(arg enable_fake_joints_execution)" />
+          <arg name="limited" value="$(arg limited)"/>
+          <arg name="debug" value="$(arg debug)" />
+      </include> 
+      
+      <!--           *******************************************************************************           -->
+      <!--           *************************** Fiducial Marker handler ***************************           -->
+      <!--           *******************************************************************************           -->
+
+      <include file="$(find robot_arm_workcell_manager )/launch/markers_detector.launch">
+          <arg name="ns" value="$(arg arm_ns)"/>
+          <arg name="camSelect"      default="/dev/video1"/>
+          <arg name="enable_usb_cam" value="$(arg enable_usb_cam)"/>
+      </include>
+      
+      <node pkg="tf" type="static_transform_publisher" name="eef_to_camera_tf" 
+            args="0 0 0 -1.57 0 -1.57 $(arg arm_ns)/camera_link_optical $(arg arm_ns)/camera 15" />
+
   </group>
-
-  <!-- UR10e -->
-  <group if="$(eval arm_type == 'ur10e')">
-    <!-- Load the URDF, SRDF and other .yaml configuration files on the param server -->
-    <include file="$(find cssdbot_ur10e_moveit_config)/launch/planning_context.launch">
-      <!-- <param name="use_sim_time" value="true"/>   -->
-      <arg name="load_robot_description" value="$(arg load_robot_description)"/>
-      <arg name="limited" value="$(arg limited)"/>
-    </include>
-
-    <!-- Run the main MoveIt executable without trajectory execution (we do not have controllers configured by default) -->
-    <include file="$(find cssdbot_ur10e_moveit_config)/launch/move_group.launch">
-      <arg name="allow_trajectory_execution" value="true"/>
-      <arg name="fake_execution" value="$(arg enable_fake_joints_execution)"/>
-      <!-- <arg name="info" value="true"/> -->
-      <arg name="limited" value="$(arg limited)"/>
-      <arg name="debug" value="$(arg debug)"/>
-      <!-- <arg name="planner" value="stomp" /> -->
-    </include>
-
-    <!-- Run Rviz and load the default config to see the state of the move_group node -->
-    <include file="$(find cssdbot_ur10e_moveit_config)/launch/moveit_rviz.launch">
-      <!-- <param name="use_sim_time" value="true"/>  -->
-      <arg name="rviz_config" value="$(find cssdbot_ur10e_moveit_config)/launch/moveit.rviz"/>
-      <arg name="debug" value="$(arg debug)"/>
-    </include>
-  </group>
-
-
-  <!--              **********************************************************************************              -->
-  <!--              ****************************** Fiducial Marker handler *****************************              -->
-  <!--              ************************************************************************************              -->
-
-  <arg name="enable_usb_cam" default="true"/>
-
-  <include file="$(find robot_arm_workcell_manager )/launch/markers_detector.launch">
-    <arg name="camSelect"      default="/dev/video1"/>
-    <arg name="enable_usb_cam" value="$(arg enable_usb_cam)"/>
-  </include>
 
 </launch>

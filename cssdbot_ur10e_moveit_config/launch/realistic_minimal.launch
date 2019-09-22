@@ -7,8 +7,8 @@
 <launch>
 
   <arg name="ns" default="" />
-
   <arg name="sim" default="false" />
+  <arg name="fake_execution" default="false" />
   <arg name="limited" default="false"/>
   <arg name="debug" default="false" />
 
@@ -31,6 +31,7 @@
     <arg name="sim" value="$(arg sim)"/>
     <arg name="limited" value="$(arg limited)"/>
     <arg name="debug" value="$(arg debug)"/>
+    <arg name="fake_execution" value="$(arg fake_execution)" />
     <arg name="ns" value="$(arg ns)"/>
   </include>
 

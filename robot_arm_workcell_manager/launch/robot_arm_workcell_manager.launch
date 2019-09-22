@@ -14,13 +14,13 @@
 
 
     <node pkg="robot_arm_workcell_manager"
-    type="robot_arm_workcell_manager"
-    name="robot_arm_workcell_manager_node"
-    respawn="true"
+        type="robot_arm_workcell_manager"
+        name="robot_arm_workcell_manager_node"
+        respawn="true"
     output="screen">
+
     <!-- tobe fixed-->
     <param name="group_name" type="string" value="manipulator" />
-    <param name="arm_namespace" value="" />
     <param name="dispenser_name" type="string" value="ur10_001" />
     </node>
 </launch>

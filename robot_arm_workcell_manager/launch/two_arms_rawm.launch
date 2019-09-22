@@ -1,5 +1,8 @@
 <launch>
     <arg name="ns" default=""/>
+    <arg name="arm_1_ns" default="arm1"/>
+    <arg name="arm_2_ns" default="arm2"/>
+
     <arg name="motion_target_file"  default="$(find robot_arm_workcell_manager)/config/motion_target.yaml" />
     <arg name="markers_config_file"  default="$(find robot_arm_workcell_manager)/config/markers_tf.yaml" />
 
@@ -13,22 +16,20 @@
     <param name="flip_marker" type="bool" value="true" />
     <param name="group_name" type="string" value="manipulator" />
 
+    <group ns="$(arg arm_1_ns)">
+        <node pkg="robot_arm_workcell_manager"  type="robot_arm_workcell_manager" name="robot_arm_workcell_manager_node"
+            respawn="true"
+            output="screen">
+            <param name="group_name" type="string" value="manipulator" />
+        </node>
+    </group>
 
-    <node pkg="robot_arm_workcell_manager"
-    type="robot_arm_workcell_manager"
-    name="robot_arm_workcell_manager_node"
-    respawn="true"
-    output="screen">
-    <param name="arm_namespace" value="arm1" />
-    <param name="group_name" type="string" value="manipulator" />
-    </node>
+    <group ns="$(arg arm_2_ns)">
+        <node pkg="robot_arm_workcell_manager"  type="robot_arm_workcell_manager" name="robot_arm_workcell_manager_node"
+            respawn="true"
+            output="screen">
+            <param name="group_name" type="string" value="manipulator" />
+        </node>
+    </group>
 
-    <node pkg="robot_arm_workcell_manager"
-    type="robot_arm_workcell_manager"
-    name="robot_arm_workcell_manager_node2"
-    respawn="true"
-    output="screen">
-    <param name="arm_namespace" value="arm2" />
-    <param name="group_name" type="string" value="manipulator" />
-    </node>
 </launch>
