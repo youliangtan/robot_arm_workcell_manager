@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <sdf version="1.6">
-  <model name="CSSD Trolley">
+  <model name="CssdTrolley">
     <static>true</static>
     <link name="link">
       <pose> 0 0 0 0 0 0 </pose>
@@ -18,7 +18,7 @@
         <geometry>
           <mesh>
             <scale>1 1 1</scale>
-            <uri>model://CSSD Trolley/meshes/Trolley_Abdullah_v2.STL</uri>
+            <uri>model://CssdTrolley/meshes/Trolley_Abdullah_v2.STL</uri>
           </mesh>
         </geometry>
       </collision>
@@ -26,11 +26,10 @@
         <geometry>
           <mesh>
             <scale>1 1 01</scale>
-            <uri>model://CSSD Trolley/meshes/Trolley_Abdullah_v2.STL</uri>
+            <uri>model://CssdTrolley/meshes/Trolley_Abdullah_v2.STL</uri>
           </mesh>
         </geometry>
       </visual>
     </link>
   </model>
 </sdf>
-

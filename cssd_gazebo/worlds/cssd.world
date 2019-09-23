@@ -102,44 +102,10 @@
       <heading_deg>0</heading_deg>
     </spherical_coordinates>
     
-    <model name='CSSD Shelf'>
-      <static>1</static>
-      <link name='link'>
-        <collision name='collision'>
-          <geometry>
-            <mesh>
-              <scale>0.001 0.001 0.001</scale>
-              <uri>model://CSSD Shelf/meshes/Abdullah's rack.STL</uri>
-            </mesh>
-          </geometry>
-          <max_contacts>10</max_contacts>
-          <surface>
-            <contact>
-              <ode/>
-            </contact>
-            <bounce/>
-            <friction>
-              <torsional>
-                <ode/>
-              </torsional>
-              <ode/>
-            </friction>
-          </surface>
-        </collision>
-        <visual name='visual'>
-          <geometry>
-            <mesh>
-              <scale>0.001 0.001 0.001</scale>
-              <uri>model://CSSD Shelf/meshes/Abdullah's rack.STL</uri>
-            </mesh>
-          </geometry>
-        </visual>
-        <self_collide>0</self_collide>
-        <enable_wind>0</enable_wind>
-        <kinematic>0</kinematic>
-      </link>
-      <pose frame=''>1.36612 -0.244889 0 0 -0 0</pose>
-    </model>
+    <include>
+      <uri>model://CssdShelf</uri>
+      <name>CssdShelf</name>
+    </include>
 
     <include>
       <uri>model://UR10Base</uri>
@@ -147,30 +113,29 @@
     </include>
 
     <include>
-      <uri>model://CSSD Tray 0</uri>
-      <name>CSSD Tray 0</name>
+      <uri>model://CssdTray0</uri>
+      <name>CssdTray0</name>
     </include>
 
     <include>
-      <uri>model://CSSD Tray 1</uri>
-      <name>CSSD Tray 1</name>
+      <uri>model://CssdTray1</uri>
+      <name>CssdTray1</name>
     </include>
 
     <include>
-      <uri>model://CSSD Tray 2</uri>
-      <name>CSSD Tray 2</name>
+      <uri>model://CssdTray2</uri>
+      <name>CssdTray2</name>
     </include>
 
     <include>
-      <uri>model://CSSD Tray 3</uri>
-      <name>CSSD Tray 3</name>
+      <uri>model://CssdTray3</uri>
+      <name>CssdTray3</name>
     </include>
 
     <include>
       <uri>model://MiRCartWithTrayPlacement</uri>
       <name>MiRCartWithTrayPlacement</name>
     </include>
-
 
     <state world_name='default'>
       <sim_time>555 529000000</sim_time>
@@ -181,15 +146,9 @@
       <model name='UR10Base'>
         <pose frame=''>-0.4 -0.35 -0.48 0 0 0</pose>
         <scale>1 1 1</scale>
-        <!-- <link name='link'>
-          <pose frame=''>0 0 0 0 0 0</pose>
-          <velocity>0 0 0 0 0 0</velocity>
-          <acceleration>0 0 0 0 -0 0</acceleration>
-          <wrench>0 0 0 0 -0 0</wrench>
-        </link> -->
       </model>
 
-      <model name='CSSD Shelf'>
+      <model name='CssdShelf'>
         <pose frame=''>0.998619 0.100342 0.01 1.57 0 -1.57</pose>
         <scale>1 1 1</scale>
         <link name='link'>
@@ -200,7 +159,7 @@
         </link>
       </model>
 
-      <model name='CSSD Tray 0'>
+      <model name='CssdTray0'>
         <pose frame=''>0.87 -0.155 0.85 -0.002949 -0.017358 0.010598</pose>
         <scale>1 1 1</scale>
         <link name='tray'>
@@ -210,7 +169,7 @@
           <wrench>0 0 0 0 0 0</wrench>
         </link>
       </model>
-      <model name='CSSD Tray 1'>
+      <model name='CssdTray1'>
         <pose frame=''>0.869227 0.360226 0.85 0.003528 -0.016359 0.002928</pose>
         <scale>1 1 1</scale>
         <link name='tray'>
@@ -220,7 +179,7 @@
           <wrench>0 0 0 0 0 0</wrench>
         </link>
       </model>
-      <model name='CSSD Tray 2'>
+      <model name='CssdTray2'>
         <pose frame=''>0.869227 0.360226 1.15 0.003528 -0.016359 0.002928</pose>
         <scale>1 1 1</scale>
         <link name='tray'>
@@ -230,7 +189,7 @@
           <wrench>0 0 0 0 0 0</wrench>
         </link>
       </model>
-      <model name='CSSD Tray 3'>
+      <model name='CssdTray3'>
         <pose frame=''>0.869227 0.360226 1.45 0.003528 -0.016359 0.002928</pose>
         <scale>1 1 1</scale>
         <link name='tray'>
@@ -262,13 +221,14 @@
           <wrench>0 0 0 0 0 0</wrench>
         </link>
       </model>
+      
       <light name='sun'>
         <pose frame=''>0 0 10 0 -0 0</pose>
       </light>
     </state>
     <gui fullscreen='0'>
       <camera name='user_camera'>
-        <pose frame=''>-2.29645 0.171653 0.743631 -0 -0.022202 -0.167829</pose>
+        <pose frame=''>-3.47606 -2.40246 2.83162 0 0.408 0.784</pose>
         <view_controller>orbit</view_controller>
         <projection_type>perspective</projection_type>
       </camera>

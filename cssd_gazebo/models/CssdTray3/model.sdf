@@ -1,11 +1,11 @@
 <?xml version='1.0'?>
 <sdf version='1.6'>
-  <model name='CSSD Tray 3'>
+  <model name='CssdTray3'>
     <allow_auto_disable>0</allow_auto_disable>
     <static>0</static>
 
     <include>
-      <uri>model://CSSD Tray</uri>
+      <uri>model://CssdTray</uri>
       <name>base</name>
     </include>
 

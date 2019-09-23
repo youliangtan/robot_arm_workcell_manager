@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <sdf version="1.6">
-  <model name="CSSD Tray">
+  <model name="CssdTray">
     <static>false</static>
     <link name="tray">
       <!--<pose> 0.1545 0.228 0 1.57 0 -1.57 </pose> -->
@@ -32,7 +32,7 @@
         <geometry>
           <mesh>
             <scale>1 1 1</scale>
-            <uri>model://CSSD Tray/meshes/tray_pegs.stl</uri>
+            <uri>model://CssdTray/meshes/tray_pegs.stl</uri>
           </mesh>
         </geometry>
       </collision>
@@ -81,7 +81,7 @@
         <geometry>
           <mesh>
             <scale>1 1 1</scale>
-            <uri>model://CSSD Tray/meshes/Tray_Assem_Locating_Stand-off.STL</uri>
+            <uri>model://CssdTray/meshes/Tray_Assem_Locating_Stand-off.STL</uri>
           </mesh>
         </geometry>
       </visual>

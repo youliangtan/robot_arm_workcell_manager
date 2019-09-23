@@ -21,8 +21,11 @@ FiducialMarkersHandler::FiducialMarkersHandler(): nh_("~"){
     markers_sub_ = nh_.subscribe ("/fiducial_transforms", 10 ,&FiducialMarkersHandler::updateFiducialArrayCallback,this);
     loadParameters();
 
-    // Handle prefix
-    tf_prefix_ = tf_prefix_ + "/";
+    // Handle prefix, specifically '/' senario
+    if ( tf_prefix_.empty() || (tf_prefix_.compare("/") == 0 ) ) 
+        tf_prefix_ = "";
+    else
+        tf_prefix_ = tf_prefix_ + "/";
 
     ROS_INFO("FiducialMarkersHandler::FiducialMarkersHandler() completed!! \n");
 }
@@ -46,7 +49,7 @@ bool FiducialMarkersHandler::loadParameters(){
     }
 
     if (nh_.getParam("tf_prefix", tf_prefix_)){
-        ROS_INFO(" [PARAM] Got namespace param: %s", tf_prefix_.c_str());
+        ROS_INFO(" [PARAM] Got tf_prefix param: %s", tf_prefix_.c_str());
     }
     else{
         ROS_ERROR(" [PARAM] Failed to get param 'tf_prefix'");
@@ -162,7 +165,7 @@ std::string FiducialMarkersHandler::setTargetMarker(std::string marker_id ){
             quat.setEuler( pose_array[3], pose_array[4], pose_array[5] );
             transform.setRotation(quat);
 
-            tf::StampedTransform extended_tf(transform, ros::Time::now(), tf_prefix_ + marker_id, tf_prefix_  + extended_frame);
+            tf::StampedTransform extended_tf(transform, ros::Time::now(), tf_prefix_ + marker_id, tf_prefix_ + extended_frame);
 
             markers_extended_tf_array_.push_back(extended_tf);
         }

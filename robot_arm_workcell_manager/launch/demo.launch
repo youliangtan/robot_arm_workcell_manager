@@ -3,61 +3,68 @@
   <arg name="arm_ns" default="/"/>
   <arg name="arm_type" default="ur10"/>
   
-  <arg name="sim" default="false"/>
   <arg name="debug" default="false" />
   <arg name="limited" default="false"/>
   
   <arg name="enable_usb_cam" default="false"/>
+  <arg name="sim" default="false"/>
   <arg name="enable_fake_joints_execution" default="true"/>
   
   <group ns="$(arg arm_ns)">
       
-      <!--           ******************************************************************************           -->
-      <!--           *************************** Robot Arm Fake Joint Pub *************************           -->
-      <!--           ******************************************************************************           -->
-      
-      <group if="$(arg enable_fake_joints_execution)">
+    <!--           ******************************************************************************           -->
+    <!--           *************************** Robot Arm Fake Joint Pub *************************           -->
+    <!--           ******************************************************************************           -->
     
-        <!-- NOTE!!!! We do not have a robot connected, so publish fake joint states -->
-        <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
-          <param name="/use_gui" value="false"/>
-          <rosparam param="/$(arg arm_ns)/source_list">[move_group/fake_controller_joint_states]</rosparam>
-        </node>
-        
-        <!-- Given the published joint states, publish tf for the robot links -->
-        <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="true" output="screen">
-          <param name="/tf_prefix" value="$(arg arm_ns)"/>
-        </node>>
-
-      </group>
+    <group if="$(arg enable_fake_joints_execution)">
   
-      <!--           ******************************************************************************           -->
-      <!--           ***************************** Robot Arm Launcher *****************************           -->
-      <!--           ******************************************************************************           -->
+      <!-- NOTE!!!! We do not have a robot connected, so publish fake joint states -->
+      <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
+        <param name="/use_gui" value="false"/>
+        <rosparam param="/$(arg arm_ns)/source_list">[move_group/fake_controller_joint_states]</rosparam>
+      </node>
       
-      <arg name= "arm_moveit_config" value="cssdbot_$(arg arm_type)_moveit_config"/>
+      <!-- Given the published joint states, publish tf for the robot links -->
+      <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="true" output="screen">
+        <param name="/tf_prefix" value="$(arg arm_ns)"/>
+      </node>>
 
-      <include file="$(eval find(arm_moveit_config)+ '/launch/realistic_minimal.launch')">
-          <arg name="ns" value="$(arg arm_ns)" />
-          <arg name="sim" value="$(arg sim)" />
-          <arg name="fake_execution" value="$(arg enable_fake_joints_execution)" />
-          <arg name="limited" value="$(arg limited)"/>
-          <arg name="debug" value="$(arg debug)" />
-      </include> 
-      
-      <!--           *******************************************************************************           -->
-      <!--           *************************** Fiducial Marker handler ***************************           -->
-      <!--           *******************************************************************************           -->
+    </group>
 
-      <include file="$(find robot_arm_workcell_manager )/launch/markers_detector.launch">
-          <arg name="ns" value="$(arg arm_ns)"/>
-          <arg name="camSelect"      default="/dev/video1"/>
-          <arg name="enable_usb_cam" value="$(arg enable_usb_cam)"/>
-      </include>
-      
-      <node pkg="tf" type="static_transform_publisher" name="eef_to_camera_tf" 
-            args="0 0 0 -1.57 0 -1.57 $(arg arm_ns)/camera_link_optical $(arg arm_ns)/camera 15" />
+    <!--           ******************************************************************************           -->
+    <!--           ***************************** Robot Arm Launcher *****************************           -->
+    <!--           ******************************************************************************           -->
+    
+    <arg name= "arm_moveit_config" value="cssdbot_$(arg arm_type)_moveit_config"/>
 
+    <include file="$(eval find(arm_moveit_config)+ '/launch/realistic_minimal.launch')">
+        <arg name="ns" value="$(arg arm_ns)" />
+        <arg name="sim" value="$(arg sim)" />
+        <arg name="fake_execution" value="$(arg enable_fake_joints_execution)" />
+        <arg name="limited" value="$(arg limited)"/>
+        <arg name="debug" value="$(arg debug)" />
+    </include> 
+    
+    <!--           *******************************************************************************           -->
+    <!--           *************************** Fiducial Marker handler ***************************           -->
+    <!--           *******************************************************************************           -->
+
+    <include file="$(find robot_arm_workcell_manager )/launch/markers_detector.launch">
+        <arg name="ns"             value="$(arg arm_ns)"/>
+        <arg name="camSelect"      default="/dev/video1"/>
+        <arg name="enable_usb_cam" value="$(arg enable_usb_cam)"/>
+    </include>
+
+    <!-- Currently handle the 'static tf publisher' in a dirty way, due to '/' issue -->
+    <node if="$(eval arg('arm_ns') == '/')"
+          pkg="tf" type="static_transform_publisher" name="eef_to_camera_tf" 
+          args="0 0 0 -1.57 0 -1.57 camera_link_optical camera 10" />    
+    
+    <node unless="$(eval arg('arm_ns') == '/')"
+          pkg="tf" type="static_transform_publisher" name="eef_to_camera_tf" 
+          args="0 0 0 -1.57 0 -1.57 $(arg arm_ns)/camera_link_optical $(arg arm_ns)/camera 10" />    
+    
   </group>
 
 </launch>
+

@@ -45,7 +45,29 @@ Robot arm manipulation manager package is one of the module for the Central ster
 #### 5. clean up cssdbot urdf [onging]
 
 #### 6. TODO:
-In RAWM: Marker Lookup and populate TF with prefix! 
+- In RAWM: Marker Lookup and populate TF with prefix! 
+- Each Robot arm with own ID
+- Warm start Issue!!!!
+
+---
+
+# Run New Testing Code 
+
+### Run 1 Arm
+```
+roslaunch cssd_gazebo one_arm.launch
+roslaunch robot_arm_workcell_manager demo.launch sim:=true enable_fake_joints_execution:=false
+roslaunch robot_arm_workcell_manager robot_arm_workcell_manager.launch
+# Pub DispenserRequest!!
+```
+
+### Run 2 Arms
+```
+roslaunch cssd_gazebo main.launch
+roslaunch robot_arm_workcell_manager two_arms_rviz.launch
+roslaunch robot_arm_workcell_manager two_arms_rawm.launch
+# Pub DispenserRequest!!
+```
 
 
 ---

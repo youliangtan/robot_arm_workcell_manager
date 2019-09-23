@@ -1,13 +1,14 @@
 <?xml version='1.0'?>
 <sdf version='1.6'>
-  <model name='CSSD Tray 0'>
+  <model name='CssdTray1'>
     <allow_auto_disable>0</allow_auto_disable>
     <static>0</static>
 
     <include>
-      <uri>model://CSSD Tray</uri>
+      <uri>model://CssdTray</uri>
       <name>base</name>
     </include>
+
 
     <link name='aruco_tag'>
       <pose> -0.154 0.0 0.0824 0 -1.57 0.0</pose>
@@ -29,9 +30,9 @@
         </geometry>
         <material>
           <script>
-            <uri>model://aruco_visual_marker_0/materials/scripts</uri>
-            <uri>model://aruco_visual_marker_0/materials/textures</uri>
-            <name>ArucoVisualMarker0/Marker</name>
+            <uri>model://aruco_visual_marker_1/materials/scripts</uri>
+            <uri>model://aruco_visual_marker_1/materials/textures</uri>
+            <name>ArucoVisualMarker1/Marker</name>
           </script>
           <ambient>1 1 1 1</ambient>
           <diffuse>1 1 1 1</diffuse>

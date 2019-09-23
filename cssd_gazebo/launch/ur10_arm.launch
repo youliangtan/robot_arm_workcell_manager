@@ -41,11 +41,4 @@
         output="screen"
   />
 
-  <!-- Warm up Gazebo so that the controller can load
-    d: How long before attempting to warm up (this should be a bit longer than you expect the URDF to finish loading)
-    i: How many warm-up steps to perform (the CSSD simulation seems to require ~3, so let's do 5 to be safe)
-    w: How long to wait between warm-up steps (this gives time for the simulation to talk to the control_manager)
-   -->
-  <node name="gazebo_warm_start" pkg="cssd_gazebo" type="warm_start" args="-d 6.0 -i 5 -w 1.0" output="screen"/>
-
 </launch>
