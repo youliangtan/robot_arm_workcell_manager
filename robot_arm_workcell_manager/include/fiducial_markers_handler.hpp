@@ -67,6 +67,7 @@ class FiducialMarkersHandler{
         tf::TransformBroadcaster tf_broadcaster_;  
         tf::TransformListener tf_listener_;
         ros::Timer marker_extended_tf_timer_;
+        std::string tf_prefix_;
 
         void updateFiducialArrayCallback(const fiducial_msgs::FiducialTransformArrayConstPtr& msg);        
 

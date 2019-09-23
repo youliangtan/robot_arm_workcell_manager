@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<launch>
+
+  <arg name="arm_1_ns" default="arm1"/>
+  <arg name="arm_2_ns" default="arm2"/>
+  <arg name="arm_1_type" default="ur10"/>
+  <arg name="arm_2_type" default="ur10e"/>
+  <arg name="gui" default="true" doc="Starts gazebo gui" />
+
+  <!--     ****************************  Gazebo Env ****************************     -->
+
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+   <arg name="world_name" default="$(find cssd_gazebo)/worlds/cssd_two_arms.world"/>
+    <env name="GAZEBO_MODEL_PATH" value="$(find cssd_gazebo)/models" />
+    <arg name="paused" value="true"/>
+    <arg name="gui" value="$(arg gui)"/>
+  </include>
+
+  <!--     **************************** UR10 Spawner ****************************     -->
+
+  <group ns="$(arg arm_1_ns)">
+    <param name="tf_prefix" value="$(arg arm_1_ns)" />
+    <include file="$(find cssd_gazebo)/launch/$(arg arm_1_type)_arm.launch" >
+      <arg name="init_pose" value="-z 0.8" />
+      <arg name="robot_name"  value="$(arg arm_1_ns)"/>
+    </include>
+
+    <!-- Map arm's world to common world, eventually should get tf from gazebo -->
+    <node pkg="tf" type="static_transform_publisher" name="$(arg arm_1_ns)_static_tf" 
+          args="0 0 0 0 0 0 /world /$(arg arm_1_ns)/world 10"/> 
+  </group>
+
+  <!--     **************************** UR10e Spawner ****************************     -->
+
+  <group ns="$(arg arm_2_ns)">
+    <param name="tf_prefix" value="$(arg arm_2_ns)" />
+    <include file="$(find cssd_gazebo)/launch/$(arg arm_2_type)_arm.launch">
+      <arg name="init_pose" value="-z 0.8 -y 2.75" />
+      <arg name="robot_name"  value="$(arg arm_2_ns)"/>
+    </include>
+    
+    <!-- Map arm's world to common world, eventually should get tf from gazebo -->
+    <!--Placed 2.5 meters apart in the y axis from arm 1-->
+    <node pkg="tf" type="static_transform_publisher" name="$(arg arm_2_ns)_static_tf" 
+          args="0 2.75 0 0 0 0 /world /$(arg arm_2_ns)/world 10"/> 
+  </group>
+
+
+  <!-- Warm up Gazebo so that the controller can load
+  d: How long before attempting to warm up (this should be a bit longer than you expect the URDF to finish loading)
+  i: How many warm-up steps to perform (the CSSD simulation seems to require ~3, so let's do 5 to be safe)
+  w: How long to wait between warm-up steps (this gives time for the simulation to talk to the control_manager)
+  -->
+  <node name="gazebo_warm_start" pkg="cssd_gazebo" type="warm_start" args="-d 6.0 -i 5 -w 1.0" output="screen"/>
+
+</launch>

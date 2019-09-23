@@ -16,7 +16,17 @@ RobotArmController::RobotArmController(): nh_("~"){
     loadParameters();
     
     std::cout << "ControlGroup::ControlGroup(" << group_name_ << ") enter" << std::endl;
-    move_group_.reset( new moveit::planning_interface::MoveGroupInterface(group_name_));
+
+    ros::NodeHandle moveit_nh(arm_namespace_);
+    std::string robot_description= arm_namespace_ + "/robot_description";
+    
+    std::cout<<"\n -- MY ARM NAMESPACE IS: "<<arm_namespace_<<std::endl;
+    std::cout<<" -- MY ROBOT DESCRIPTION IS: "<<robot_description<<std::endl;
+
+    moveit::planning_interface::MoveGroupInterface::Options options(group_name_,
+                                                                robot_description,
+                                                                moveit_nh);
+    move_group_.reset( new moveit::planning_interface::MoveGroupInterface(options));
     current_state_name_ = "";
 
     double t_0 = ros::Time::now().toSec();
@@ -27,7 +37,7 @@ RobotArmController::RobotArmController(): nh_("~"){
         if (move_group_ && move_group_->getName() == group_name_)
             break;
         else
-            move_group_.reset(new moveit::planning_interface::MoveGroupInterface(group_name_));  
+            move_group_.reset(new moveit::planning_interface::MoveGroupInterface(options));  
     }
 
     if (!move_group_ || move_group_->getName() != group_name_){
@@ -58,16 +68,16 @@ RobotArmController::~RobotArmController(){
 // Get yaml path from ros param server, then load content via yaml-cpp
 bool RobotArmController::loadParameters(){
 
-    if (nh_.getParam("/group_name", group_name_)){
+    if (nh_.getParam("group_name", group_name_)){
       ROS_INFO(" [PARAM] Got group_name param: %s", group_name_.c_str());
     }
     else{
       ROS_ERROR(" [PARAM] Failed to get param 'group_name'");
-      return false;
+      nh_.param<std::string>("group_name", group_name_, "manipulator");
     }
 
     std::string _yaml_path = "";
-    if (nh_.getParam("/motion_target_yaml_path", _yaml_path)){
+    if (nh_.getParam("motion_target_yaml_path", _yaml_path)){
       ROS_INFO(" [PARAM] Got path param: %s", _yaml_path.c_str());
     }
     else{
@@ -76,6 +86,14 @@ bool RobotArmController::loadParameters(){
     }
     std::cout<<"[PARAM] YAML Path: "<<_yaml_path<<std::endl;
 
+    // First try
+    if (nh_.getParam("arm_namespace", arm_namespace_)){
+        ROS_INFO(" [PARAM] Got namespace param: %s", arm_namespace_.c_str());
+    }
+    else{
+        ROS_ERROR(" [PARAM] Failed to get param 'arm_namespace'");
+        return false;
+    }
 
     try {
         NAMED_TARGET_CONFIG_ = YAML::LoadFile(_yaml_path);

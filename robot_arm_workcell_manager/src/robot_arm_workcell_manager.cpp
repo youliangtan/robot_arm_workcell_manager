@@ -9,14 +9,11 @@
 #include "robot_arm_workcell_manager.hpp"
 
 
-RobotArmWorkcellManager::RobotArmWorkcellManager(const std::string& _dispenser_name): nh_("~"){
-
+RobotArmWorkcellManager::RobotArmWorkcellManager(): nh_("~"){
 
     dispenser_request_sub_ = nh_.subscribe ("/cssd_workcell/dispenser_request", 10 ,&RobotArmWorkcellManager::dispenserRequestCallback,this);
     dispenser_state_pub_   = nh_.advertise<rmf_msgs::DispenserState>("/cssd_workcell/dispenser_state", 10);
     dispenser_result_pub_  = nh_.advertise<rmf_msgs::DispenserResult>("/cssd_workcell/dispenser_result", 10);
-
-    dispenser_name_ = _dispenser_name;
 
     loadParameters();
 
@@ -34,7 +31,23 @@ RobotArmWorkcellManager::~RobotArmWorkcellManager(){
 
 bool RobotArmWorkcellManager::loadParameters(){
 
-    if (nh_.getParam("/dispenser_state_pub_rate", dispenser_pub_rate_)){
+    if (nh_.getParam("dispenser_name", dispenser_name_)){
+        ROS_INFO(" [PARAM] Got 'dispenser_name' param: %s", dispenser_name_.c_str());
+    }
+    else{
+        ROS_ERROR(" [PARAM] Failed to get param 'dispenser_name', set to default 'ur10_001' ");
+        nh_.param<std::string>("dispenser_name", dispenser_name_, "ur10_001");
+    }
+
+    if (nh_.getParam("transporter_placement", transporter_placement_)){
+        ROS_INFO(" [PARAM] Got transporter_placement param: %s", transporter_placement_.c_str());
+    }
+    else{
+        ROS_ERROR(" [PARAM] Failed to get param 'transporter_placement', set to default 'left' ");
+        nh_.param<std::string>("transporter_placement", transporter_placement_, "left");
+    }
+
+    if (nh_.getParam("dispenser_state_pub_rate", dispenser_pub_rate_)){
         ROS_INFO(" [PARAM] Got path param: %f", dispenser_pub_rate_);
     }
     else{
@@ -42,7 +55,7 @@ bool RobotArmWorkcellManager::loadParameters(){
         return false;
     }
 
-    if (nh_.getParam("/motion_pause_time", motion_pause_time_)){
+    if (nh_.getParam("motion_pause_time", motion_pause_time_)){
         ROS_INFO(" [PARAM] Got Motion Pause Time param: %d", motion_pause_time_);
     }
     else{
@@ -51,7 +64,7 @@ bool RobotArmWorkcellManager::loadParameters(){
     }
 
     std::string _yaml_path = "";
-    if (nh_.getParam("/arm_mission_path", _yaml_path)){
+    if (nh_.getParam("arm_mission_path", _yaml_path)){
         ROS_INFO(" [PARAM] Got path param: %s", _yaml_path.c_str());
     }
     else{
@@ -62,11 +75,7 @@ bool RobotArmWorkcellManager::loadParameters(){
     return true;
 }
 
-
-
 // ---------------------------------- Callback Zone ----------------------------------
-
-
 
 // Callback!!!! TODO
 void RobotArmWorkcellManager::dispenserRequestCallback(const rmf_msgs::DispenserRequestConstPtr& _msg){
@@ -131,7 +140,6 @@ void RobotArmWorkcellManager::dispenserRequestCallback(const rmf_msgs::Dispenser
 
 // ----------------------------------Task Handler ----------------------------------
 
-
 // TODO!!!!!
 bool RobotArmWorkcellManager::getNextTaskFromQueue(){
 
@@ -160,7 +168,7 @@ bool RobotArmWorkcellManager::getNextTaskFromQueue(){
 // TBC: move this under timer???
 void RobotArmWorkcellManager::spinRosThread(){
 
-    ROS_INFO(" Initialize Publishing Dispenser State");
+    ROS_INFO(" Spinning Ros Dispenser Thread...");
     ros::Rate loop_rate(dispenser_pub_rate_);
 
     while(nh_.ok()){
@@ -264,7 +272,7 @@ bool RobotArmWorkcellManager::executePickPlaceMotion( std::vector<std::string> f
         _eef_target_pose = new geometry_msgs::Pose;
         tf::poseTFToMsg(*tf, *_eef_target_pose);
         ROS_INFO(" **Executing Pick Place Motion**  tf_frame: %s ", frame_array.at(idx).c_str());
-        if (! arm_controller_.moveToEefTarget(*_eef_target_pose, 0.15) ) return false;  //TODO: all vel factor is in config file, or rosparam
+        if (! arm_controller_.moveToEefTarget(*_eef_target_pose, 0.2) ) return false;  //TODO: all vel factor is in config file, or rosparam
         std::this_thread::sleep_for (std::chrono::seconds(motion_pause_time_));
         idx++;
     }
@@ -272,8 +280,9 @@ bool RobotArmWorkcellManager::executePickPlaceMotion( std::vector<std::string> f
     return true;
 }
 
-
+// ----------------------------------------------------------------------------------------------------------
 // ---------------------------------- ROBOT_ARM_MISSION_CONTROL: EXECUTION ----------------------------------
+// ----------------------------------------------------------------------------------------------------------
 
 // // TODO: Mission sequences, TBC: name as Task
 // // Make it to a config file @_@
@@ -297,48 +306,63 @@ bool RobotArmWorkcellManager::executeRobotArmMission(){
 
     // picking, e.g: requested_item.item_type = "marker_X" 
     if (! executePickPlaceMotion(picking_frame_array , requested_item.item_type ) ) return false;
-
     // home position facing rack
     if (! arm_controller_.moveToNamedTarget("rack_home_position") ) return false;
 
-    // turn to face trolley
-    if (! arm_controller_.moveToNamedTarget("mir_facing_home") ) return false;
+    // Placing Motion Sequence
+    //* Transporter is at the left of the arm
+    if( transporter_placement_.compare("left") == 0 ){
+        // turn to face trolley
+        if (! arm_controller_.moveToNamedTarget("transporter_left_home") ) return false;
+        // Lower the position
+        if (! arm_controller_.moveToNamedTarget("transporter_left_low") ) return false;
+        // TODO: Scanning feature here... Yaw
+        
+        // placing, e.g: requested_item.compartment_name = "marker_X"
+        if (! executePickPlaceMotion(placing_frame_array , requested_item.compartment_name) ) return false;
+        // back lower home 
+        if (! arm_controller_.moveToNamedTarget("transporter_left_low") ) return false;
+        // turn to face trolley
+        if (! arm_controller_.moveToNamedTarget("transporter_left_home") ) return false;
+    }
 
-    // Lower the position
-    if (! arm_controller_.moveToNamedTarget("mir_place_position") ) return false;
-    
-    // TODO: Scanning feature here... Yaw
-    
-    // placing, e.g: requested_item.compartment_name = "marker_X"
-    if (! executePickPlaceMotion(placing_frame_array , requested_item.compartment_name) ) return false;
+    //* Transporter is at the right of the arm
+    else if( transporter_placement_.compare("right") == 0 ){
+        // turn to face trolley
+        if (! arm_controller_.moveToNamedTarget("transporter_right_home") ) return false;
+        // Lower the position
+        if (! arm_controller_.moveToNamedTarget("transporter_right_low") ) return false;
+        // TODO: Scanning feature here... Yaw
 
-    // back lower home 
-    if (! arm_controller_.moveToNamedTarget("mir_place_position") ) return false;
+        // placing, e.g: requested_item.compartment_name = "marker_X"
+        if (! executePickPlaceMotion(placing_frame_array , requested_item.compartment_name) ) return false;
+        // back lower home 
+        if (! arm_controller_.moveToNamedTarget("transporter_right_low") ) return false;
+        // turn to face trolley
+        if (! arm_controller_.moveToNamedTarget("transporter_right_home") ) return false;
+    }
 
-    // turn to face trolley
-    if (! arm_controller_.moveToNamedTarget("mir_facing_home") ) return false;
+    else {
+        ROS_ERROR("Param 'transporter_placement_': %s is undefined: End the placing action abruptly!! >,< \n", 
+        transporter_placement_.c_str());
+        return false;
+    }
 
     // Back home position facing rack
     if (! arm_controller_.moveToNamedTarget("rack_home_position") ) return false;
 
     ROS_INFO("\n ***** Done with Task with request_id: %s *****", dispenser_curr_task_.request_id.c_str());
-    
     return true;
 }
 
-
 //-----------------------------------------------------------------------------
-
 
 int main(int argc, char** argv){
     std::cout<<" YoYoYo!, Arm Workcell Manager is alive!!!"<< std::endl;
     
     ros::init(argc, argv, "robot_arm_workcell_manager", ros::init_options::NoSigintHandler);
-    
-    RobotArmWorkcellManager ur10_workcell("ur10_001");
-
+    RobotArmWorkcellManager ur10_workcell;
     ros::AsyncSpinner ros_async_spinner(1);
-    std::cout<< " RAWM Node is now Running...."<<std::endl;
     ros_async_spinner.start();
     ros::waitForShutdown();    
 }

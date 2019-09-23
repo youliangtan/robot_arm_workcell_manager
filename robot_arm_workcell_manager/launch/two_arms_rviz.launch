@@ -1,0 +1,40 @@
+<launch>
+    <arg name="arm_1_model" default="ur10"/>
+    <arg name="arm_2_model" default="ur10e"/>
+    <arg name="arm_1_ns" default="/arm1"/>
+    <arg name="arm_2_ns" default="/arm2"/>
+
+    <!-- If running on Gazebo-->
+    <arg name="gazebo_sim"             default="true"/>
+    <arg name="fake_joints_execution"  default="false"/>
+
+    <!-- If running on Rviz-->
+    <!-- <arg name="gazebo_sim"             default="false"/>
+    <arg name="fake_joints_execution"  default="true"/> -->
+
+    <!-- If running on Gazebo-->
+    <!-- <arg name="gazebo_sim"             default="false"/>
+    <arg name="fake_joints_execution"  default="false"/> -->
+
+    
+    <!-- ########################################################################## -->
+
+    <!-- Dearly Arm 1 -->
+    <include file="$(find robot_arm_workcell_manager)/launch/demo.launch">
+        <arg name="arm_ns"          value="$(arg arm_1_ns)"/>
+        <arg name="arm_type"        value="$(arg arm_1_model)"/>
+        <arg name="sim"             value="$(arg gazebo_sim)"/>
+        <arg name="enable_fake_joints_execution" value="$(arg fake_joints_execution)"/>
+    </include>
+  
+    <!-- Dearly Arm 2 -->
+    <include file="$(find robot_arm_workcell_manager)/launch/demo.launch">
+        <arg name="arm_ns"          value="$(arg arm_2_ns)"/>
+        <arg name="arm_type"        value="$(arg arm_2_model)"/>
+        <arg name="sim"             value="$(arg gazebo_sim)"/>
+        <arg name="enable_fake_joints_execution" value="$(arg fake_joints_execution)"/>
+    </include>
+
+    <!-- Dearly Arm n.... -->
+
+  </launch>
