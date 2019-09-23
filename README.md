@@ -8,7 +8,6 @@ Robot arm manipulation manager package is one of the module for the Central ster
 
 *Full Video Link*, [here](https://drive.google.com/open?id=1dGKh3FVMlUwX8GUMv3mgxQFBm0OnGa8B)
 
-
 ---
 
 
@@ -45,30 +44,8 @@ Robot arm manipulation manager package is one of the module for the Central ster
 #### 5. clean up cssdbot urdf [onging]
 
 #### 6. TODO:
-- In RAWM: Marker Lookup and populate TF with prefix! 
 - Each Robot arm with own ID
-- Warm start Issue!!!!
-
----
-
-# Run New Testing Code 
-
-### Run 1 Arm
-```
-roslaunch cssd_gazebo one_arm.launch
-roslaunch robot_arm_workcell_manager demo.launch sim:=true enable_fake_joints_execution:=false
-roslaunch robot_arm_workcell_manager robot_arm_workcell_manager.launch
-# Pub DispenserRequest!!
-```
-
-### Run 2 Arms
-```
-roslaunch cssd_gazebo main.launch
-roslaunch robot_arm_workcell_manager two_arms_rviz.launch
-roslaunch robot_arm_workcell_manager two_arms_rawm.launch
-# Pub DispenserRequest!!
-```
-
+- Warm start Issue!!!! Also ability to launch gazebo with rviz (Controller issue!!!)
 
 ---
 
@@ -99,17 +76,32 @@ catkin_make --pkg cssdbot_moveit_config cssdbot_description cssd_gazebo
 catkin_make --pkg robot_arm_workcell_manager -j4
 ```
 
-
 ---
 
 ## Run RAWM with Gazebo
 
+### Run Single Arm
 ```
-# Terminal A: Run Gazebo, alongside with Rviz and Moveit
-roslaunch cssd_gazebo ur10_gazebo.launch
+# Terminal A: Run Gazebo Env
+roslaunch cssd_gazebo one_arm.launch
 
-# Terminal B: Run RAWM
+# Terminal B: Run MoveIt Env With Rviz
+roslaunch robot_arm_workcell_manager demo.launch sim:=true enable_fake_joints_execution:=false
+
+# Terminal C: Run RAWM
 roslaunch robot_arm_workcell_manager robot_arm_workcell_manager.launch
+```
+
+### Run 2 Arms 
+```
+# Terminal A: Run Gazebo Env
+roslaunch cssd_gazebo main.launch
+
+# Terminal B: Run MoveIt Env With Rviz
+roslaunch robot_arm_workcell_manager two_arms_rviz.launch
+
+# Terminal C: Run RAWM
+roslaunch robot_arm_workcell_manager two_arms_rawm.launch
 ```
 
 ### Request a Task 
@@ -214,7 +206,7 @@ NOTE: JOINT STATES FOR POSES CAN BE ALTERNED IN cssdbot_urxx_moveit_config/confi
 - Camera calib is tuned, and written here: `/config/usb_cam.yaml`
 - Dispenser req will be received by RAWM, id: with convention of `marker_{$fiducial_id}`
 - Use Ros_bridge/SOSS to link ros1 msg to ros2, eventually communicates with a ``cssd_workcell_manager`
-
+- Tune all relevant param for RAWM in `robot_arm_workcell_manager.launch`, including `robot_id` and `transporter_placeme`
 
 ## TODO
 - Code clean up!!

@@ -128,7 +128,6 @@
         </visual>
       </link>
 
-
     <!-- Defining Joints and Links -->
     <joint name="aruco_tag_joint" type="revolute">
       <parent>base::body</parent>

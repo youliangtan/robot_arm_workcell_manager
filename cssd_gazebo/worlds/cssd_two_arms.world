@@ -164,7 +164,7 @@
       </model>
 
       <model name='UR10Base_1'>
-        <pose frame=''>-0.4 2.15 -0.48 0 0 0</pose>
+        <pose frame=''>-0.4 2.4 -0.48 0 0 0</pose>
         <scale>1 1 1</scale>
       </model>
 
@@ -174,7 +174,7 @@
       </model>
 
       <model name='CssdShelf_1'>
-        <pose frame=''>1 2.6 0.01 1.57 0 -1.57</pose>
+        <pose frame=''>1 2.7 0.01 1.57 0 -1.57</pose>
         <scale>1 1 1</scale>
       </model>
 
@@ -199,7 +199,7 @@
       </model>
 
       <model name='CssdTray0_1'>
-        <pose frame=''>0.869227 2.860226 1.15 0.003528 -0.016359 0.002928</pose>
+        <pose frame=''>0.869227 2.960226 1.15 0.003528 -0.016359 0.002928</pose>
         <scale>1 1 1</scale>
       </model>
 

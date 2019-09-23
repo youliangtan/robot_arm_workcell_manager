@@ -35,14 +35,14 @@
   <group ns="$(arg arm_2_ns)">
     <param name="tf_prefix" value="$(arg arm_2_ns)" />
     <include file="$(find cssd_gazebo)/launch/$(arg arm_2_type)_arm.launch">
-      <arg name="init_pose" value="-z 0.8 -y 2.5" />
+      <arg name="init_pose" value="-z 0.8 -y 2.75" />
       <arg name="robot_name"  value="$(arg arm_2_ns)"/>
     </include>
     
     <!-- Map arm's world to common world, eventually should get tf from gazebo -->
     <!--Placed 2.5 meters apart in the y axis from arm 1-->
     <node pkg="tf" type="static_transform_publisher" name="$(arg arm_2_ns)_static_tf" 
-          args="0 2.5 0 0 0 0 /world /$(arg arm_2_ns)/world 10"/> 
+          args="0 2.75 0 0 0 0 /world /$(arg arm_2_ns)/world 10"/> 
   </group>
 
 

@@ -38,7 +38,6 @@ FiducialMarkersHandler::~FiducialMarkersHandler(){
 
 bool FiducialMarkersHandler::loadParameters(){
 
-    std::cout << "\n\n NodeHandler NameSpace: " << nh_.getNamespace() << std::endl << std::endl;;
 
     if (nh_.getParam("camera_frame_id", camera_frame_id_)){
         ROS_INFO(" [PARAM] Got camera frame param: %s", camera_frame_id_.c_str());

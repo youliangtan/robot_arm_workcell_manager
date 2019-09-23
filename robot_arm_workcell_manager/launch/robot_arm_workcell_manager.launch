@@ -4,12 +4,16 @@
     <arg name="motion_target_file"  default="$(find robot_arm_workcell_manager)/config/motion_target.yaml" />
     <arg name="markers_config_file"  default="$(find robot_arm_workcell_manager)/config/markers_tf.yaml" />
     <arg name="arm_ns" default="/"/>
-    
+    <arg name="dispenser_name" default="ur10_001"/>
+    <arg name="transporter_placement" default="left"/>
+
     <group ns="$(arg arm_ns)">
 
         <node pkg="robot_arm_workcell_manager" type="robot_arm_workcell_manager" name="robot_arm_workcell_manager_node" respawn="true" output="screen">
             <param name="arm_namespace" value="$(arg arm_ns)" />
             <param name="tf_prefix" value="$(arg arm_ns)" />
+            <param name="dispenser_name" value="$(arg dispenser_name)" />
+            <param name="transporter_placement" value="$(arg transporter_placement)" />
 
             <param name="group_name" type="string" value="manipulator" />
             <param name="marker_tf_path" value="$(arg markers_config_file)"/>

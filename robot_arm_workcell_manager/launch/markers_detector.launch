@@ -14,8 +14,6 @@
   <arg name="ref_frame"       default=""/>  <!-- leave empty and the pose will be published wrt param parent_name -->
 
   <group if="$(arg enable_usb_cam)">
-    
-
 
     <node pkg="usb_cam" type="usb_cam_node" name="usb_camera">
       <remap from="/usb_camera/camera_info"  to="/camera_info"/>
@@ -32,8 +30,6 @@
   <!--              ************************************************************************************              -->
   <!--              ******************************** Aruco Detector node *******************************              -->
   <!--              ************************************************************************************              -->
-
-
 
   <!-- Run the aruco_detect node -->
   <!-- namespace for camera input -->
