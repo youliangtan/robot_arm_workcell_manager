@@ -1,8 +1,10 @@
 
 # robot_arm_workcell_manager (RAWM)
-Robot arm manipulation manager package is one of the module for the Central sterile services department (cssd) workcell application. This package will act as a standalone workcell (aka: Dispenser Robot), which handles the robotics aspect of cssd_workcell. When a `DispenserRequest` is being sent out by a user to RAWM, this workcell will begin executing the task, starting with the picking motion of custom design instrument tray from a medical rack, then end it by placing the tray on MIR cart (follow-up delivery task by MIR). Fiducial Aruco markers will function as locating visual markers for pose estimation. Aruco markers are attached to the trays and MIR cart. `ur10` and `ur10e` are used in this application. Current package is developed and tested on `ros-melodic` and `gazebo 9.1`. 
+Robot arm manipulation manager package is one of the module for the Central sterile services department (cssd) workcell application. This package will act as a standalone workcell (aka: Dispenser Robot), which handles the robotics aspect of cssd_workcell. When a `DispenserRequest` is being sent out by a user to RAWM, a 'RAWM' workcell will begin execute the pick and place task. `ur10` and `ur10e` are used in this application. Current package is developed and tested on `ros-melodic` and `gazebo 9.1`. 
 
-Newest version consists of namespacing support with move it, able to let two arms dance choreographically!!
+The task sequence starts with picking up a custom design instrument tray from a medical rack, then end it by placing the tray on MIR cart (follow-up delivery task by a AGV). Fiducial visual markers (aruco) will function as locating markers for pose estimation and id matching. Aruco markers are attached to the trays and AGV cart.
+
+Newest version consists of namespacing support with move it, enable two arms to perform choreographed dance!! 🤖🤖
 
 **Active in Development!!!**
 
@@ -24,7 +26,6 @@ Newest version consists of namespacing support with move it, able to let two arm
 ### Dependencies
 
 - Universal Robot: [here](https://github.com/ros-industrial/universal_robot), **Remember to switch branch
-- HanWha: TBC
 - Fiducial Marker Detector: [here](https://github.com/UbiquityRobotics/fiducials)
 ```
 sudo apt-get install ros-melodic-aruco-detect
@@ -56,6 +57,7 @@ roslaunch robot_arm_workcell_manager robot_arm_workcell_manager.launch
 ```
 
 ### Run 2 Arms 
+In this case, there's 2 `RAWM` workcells running... ✌️
 ```
 # Terminal A: Run Gazebo Env
 roslaunch cssd_gazebo main.launch
@@ -126,9 +128,11 @@ roslaunch robot_arm_workcell_manager robot_arm_workcell_manager.launch
 
 ## Testing Arms on HARDWARE! (ToBeTested)
 
+### Prerequisites
 PLEASE KEEP YOUR HANDS ON THE BIG RED BUTTON!
+Also, Download [ur_modern_driver with e series](https://github.com/AdmiralWall/ur_modern_driver/tree/kinetic_ur_5_4). Then install it.
 
-1. Terminal A (HARDWARE BRINGUP):
+### 1. Terminal A (HARDWARE BRINGUP):
 ```
 # For ur10
 roslaunch ur_modern_driver ur10_bringup.launch robot_ip:=198.168.88.XX
@@ -136,16 +140,16 @@ roslaunch ur_modern_driver ur10_bringup.launch robot_ip:=198.168.88.XX
 roslaunch ur_modern_driver ur10e_bringup.launch robot_ip:=198.168.88.XX
 ```
 
-2. Terminal B (MOVEIT & RVIZ):
+### 2. Terminal B (MOVEIT & RVIZ):
 
-a) With Full RAWM package
+*a) With Full RAWM package*
 ```
 roslaunch robot_arm_workcell_manager demo.launch sim:=false enable_fake_joints_execution:=false
 # then on terminal C, run RAWM
 roslaunch robot_arm_workcell_manager robot_arm_workcell_manager.launch 
 ```
 
-b) *Or just to test it with moveit on Rviz (terminal B)*
+*b) Or, just test it with moveit on Rviz (terminal B)*
 
 ![alt text](/documentations/rviz.gif?)
 
@@ -156,10 +160,10 @@ roslaunch cssdbot_ur10_moveit_config hardware_minimal.launch
 roslaunch cssdbot_ur10e_moveit_config hardware_minimal.launch
 ```
 
-With pure moveit on rviz, remember:
+With pure tryout using moveit on rviz, remember:
 - !!!PLAN BEFORE EXECUTING. SCALE YORU VELOCITY!!!!
-- !!!REMEMBER `CURRENT STATE` SHOULD ALWAYS BE :`<current_state>`, `GROUP` SHOULD BE: `MANIPULATOR`
-- JOINT STATES FOR POSES CAN BE ALTERNED IN `cssdbot_urxx_moveit_config/config/urxx.srdf`
+- Remember `CURRENT STATE` should always be :`<current_state>`, `GROUP` should be: `MANIPULATOR`
+- Joint states can be altered in `cssdbot_urxx_moveit_config/config/urxx.srdf`
 
 ---
 
@@ -168,7 +172,8 @@ With pure moveit on rviz, remember:
 - 3 executables are used in this application, namely: `robot_arm_workcell_manager` (MAIN), `robot_arm_controller`, `fiducial_markers_handler`.
 - `robot_arm_workcell_manager` executable depends on above `robot_arm_controller` and `fiducial_markers_handler` libs. 
 - "Named Motion Target" can be used to name then request each "joint/pose goal" of the robot arm. Edit `motion_config.yaml` accordingly.
-- Camera calib is tuned, and written here: `/config/usb_cam.yaml`
+- construction of extended TFs from the detected marker is configured in `extended_tf.yaml`
+- Camera should be calibrated, and intrinsic params should be written here: `/config/usb_cam.yaml`
 - Dispenser req will be received by RAWM, id: with convention of `marker_{$fiducial_id}`
 - Use Ros_bridge/SOSS to link ros1 msg to ros2, eventually communicates with a ``cssd_workcell_manager`
 - Tune all relevant param for RAWM in `robot_arm_workcell_manager.launch`, including `robot_id` and `transporter_placement`
