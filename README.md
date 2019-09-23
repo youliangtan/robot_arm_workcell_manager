@@ -4,7 +4,7 @@ Robot arm manipulation manager package is one of the module for the Central ster
 
 The task sequence starts with picking up a custom design instrument tray from a medical rack, then end it by placing the tray on MIR cart (follow-up delivery task by a AGV). Fiducial visual markers (aruco) will function as locating markers for pose estimation and id matching. Aruco markers are attached to the trays and AGV cart.
 
-Newest version consists of namespacing support with move it, enable two arms to perform choreographed dance!! 🤖🤖
+Currently provide namespacing support!, enable two arms to perform choreographed dance!! 🤖🤖
 
 **Active in Development!!!**
 
@@ -43,6 +43,7 @@ catkin_make --pkg robot_arm_workcell_manager -j4
 ---
 
 ## Run RAWM with Gazebo
+Motion are planned dynamically and markers are being detected by the eef cameras on gazebo.
 
 ### Run Single Arm
 ```
@@ -57,7 +58,7 @@ roslaunch robot_arm_workcell_manager robot_arm_workcell_manager.launch
 ```
 
 ### Run 2 Arms 
-In this case, there's 2 `RAWM` workcells running... ✌️
+In this case, there are 2 `RAWM` workcells running... ✌️
 ```
 # Terminal A: Run Gazebo Env
 roslaunch cssd_gazebo main.launch
@@ -168,7 +169,7 @@ With pure tryout using moveit on rviz, remember:
 ---
 
 ## Notes
-- A custom designed "fork-lift" end effector is used in this process
+- Custom designed "fork-lift" end effector, trays and tray placements are used in this application.
 - 3 executables are used in this application, namely: `robot_arm_workcell_manager` (MAIN), `robot_arm_controller`, `fiducial_markers_handler`.
 - `robot_arm_workcell_manager` executable depends on above `robot_arm_controller` and `fiducial_markers_handler` libs. 
 - "Named Motion Target" can be used to name then request each "joint/pose goal" of the robot arm. Edit `motion_config.yaml` accordingly.
