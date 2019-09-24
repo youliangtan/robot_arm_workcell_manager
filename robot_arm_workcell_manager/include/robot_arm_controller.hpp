@@ -48,7 +48,6 @@ class RobotArmController{
         bool moveToEefTarget(const geometry_msgs::Pose _eef_target_pose, double vel_factor);
 
         // TODO: Sub IO from UR10, Stop all motion
-    
 
     protected:
         bool loadParameters();
@@ -60,9 +59,10 @@ class RobotArmController{
         bool load_complete_ = false;  //TBC
         moveit::planning_interface::MoveGroupInterface::Plan motion_plan_;
 
+        std::string arm_namespace_;
         ros::NodeHandle nh_;
         YAML::Node NAMED_TARGET_CONFIG_;
 };
 
 
-#endif 
+#endif

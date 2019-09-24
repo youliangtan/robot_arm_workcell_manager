@@ -31,19 +31,16 @@ class FiducialMarkersHandler{
 
         // ------ Execution -----
 
-        // provide marker's pose respective to requested frame_id, TODO, should i removed?? TBC
-        bool getMarkerTransformPose(tf::Transform *target_marker_transform, std::string marker_id, std::string frame_id);
-
-        bool getTransformPose(tf::Transform *target_transform, std::string target_frame_id, std::string frame_id);
+        bool getTransformPose(std::string target_frame_id, std::string frame_id, tf::Transform *target_transform = new tf::Transform);
         
         // Set target marker and generate extended tf; @return: Marker's Type
         std::string setTargetMarker(std::string marker_id);
 
+        // Remove previously set target marker
         bool removeTargetMarker();
 
         // TODO
         bool getAllSpottedMarkersID();
-    
     
     protected:
 
@@ -71,6 +68,7 @@ class FiducialMarkersHandler{
         tf::TransformBroadcaster tf_broadcaster_;  
         tf::TransformListener tf_listener_;
         ros::Timer marker_extended_tf_timer_;
+        std::string tf_prefix_;
 
         void updateFiducialArrayCallback(const fiducial_msgs::FiducialTransformArrayConstPtr& msg);        
 
@@ -78,4 +76,4 @@ class FiducialMarkersHandler{
 
 };
 
-#endif 
+#endif

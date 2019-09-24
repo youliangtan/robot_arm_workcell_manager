@@ -21,6 +21,12 @@ FiducialMarkersHandler::FiducialMarkersHandler(): nh_("~"){
     markers_sub_ = nh_.subscribe ("/fiducial_transforms", 10 ,&FiducialMarkersHandler::updateFiducialArrayCallback,this);
     loadParameters();
 
+    // Handle prefix, specifically '/' senario
+    if ( tf_prefix_.empty() || (tf_prefix_.compare("/") == 0 ) ) 
+        tf_prefix_ = "";
+    else
+        tf_prefix_ = tf_prefix_ + "/";
+
     ROS_INFO("FiducialMarkersHandler::FiducialMarkersHandler() completed!! \n");
 }
 
@@ -32,7 +38,8 @@ FiducialMarkersHandler::~FiducialMarkersHandler(){
 
 bool FiducialMarkersHandler::loadParameters(){
 
-    if (nh_.getParam("/camera_frame_id", camera_frame_id_)){
+
+    if (nh_.getParam("camera_frame_id", camera_frame_id_)){
         ROS_INFO(" [PARAM] Got camera frame param: %s", camera_frame_id_.c_str());
     }
     else{
@@ -40,19 +47,24 @@ bool FiducialMarkersHandler::loadParameters(){
         nh_.param<std::string>("/camera_frame_id", camera_frame_id_, "camera");
     }
 
+    if (nh_.getParam("tf_prefix", tf_prefix_)){
+        ROS_INFO(" [PARAM] Got tf_prefix param: %s", tf_prefix_.c_str());
+    }
+    else{
+        ROS_ERROR(" [PARAM] Failed to get param 'tf_prefix'");
+        return false;
+    }
 
-    if (nh_.getParam("/flip_marker", is_marker_flipped_)){
+    if (nh_.getParam("flip_marker", is_marker_flipped_)){
       ROS_INFO(" [PARAM] Got flip marker param: %d", is_marker_flipped_);
     }
     else{
         ROS_ERROR(" [PARAM] Failed to get param flip marker param, set to default: false");
-        nh_.param<bool>("/flip_marker", is_marker_flipped_, false);
+        nh_.param<bool>("flip_marker", is_marker_flipped_, false);
     }
 
-
-
     std::string _yaml_path = "";
-    if (nh_.getParam("/marker_tf_path", _yaml_path)){
+    if (nh_.getParam("marker_tf_path", _yaml_path)){
       ROS_INFO(" [PARAM] Got path param: %s", _yaml_path.c_str());
     }
     else{
@@ -73,9 +85,7 @@ bool FiducialMarkersHandler::loadParameters(){
 }
 
 
-
 //-----------------------------------------------------------------------------
-
 
 // TODO, work on the mode: rosparam
 // To reOrientate Marker's frame to the correct convention
@@ -92,46 +102,36 @@ tf::Quaternion FiducialMarkersHandler::reorientateMarker(tf::Quaternion quat){
 }
 
 
-
 //--------------------------------------------------------------------------------
 
-
-
-
 // Get transform 
-bool FiducialMarkersHandler::getTransformPose(tf::Transform *target_transform, std::string target_frame_id, std::string frame_id){
+bool FiducialMarkersHandler::getTransformPose(std::string target_frame_id, std::string frame_id, tf::Transform *target_transform){
     ROS_INFO("Looking up TF between frame: %s and %s", target_frame_id.c_str(), frame_id.c_str());
+
+    std::string prefix_target_frame_id = tf_prefix_ + target_frame_id;
+    std::string prefix_frame_id = tf_prefix_ + frame_id;
 
     //get transform of marker relative to base link
   	tf::StampedTransform stamped_transform;
   	try{
-	  	tf_listener_.waitForTransform(target_frame_id, frame_id, ros::Time::now(), ros::Duration(2) );
-	  	tf_listener_.lookupTransform(target_frame_id, frame_id, ros::Time(0), stamped_transform);
+	  	tf_listener_.waitForTransform(prefix_target_frame_id, prefix_frame_id, ros::Time::now(), ros::Duration(2) );
+	  	tf_listener_.lookupTransform(prefix_target_frame_id, prefix_frame_id, ros::Time(0), stamped_transform);
     }
     catch (tf::TransformException ex) {
         ROS_ERROR(" Get Transform Error!! Most likely tf is not existed between 2 input frames. error:%s",ex.what());
         return false;
     }
 
-    // Expiry time
+    // Check Expiry time, currently 2s 
     ros::Duration diff = ros::Time::now()-stamped_transform.stamp_;
     if (diff.toSec() > 2 ) return false;   // TODO: ROSParam for this thresh
 
   	target_transform->setRotation(stamped_transform.getRotation());
   	target_transform->setOrigin(stamped_transform.getOrigin());
-    ROS_INFO(" - Frame: %s and %s Detected!", target_frame_id.c_str(), frame_id.c_str());
+    ROS_INFO(" - Frame: %s and %s Detected!", prefix_target_frame_id.c_str(), prefix_frame_id.c_str());
 
     return true;
 }
-
-
-// Get Markers's transfrom the tf between 2 frames
-bool FiducialMarkersHandler::getMarkerTransformPose( tf::Transform *target_marker_transform, std::string marker_id, std::string frame_id="base_link"){    
-    ROS_INFO("Providing marker's pose");
-    return getTransformPose( target_marker_transform, marker_id, frame_id);
-}
-
-
 
 
 // @ return marker type, failed then return ""
@@ -151,7 +151,6 @@ std::string FiducialMarkersHandler::setTargetMarker(std::string marker_id ){
         return "";
     }
 
-
     try {
         // Create and array of extended_markers tf, and stored in under member func
         for( std::size_t i=0;i< marker_extended_frame_array.size() ;i++) {
@@ -165,7 +164,7 @@ std::string FiducialMarkersHandler::setTargetMarker(std::string marker_id ){
             quat.setEuler( pose_array[3], pose_array[4], pose_array[5] );
             transform.setRotation(quat);
 
-            tf::StampedTransform extended_tf(transform, ros::Time::now(), marker_id, extended_frame);
+            tf::StampedTransform extended_tf(transform, ros::Time::now(), tf_prefix_ + marker_id, tf_prefix_ + extended_frame);
 
             markers_extended_tf_array_.push_back(extended_tf);
         }
@@ -173,13 +172,12 @@ std::string FiducialMarkersHandler::setTargetMarker(std::string marker_id ){
         std::cout << " Done with creating Markers Extended TFs " << std::endl;
         marker_extended_tf_timer_ = nh_.createTimer(ros::Duration(0.4), &FiducialMarkersHandler::MarkerExtendedTfTimerCallback, this);
         return marker_type;
-    
-    }
-    catch (std::exception& err){
-        ROS_ERROR("YAML ERROR!! Exception Raise while reading  '%s frame' in YAML config:  %s", extended_frame.c_str(), err.what());
-        return "";
     }
 
+    catch (std::exception& err){
+        ROS_ERROR("YAML ERROR!! Exception Raise while reading  '%s' frame in YAML config:  %s", extended_frame.c_str(), err.what());
+        return "";
+    }
 }
 
 
@@ -191,11 +189,7 @@ bool FiducialMarkersHandler::removeTargetMarker(){
 }
 
 
-
-
 // ------------------------------------------- ROS Callback Zone ------------------------------------------------
-
-
 
 // Periodic callback to pub marker extended tfs to /tf
 void FiducialMarkersHandler::MarkerExtendedTfTimerCallback(const ros::TimerEvent& event) {
@@ -204,10 +198,7 @@ void FiducialMarkersHandler::MarkerExtendedTfTimerCallback(const ros::TimerEvent
         markers_extended_tf_array_[i].stamp_ = ros::Time::now();
         tf_broadcaster_.sendTransform( markers_extended_tf_array_[i] );
     }
-
 }
-
-
 
 // Update all fiducial arrays to /tf, and name markers according to their marker's id
 void FiducialMarkersHandler::updateFiducialArrayCallback(const fiducial_msgs::FiducialTransformArrayConstPtr& _msg){
@@ -233,17 +224,14 @@ void FiducialMarkersHandler::updateFiducialArrayCallback(const fiducial_msgs::Fi
         transform.setOrigin(tf::Vector3(pose.translation.x,pose.translation.y,pose.translation.z));
         transform.setRotation(after_rotation);
 
-        tf_broadcaster_.sendTransform(tf::StampedTransform(transform, ros::Time::now(), camera_frame_id_, marker_frame_id));
+        tf_broadcaster_.sendTransform(tf::StampedTransform(transform, ros::Time::now(), tf_prefix_ + camera_frame_id_, tf_prefix_ + marker_frame_id));
     }
-
 }
-
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // ----------------------------------------------- MAIN ------------------------------------------------------
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
 
 int main(int argc, char** argv){
@@ -265,7 +253,7 @@ int main(int argc, char** argv){
         
         std::cout << "************ Check target Pose [insert, marker_0]************" << std::endl;
         tf::Transform *target_transform (new tf::Transform);
-        if ( aruco_markers.getTransformPose(target_transform, "insert", "camera") == true ){
+        if ( aruco_markers.getTransformPose("insert", "camera", target_transform) == true ){
             std::cout <<    std::to_string(target_transform->getOrigin().x() ) << " " << 
                             std::to_string(target_transform->getOrigin().y() ) << " " <<   
                             std::to_string(target_transform->getOrigin().z() ) << std::endl;
@@ -280,5 +268,4 @@ int main(int argc, char** argv){
         aruco_markers.removeTargetMarker();
         std::this_thread::sleep_for (std::chrono::seconds(10));
     }
-
 }

@@ -21,8 +21,7 @@ find_package(catkin REQUIRED COMPONENTS
   geometry_msgs
   ur_description
   ur_gazebo
-moveit_ros_move_group
-
+  moveit_ros_move_group
   fiducial_msgs
   aruco_detect
   rmf_msgs
@@ -32,8 +31,6 @@ find_package(YAML-CPP REQUIRED yaml-cpp)
 find_package(Eigen3 REQUIRED)
 find_package(Boost REQUIRED system filesystem date_time thread)
 find_package(gazebo 9 REQUIRED)
-
-
 
 catkin_package(
   LIBRARIES
@@ -51,44 +48,9 @@ catkin_package(
     EIGEN3
     gazebo
 )
-# catkin_install_python(
-#   PROGRAMS
-#     scripts/gazebo_unpauser.py
-#     scripts/RequestCoffeebot.py
-#     scripts/gazebo_model_spawner.py
-#     scripts/LaunchBeverage.py
-#   DESTINATION
-#     ${CATKIN_PACKAGE_BIN_DESTINATION}
-# )
-
-#------------------------------- Gazebo stuffs -----------------------------------------
-# set(coffeebot_plugin_source
-#   src/CoffeebotPlugin.cpp
-#   src/GripperHandler.cpp
-# )
-# add_library(CoffeebotPlugin SHARED
-#   ${coffeebot_plugin_source}
-# )
-# target_link_libraries(CoffeebotPlugin PRIVATE
-#   ${GAZEBO_LIBRARIES}
-#   ${catkin_LIBRARIES}
-# )
-# target_include_directories(CoffeebotPlugin PRIVATE
-#   ${GAZEBO_INCLUDE_DIRS}
-#   ${catkin_INCLUDE_DIRS}
-# )
-# install(TARGETS CoffeebotPlugin
-#   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-#   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-#   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-# )
 
 #---------------------------------- Exec Stuffs--------------------------------------------------
 
-
-# add_library(object_pose_estimation  src/object_pose_estimation.cpp )
-# target_link_libraries(object_pose_estimation ${catkin_LIBRARIES} ${PCL_LIBRARIES}  ${YAML_CPP_LIBRARIES} ${EIGEN3_LIBRARIES})
-# add_dependencies(object_pose_estimation ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 include_directories(
   include
@@ -124,39 +86,3 @@ install(
   DIRECTORY python/
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
-
-# set(Executables
-#   CoffeebotController
-#   hacky_coffeebot_workspace
-# )
-# foreach(exec ${Executables})
-#   add_executable(${exec}
-#     src/${exec}.cpp
-#   )
-#   target_link_libraries(${exec} PRIVATE
-#     ${GAZEBO_LIBRARIES}
-#     ${catkin_LIBRARIES}
-#   )
-#   target_include_directories(${exec} PRIVATE
-#     ${GAZEBO_INCLUDE_DIRS}
-#     ${catkin_INCLUDE_DIRS}
-#   )
-#   install(TARGETS ${exec}
-#     ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-#     LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-#     RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-#   )
-# endforeach()
-
-
-# #---------------------------------------------------------------------------------------------------
-# install(
-#   DIRECTORY
-#     config
-#     controller
-#     launch
-#     meshes
-#     scripts
-#     urdf
-#   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
-# )

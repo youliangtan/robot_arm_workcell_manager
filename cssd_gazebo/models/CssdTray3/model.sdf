@@ -1,0 +1,32 @@
+<?xml version='1.0'?>
+<sdf version='1.6'>
+  <model name='CssdTray3'>
+    <allow_auto_disable>0</allow_auto_disable>
+    <static>0</static>
+
+    <include>
+      <uri>model://CssdTray</uri>
+      <name>base</name>
+    </include>
+
+    <include>
+      <name>aruco_tag</name>
+      <uri>model://aruco_visual_marker_3</uri>
+      <pose> -0.154 0.0 0.0824 0 -1.57 0.0</pose>
+      <static>true</static>
+    </include>
+
+    <joint name="aruco_tag_joint" type="revolute">
+      <parent>base::tray</parent>
+      <child>aruco_tag::marker</child>
+      <!-- Common hack to make this a "fixed" joint -->
+      <axis>
+        <limit>
+          <lower>0.0</lower>
+          <upper>0.0</upper>
+        </limit>
+      </axis>
+
+    </joint>
+  </model>
+</sdf>
