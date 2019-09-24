@@ -33,6 +33,8 @@
         <arg name="arm_type"        value="$(arg arm_2_model)"/>
         <arg name="sim"             value="$(arg gazebo_sim)"/>
         <arg name="enable_fake_joints_execution" value="$(arg fake_joints_execution)"/>
+        <!-- Hardfix for now, for deviation prob, 0.05 yaw rad -->
+        <!-- <arg name="eef2cam_tf"      default="0 0 0 -1.59 0 -1.57"/>   -->
     </include>
 
     <!-- Dearly Arm n.... -->

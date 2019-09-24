@@ -80,16 +80,17 @@ bool RobotArmWorkcellManager::loadParameters(){
 // Callback!!!! TODO
 void RobotArmWorkcellManager::dispenserRequestCallback(const rmf_msgs::DispenserRequestConstPtr& _msg){
     
-    ROS_INFO(" \n --------- Received 1 Job request with id: %s -----------\n", _msg->request_id.c_str() );
+    ROS_INFO(" \n ------- [Robot: %s] Received 1 Job request with id: %s ---------\n", 
+            dispenser_name_.c_str(), _msg->request_id.c_str() );
 
     if (_msg->dispenser_name != dispenser_name_){
-        std::cout << " Invalid Dispenser Name..." << std::endl;
+        ROS_ERROR(" [Robot: %s] Invalid Dispenser Name...", dispenser_name_.c_str());
         return;
     }
 
     // already performing this request
     if (_msg->request_id == dispenser_curr_task_.request_id){
-        std::cout << " Task Request has been performed" << std::endl;
+        ROS_ERROR(" [Robot: %s] Task Request has been performed previously", dispenser_name_.c_str());
         return;
     }
 
@@ -104,7 +105,7 @@ void RobotArmWorkcellManager::dispenserRequestCallback(const rmf_msgs::Dispenser
     // Check if quantity and item size number
     // TODO, Check Compartment_ID
     if (_msg->items.size() != 1 || _msg->items[0].quantity != 1 )  {
-        std::cout << "    Currently only supports 1 item request of quantity 1 " << std::endl;
+        ROS_ERROR("  [Robot: %s] Currently only supports 1 item request of quantity 1 ", dispenser_name_.c_str());
         publishDispenserResult(_msg->request_id, false);
         return;
     }
@@ -113,7 +114,7 @@ void RobotArmWorkcellManager::dispenserRequestCallback(const rmf_msgs::Dispenser
     std::unique_lock<std::mutex> queue_lock(dispenser_task_queue_mutex_); 
     for (rmf_msgs::DispenserRequest& task_in_queue : dispenser_task_queue_){
         if (_msg->request_id == task_in_queue.request_id){
-            std::cout << "    found duplicate task in queue, updating task."  << std::endl;
+            ROS_ERROR("    found duplicate task in queue, updating task.";
             dispenser_task_queue_.erase(dispenser_task_queue_.begin());
             dispenser_task_queue_.push_back(*_msg);
             return;
@@ -132,7 +133,8 @@ void RobotArmWorkcellManager::dispenserRequestCallback(const rmf_msgs::Dispenser
 
     // All Valid!! Expand request queue
     dispenser_task_queue_.push_back(*_msg);
-    ROS_INFO("  --------- Successfully added request task: %s  to queue -----------\n", _msg->request_id.c_str() );
+    ROS_INFO(" \n  --------- [Robot: %s] Successfully added request task: %s  to queue -----------\n", 
+            dispenser_name_.c_str(), _msg->request_id.c_str() );
     
     return;
 }
@@ -219,12 +221,12 @@ void RobotArmWorkcellManager::dispenserTaskExecutionThread(){
             loop_rate.sleep();
 
             if (mission_success){
-                ROS_INFO("\n *************** Done with Task with Request ID: %s *************** \n", 
-                    dispenser_curr_task_.request_id.c_str());
+                ROS_INFO("\n *************** [Robot: %s] Done with Task with Request ID: %s *************** \n", 
+                    dispenser_name_.c_str(), dispenser_curr_task_.request_id.c_str());
             }
             else{
-                ROS_ERROR("\n *************** Task Failed for Request ID: %s *************** \n", 
-                    dispenser_curr_task_.request_id.c_str());
+                ROS_ERROR("\n *************** [Robot: %s] Task Failed for Request ID: %s *************** \n", 
+                    dispenser_name_.c_str(), dispenser_curr_task_.request_id.c_str());
             }
             
             dispenser_completed_request_ids_[dispenser_curr_task_.request_id] =  mission_success;
@@ -252,11 +254,6 @@ bool RobotArmWorkcellManager::executePickPlaceMotion( std::vector<std::string> f
     if (! markers_detector_.getTransformPose( "base_link", "rescan_pos", target_tf ) ) return false;
     tf::poseTFToMsg(*target_tf, *_eef_target_pose);
     if (! arm_controller_.moveToEefTarget(*_eef_target_pose, 0.15) ) return false;
-    
-    // Reset target marker position
-    markers_detector_.removeTargetMarker();
-    markers_detector_.setTargetMarker(marker_frame_id);
-    std::this_thread::sleep_for (std::chrono::seconds(motion_pause_time_));
  
     // Get transform from tf detection, and store in local var
     for (std::string frame : frame_array){

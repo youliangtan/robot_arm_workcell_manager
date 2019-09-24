@@ -1,14 +1,15 @@
 <launch>
+   
+  <arg name="arm_ns"                        default="/"/>
+  <arg name="arm_type"                      default="ur10"/>
   
-  <arg name="arm_ns" default="/"/>
-  <arg name="arm_type" default="ur10"/>
+  <arg name="debug"                         default="false" />
+  <arg name="limited"                       default="false"/>
   
-  <arg name="debug" default="false" />
-  <arg name="limited" default="false"/>
-  
-  <arg name="enable_usb_cam" default="false"/>
-  <arg name="sim" default="false"/>
-  <arg name="enable_fake_joints_execution" default="true"/>
+  <arg name="enable_usb_cam"                default="false"/>
+  <arg name="sim"                           default="false"/>
+  <arg name="enable_fake_joints_execution"  default="true"/>
+  <arg name="eef2cam_tf"                    default="0 0 0 -1.57 0 -1.57"/>
   
   <group ns="$(arg arm_ns)">
       
@@ -58,13 +59,14 @@
     <!-- Currently handle the 'static tf publisher' in a dirty way, due to '/' issue -->
     <node if="$(eval arg('arm_ns') == '/')"
           pkg="tf" type="static_transform_publisher" name="eef_to_camera_tf" 
-          args="0 0 0 -1.57 0 -1.57 camera_link_optical camera 10" />    
+          args="$(eval arg('eef2cam_tf') + ' camera_link_optical camera 10' )" />   
     
     <node unless="$(eval arg('arm_ns') == '/')"
           pkg="tf" type="static_transform_publisher" name="eef_to_camera_tf" 
-          args="0 0 0 -1.57 0 -1.57 $(arg arm_ns)/camera_link_optical $(arg arm_ns)/camera 10" />    
-    
+          args="$(eval arg('eef2cam_tf') 
+                + ' ' + arg('arm_ns') + '/camera_link_optical ' + arg('arm_ns') + '/camera 10' )" />   
+                <!-- 0 0 0 -1.57 0 -1.57 $(arg arm_ns)/camera_link_optical $(arg arm_ns)/camera 10"     -->
+
   </group>
 
 </launch>
-

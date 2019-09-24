@@ -10,7 +10,8 @@ Currently provide namespacing support!, enable two arms to perform choreographed
 
 ![alt text](/documentations/two_arms_dance.gif?)
 
-*Full Video Link* (with one arm), [here](https://drive.google.com/open?id=1dGKh3FVMlUwX8GUMv3mgxQFBm0OnGa8B)
+*Full Video Link* (with one arm),  [here](https://drive.google.com/open?id=1dGKh3FVMlUwX8GUMv3mgxQFBm0OnGa8B)
+*Full Video Link* (with two arms), [here](https://drive.google.com/open?id=1dT9zQ5bbWr0oMqf9hO2wWMH2uiiHR1AT)
 
 ---
 
@@ -45,7 +46,10 @@ catkin_make --pkg robot_arm_workcell_manager -j4
 ## Run RAWM with Gazebo
 Motion are planned dynamically and markers are being detected by the eef cameras on gazebo.
 
-### Run Single Arm
+### Run Arm
+
+#### Run Single Arm
+
 ```
 # Terminal A: Run Gazebo Env
 roslaunch cssd_gazebo one_arm.launch
@@ -57,7 +61,8 @@ roslaunch robot_arm_workcell_manager demo.launch sim:=true enable_fake_joints_ex
 roslaunch robot_arm_workcell_manager robot_arm_workcell_manager.launch
 ```
 
-### Run 2 Arms 
+#### Run 2 Arms 
+
 In this case, there are 2 `RAWM` workcells running... ✌️
 ```
 # Terminal A: Run Gazebo Env
@@ -72,18 +77,25 @@ roslaunch robot_arm_workcell_manager two_arms_rawm.launch
 
 ### Request a Task 
 
-Open another terminal, then use rostopic to publish a `DispenserRequest.msg` to start the pick and place motion.
+Open another terminal, then use rostopic to publish a `DispenserRequest.msg` to start the pick and place motion. Each request will execute one pick and place task. Intotal, 4 requests will be sent out to fill up the Transporter!!
+
+*Request Task to UR10 arm!* 🤖
 ```
-rostopic pub /cssd_workcell/dispenser_request rmf_msgs/DispenserRequest '{request_id: 0xx01, dispenser_name: ur10_001, items:[{item_type: marker_2, quantity: 1, compartment_name: 'marker_101'}] }' --once
+rostopic pub /cssd_workcell/dispenser_request rmf_msgs/DispenserRequest '{request_id: 0xx01, dispenser_name: ur10_001, items:[{item_type: marker_1, quantity: 1, compartment_name: 'marker_101'}] }' --once
+## second request
+rostopic pub /cssd_workcell/dispenser_request rmf_msgs/DispenserRequest '{request_id: 0xx02, dispenser_name: ur10_001, items:[{item_type: marker_2, quantity: 1, compartment_name: 'marker_100'}] }' --once
+```
 
-# second request
-rostopic pub /cssd_workcell/dispenser_request rmf_msgs/DispenserRequest '{request_id: 0xx02, dispenser_name: ur10_001, items:[{item_type: marker_1, quantity: 1, compartment_name: 'marker_100'}] }' --once
-
-# third request: manually remove tray, and play with the pose of cart on gazebo
-rostopic pub /cssd_workcell/dispenser_request rmf_msgs/DispenserRequest '{request_id: 0xx00, dispenser_name: ur10_001, items:[{item_type: marker_0, quantity: 1, compartment_name: 'marker_100'}] }' --once
+*Request Task to UR10e arm!* 🤖
+```
+rostopic pub /cssd_workcell/dispenser_request rmf_msgs/DispenserRequest '{request_id: 0xx03, dispenser_name: ur10e_001, items:[{item_type: marker_0, quantity: 1, compartment_name: 'marker_102'}] }' --once
+## second request
+rostopic pub /cssd_workcell/dispenser_request rmf_msgs/DispenserRequest '{request_id: 0xx04, dispenser_name: ur10e_001, items:[{item_type: marker_4, quantity: 1, compartment_name: 'marker_103'}] }' --once
 ```
 
 By now, the robot dispenser will execute the task according to the `DispenserRequest`. GoodLuck!!
+
+P/S: You can play with the gazebo model my manually move the position of the transporter cart
 
 ---
 
@@ -191,3 +203,4 @@ With pure tryout using moveit on rviz, remember:
 - intergration with greater RMF environment
 - test usb cam on new hardware, and config all usb video path
 - Eventually, *FULL* Hardware Test!!!!!!
+- Potential prob: checkout `prob1.png`, encounter yaw prob on ur10e (instead of ur10). Quick fix on cart's aruco marker's yaw angle

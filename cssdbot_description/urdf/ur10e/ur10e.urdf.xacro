@@ -371,7 +371,6 @@
         </geometry>
       </collision>
 
-
       <!-- Extents: ([0.12276, 0.2112], +/- 0.08644, [-0.046, -0.043]) -->
       <!-- Note: I'm making this 3mm thicker than the actual model -->
       <collision>

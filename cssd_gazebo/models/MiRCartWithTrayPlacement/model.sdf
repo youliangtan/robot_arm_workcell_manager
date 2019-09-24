@@ -16,122 +16,40 @@
     </include>
 
     <!-- Aruco Tag 100 -->
-    <link name='aruco_tag_100'>
+    <include>
+      <name>aruco_tag_100</name>
+      <uri>model://aruco_visual_marker_100</uri>
       <pose> 0.405 0.25 0.5 0 -1.57 3.14</pose>
-
-      <inertial>
-        <mass>0.01</mass>
-        <inertia>
-          <ixx>0.001</ixx>
-          <iyy>0.001</iyy>
-          <izz>0.001</izz>
-        </inertia>
-      </inertial>
-
-      <visual name='marker_100'>
-        <geometry>
-          <box>
-            <size>0.04 0.04 1e-05</size>
-          </box>
-        </geometry>
-        <material>
-          <script>
-            <uri>model://aruco_visual_marker_100/materials/scripts</uri>
-            <uri>model://aruco_visual_marker_100/materials/textures</uri>
-            <name>ArucoVisualMarker100/Marker</name>
-          </script>
-          <ambient>1 1 1 1</ambient>
-          <diffuse>1 1 1 1</diffuse>
-          <specular>0 0 0 1</specular>
-          <emissive>1 1 1 0</emissive>
-          <shader type='vertex'>
-            <normal_map>__default__</normal_map>
-          </shader>
-        </material>
-        <cast_shadows>1</cast_shadows>
-        <transparency>0</transparency>
-      </visual>
-    </link>
-
+      <static>true</static>
+    </include>
     <!-- Aruco Tag 101 -->
-    <link name='aruco_tag_101'>
+    <include>
+      <name>aruco_tag_101</name>
+      <uri>model://aruco_visual_marker_101</uri>
       <pose> 0.405 -0.25 0.5 0 -1.57 3.14</pose>
+      <static>true</static>
+    </include>
 
-      <inertial>
-        <mass>0.01</mass>
-        <inertia>
-          <ixx>0.001</ixx>
-          <iyy>0.001</iyy>
-          <izz>0.001</izz>
-        </inertia>
-      </inertial>
-
-      <visual name='marker_101'>
-        <geometry>
-          <box>
-            <size>0.04 0.04 1e-05</size>
-          </box>
-        </geometry>
-        <material>
-          <script>
-            <uri>model://aruco_visual_marker_101/materials/scripts</uri>
-            <uri>model://aruco_visual_marker_101/materials/textures</uri>
-            <name>ArucoVisualMarker101/Marker</name>
-          </script>
-          <ambient>1 1 1 1</ambient>
-          <diffuse>1 1 1 1</diffuse>
-          <specular>0 0 0 1</specular>
-          <emissive>1 1 1 0</emissive>
-          <shader type='vertex'>
-            <normal_map>__default__</normal_map>
-          </shader>
-        </material>
-        <cast_shadows>1</cast_shadows>
-        <transparency>0</transparency>
-      </visual>
-    </link>
-
-    <!-- Aruco Tag 100 (1) TBRemoved-->
-    <link name='aruco_tag_100_1 '>
-        <pose> -0.405 0.25 0.5 3.14 -1.57 3.14</pose>
-        <inertial>
-          <mass>0.01</mass>
-          <inertia>
-            <ixx>0.001</ixx>
-            <iyy>0.001</iyy>
-            <izz>0.001</izz>
-          </inertia>
-        </inertial>
-  
-        <visual name='marker_100'>
-          <geometry>
-            <box>
-              <size>0.04 0.04 1e-05</size>
-            </box>
-          </geometry>
-          <material>
-            <script>
-              <uri>model://aruco_visual_marker_100/materials/scripts</uri>
-              <uri>model://aruco_visual_marker_100/materials/textures</uri>
-              <name>ArucoVisualMarker100/Marker</name>
-            </script>
-            <ambient>1 1 1 1</ambient>
-            <diffuse>1 1 1 1</diffuse>
-            <specular>0 0 0 1</specular>
-            <emissive>1 1 1 0</emissive>
-            <shader type='vertex'>
-              <normal_map>__default__</normal_map>
-            </shader>
-          </material>
-          <cast_shadows>1</cast_shadows>
-          <transparency>0</transparency>
-        </visual>
-      </link>
+    <!-- Hardfix for now, for deviation prob, 0.05 yaw rad -->
+    <!-- Hacky Way, Aruco Tag 102 -->
+    <include>
+      <name>aruco_tag_102</name>
+      <uri>model://aruco_visual_marker_102</uri>
+      <pose> -0.407 0.25 0.5 3.14 -1.57 3.19</pose>
+      <static>true</static>
+    </include>
+    <!-- Hacky Way, Aruco Tag 103 -->
+    <include>
+      <name>aruco_tag_103</name>
+      <uri>model://aruco_visual_marker_103</uri>
+      <pose> -0.407 -0.25 0.5 3.14 -1.57 3.19</pose>
+      <static>true</static>
+    </include>
 
     <!-- Defining Joints and Links -->
     <joint name="aruco_tag_joint" type="revolute">
       <parent>base::body</parent>
-      <child>aruco_tag_100</child>
+      <child>aruco_tag_100::marker</child>
       <!-- Common hack to make this a "fixed" joint -->
       <axis>
         <limit>
@@ -143,7 +61,7 @@
 
     <joint name="aruco_tag_joint2" type="revolute">
       <parent>base::body</parent>
-      <child>aruco_tag_101</child>
+      <child>aruco_tag_101::marker</child>
       <!-- Common hack to make this a "fixed" joint -->
       <axis>
         <limit>
@@ -155,16 +73,27 @@
 
     <!-- Hacky way: TBRemoved -->
     <joint name="aruco_tag_joint3" type="revolute">
-        <parent>base::body</parent>
-        <child>aruco_tag_100_1</child>
-        <!-- Common hack to make this a "fixed" joint -->
-        <axis>
-          <limit>
-            <lower>0.0</lower>
-            <upper>0.0</upper>
-          </limit>
-        </axis>
-      </joint>
+      <parent>base::body</parent>
+      <child>aruco_tag_100_1::marker</child>
+      <!-- Common hack to make this a "fixed" joint -->
+      <axis>
+        <limit>
+          <lower>0.0</lower>
+          <upper>0.0</upper>
+        </limit>
+      </axis>
+    </joint>
+    <joint name="aruco_tag_joint3" type="revolute">
+      <parent>base::body</parent>
+      <child>aruco_tag_101_1::marker</child>
+      <!-- Common hack to make this a "fixed" joint -->
+      <axis>
+        <limit>
+          <lower>0.0</lower>
+          <upper>0.0</upper>
+        </limit>
+      </axis>
+    </joint>
 
     <joint name="tray_placement_joint" type="revolute">
       <parent>base::body</parent>

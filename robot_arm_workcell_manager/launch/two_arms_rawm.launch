@@ -6,12 +6,14 @@
     <!-- Dearly Arm 1 -->
     <include file="$(find robot_arm_workcell_manager)/launch/robot_arm_workcell_manager.launch">
         <arg name="arm_ns"                  value="$(arg arm_1_ns)"/>
+        <arg name="dispenser_name"          value="ur10_001"/>
         <arg name="transporter_placement"   value="left"/>
     </include>
   
     <!-- Dearly Arm 2 -->
     <include file="$(find robot_arm_workcell_manager)/launch/robot_arm_workcell_manager.launch">
         <arg name="arm_ns"                  value="$(arg arm_2_ns)"/>
+        <arg name="dispenser_name"          value="ur10e_001"/>
         <arg name="transporter_placement"   value="right"/>
     </include>
 

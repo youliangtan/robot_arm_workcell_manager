@@ -7,8 +7,10 @@ Panels:
         - /MotionPlanning1
         - /MotionPlanning1/Planning Request1
         - /MotionPlanning1/Planned Path1
+        - /TF1
+        - /TF1/Frames1
       Splitter Ratio: 0.7425600290298462
-    Tree Height: 186
+    Tree Height: 176
   - Class: rviz/Help
     Name: Help
   - Class: rviz/Views
@@ -258,7 +260,6 @@ Visualization Manager:
       Unreliable: false
       Value: false
       Visibility:
-        "": true
         Grid: true
         Image: true
         MotionPlanning: true
@@ -281,36 +282,64 @@ Visualization Manager:
       Enabled: true
       Frame Timeout: 15
       Frames:
-        /camera:
+        All Enabled: false
+        arm1/base:
+          Value: false
+        arm1/base_link:
+          Value: false
+        arm1/camera:
+          Value: false
+        arm1/camera_link_optical:
+          Value: false
+        arm1/ee_link:
           Value: true
-        /camera_link_optical:
+        arm1/end_effector_link:
+          Value: false
+        arm1/forearm_link:
+          Value: false
+        arm1/shoulder_link:
+          Value: false
+        arm1/tool0:
+          Value: false
+        arm1/upper_arm_link:
+          Value: false
+        arm1/world:
+          Value: false
+        arm1/wrist_1_link:
+          Value: false
+        arm1/wrist_2_link:
+          Value: false
+        arm1/wrist_3_link:
+          Value: false
+        arm2/base:
           Value: true
-        All Enabled: true
-        base:
+        arm2/base_link:
           Value: true
-        base_link:
+        arm2/camera:
           Value: true
-        camera_link_optical:
+        arm2/camera_link_optical:
+          Value: false
+        arm2/ee_link:
+          Value: false
+        arm2/end_effector_link:
+          Value: false
+        arm2/forearm_link:
           Value: true
-        ee_link:
+        arm2/shoulder_link:
           Value: true
-        end_effector_link:
+        arm2/tool0:
           Value: true
-        forearm_link:
+        arm2/upper_arm_link:
           Value: true
-        shoulder_link:
+        arm2/world:
           Value: true
-        tool0:
+        arm2/wrist_1_link:
           Value: true
-        upper_arm_link:
-          Value: true
+        arm2/wrist_2_link:
+          Value: false
+        arm2/wrist_3_link:
+          Value: false
         world:
-          Value: true
-        wrist_1_link:
-          Value: true
-        wrist_2_link:
-          Value: true
-        wrist_3_link:
           Value: true
       Marker Scale: 1
       Name: TF
@@ -319,23 +348,40 @@ Visualization Manager:
       Show Names: true
       Tree:
         world:
-          base_link:
-            base:
-              {}
-            shoulder_link:
-              upper_arm_link:
-                forearm_link:
-                  wrist_1_link:
-                    wrist_2_link:
-                      wrist_3_link:
-                        ee_link:
-                          end_effector_link:
-                            /camera_link_optical:
-                              {}
-                            camera_link_optical:
-                              {}
-                        tool0:
-                          {}
+          arm1/world:
+            arm1/base_link:
+              arm1/base:
+                {}
+              arm1/shoulder_link:
+                arm1/upper_arm_link:
+                  arm1/forearm_link:
+                    arm1/wrist_1_link:
+                      arm1/wrist_2_link:
+                        arm1/wrist_3_link:
+                          arm1/ee_link:
+                            arm1/end_effector_link:
+                              arm1/camera_link_optical:
+                                arm1/camera:
+                                  {}
+                          arm1/tool0:
+                            {}
+          arm2/world:
+            arm2/base_link:
+              arm2/base:
+                {}
+              arm2/shoulder_link:
+                arm2/upper_arm_link:
+                  arm2/forearm_link:
+                    arm2/wrist_1_link:
+                      arm2/wrist_2_link:
+                        arm2/wrist_3_link:
+                          arm2/ee_link:
+                            arm2/end_effector_link:
+                              arm2/camera_link_optical:
+                                arm2/camera:
+                                  {}
+                          arm2/tool0:
+                            {}
       Update Interval: 0
       Value: true
     - Class: rviz/Image
@@ -366,32 +412,32 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/XYOrbit
-      Distance: 2.9803102016448975
+      Distance: 4.070176601409912
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: 0.46457433700561523
-        Y: 0.07580345869064331
+        X: -0.2663877010345459
+        Y: 1.3755148649215698
         Z: -1.4900592759659048e-8
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.4797963500022888
+      Pitch: 0.05979640409350395
       Target Frame: world
       Value: XYOrbit (rviz)
-      Yaw: 4.416756629943848
+      Yaw: 5.306763172149658
     Saved: ~
 Window Geometry:
   Camera:
     collapsed: false
   Displays:
     collapsed: false
-  Height: 1052
+  Height: 1025
   Help:
     collapsed: false
   Hide Left Dock: false
@@ -402,9 +448,9 @@ Window Geometry:
     collapsed: false
   MotionPlanning - Trajectory Slider:
     collapsed: false
-  QMainWindow State: 000000ff00000000fd0000000100000000000002a2000003c6fc020000000afb000000100044006900730070006c006100790073010000003b00000149000000c700fffffffb0000000800480065006c00700000000342000000bb0000006e00fffffffb0000000a0056006900650077007300000003b0000000b0000000a000fffffffb0000000c00430061006d00650072006100000002ff000001610000001600fffffffb0000001e004d006f00740069006f006e00200050006c0061006e006e0069006e00670100000374000001890000000000000000fb00000044004d006f00740069006f006e0050006c0061006e006e0069006e00670020002d0020005400720061006a006500630074006f0072007900200053006c00690064006500720000000000ffffffff0000003f00fffffffb0000001c004d006f00740069006f006e0050006c0061006e006e0069006e006700000001080000018e0000018300fffffffb0000000c00430061006d006500720061000000029c000000400000000000000000fb0000000a0049006d006100670065010000018a0000014e0000001600fffffffb0000000a0049006d00610067006501000002de000001230000001600ffffff000004d8000003c600000001000000020000000100000002fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  QMainWindow State: 000000ff00000000fd0000000100000000000002a2000003abfc020000000afb000000100044006900730070006c006100790073010000003b0000013f000000c700fffffffb0000000800480065006c00700000000342000000bb0000006e00fffffffb0000000a0056006900650077007300000003b0000000b0000000a000fffffffb0000000c00430061006d00650072006100000002ff000001610000001600fffffffb0000001e004d006f00740069006f006e00200050006c0061006e006e0069006e00670100000374000001890000000000000000fb00000044004d006f00740069006f006e0050006c0061006e006e0069006e00670020002d0020005400720061006a006500630074006f0072007900200053006c00690064006500720000000000ffffffff0000003f00fffffffb0000001c004d006f00740069006f006e0050006c0061006e006e0069006e006700000001080000018e0000018300fffffffb0000000c00430061006d006500720061000000029c000000400000000000000000fb0000000a0049006d0061006700650100000180000001450000001600fffffffb0000000a0049006d00610067006501000002cb0000011b0000001600ffffff00000495000003ab00000001000000020000000100000002fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
   Views:
     collapsed: false
-  Width: 1920
-  X: 1920
-  Y: 0
+  Width: 1853
+  X: 67
+  Y: 27
