@@ -14,8 +14,6 @@
   <arg name="ref_frame"       default=""/>  <!-- leave empty and the pose will be published wrt param parent_name -->
 
   <group if="$(arg enable_usb_cam)">
-    
-
 
     <node pkg="usb_cam" type="usb_cam_node" name="usb_camera">
       <remap from="/usb_camera/camera_info"  to="/camera_info"/>
@@ -28,19 +26,10 @@
     
   </group>
 
-  <!-- Todo: When camera is upside down -->
-  <!-- <node pkg="tf" type="static_transform_publisher" name="eef_to_camera_tf" args="0 0 0 -1.57 0 1.57 camera_link_optical camera 15" />   -->
-  
-  <!-- Todo: When camera is upright -->
-  <node pkg="tf" type="static_transform_publisher" name="eef_to_camera_tf" args="0 0 0 -1.57 0 -1.57 camera_link_optical camera 15" />  
-
-
 
   <!--              ************************************************************************************              -->
   <!--              ******************************** Aruco Detector node *******************************              -->
   <!--              ************************************************************************************              -->
-
-
 
   <!-- Run the aruco_detect node -->
   <!-- namespace for camera input -->
@@ -62,8 +51,11 @@
     <param name="do_pose_estimation" value="$(arg do_pose_estimation)"/>
     <param name="ignore_fiducials" value="$(arg ignore_fiducials)"/>
     <param name="fiducial_len_override" value="$(arg fiducial_len_override)"/>
-    <remap from="/camera/compressed" to="$(arg ns)/$(arg image)/$(arg transport)"/>
+    <remap from="/camera/compressed" to="$(arg ns)/$(arg image)/$(arg transport)"/>  <!-- TODO: Clean up-->
     <remap from="/camera_info" to="$(arg ns)/camera_info"/>
+    <remap from="/fiducial_images" to="fiducial_images"/>
+    <remap from="/fiducial_transforms" to="fiducial_transforms"/>
+    <remap from="/fiducial_vertices" to="fiducial_vertices"/>
   </node>
 
 </launch>

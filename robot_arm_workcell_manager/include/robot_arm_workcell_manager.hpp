@@ -41,7 +41,7 @@
 class RobotArmWorkcellManager{
 
     public:
-        RobotArmWorkcellManager(const std::string& _dispenser_name);
+        RobotArmWorkcellManager();
 
         ~RobotArmWorkcellManager();
 
@@ -66,7 +66,7 @@ class RobotArmWorkcellManager{
         void publishDispenserResult(std::string request_id, bool success);
 
     private:
-        std::string dispenser_name_;   //TODO load with ros param        
+        std::string dispenser_name_;
 
         // Thread Stuffs
         std::thread dispenser_task_execution_thread_;
@@ -89,6 +89,7 @@ class RobotArmWorkcellManager{
         // ros param
         double dispenser_pub_rate_;
         int motion_pause_time_;
+        std::string transporter_placement_;
 
         // local lib stuffs
         RobotArmController arm_controller_;
