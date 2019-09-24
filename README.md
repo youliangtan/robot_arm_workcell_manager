@@ -180,7 +180,6 @@ With pure tryout using moveit on rviz, remember:
 - Remember `CURRENT STATE` should always be :`<current_state>`, `GROUP` should be: `MANIPULATOR`
 - Joint states can be altered in `cssdbot_urxx_moveit_config/config/urxx.srdf`
 
----
 
 ## Notes
 - Custom designed "fork-lift" end effector, trays and tray placements are used in this application.
@@ -193,6 +192,7 @@ With pure tryout using moveit on rviz, remember:
 - Use Ros_bridge/SOSS to link ros1 msg to ros2, eventually communicates with a ``cssd_workcell_manager`
 - Tune all relevant param for RAWM in `robot_arm_workcell_manager.launch`, including `robot_id` and `transporter_placement`
 - To check out `tf_tree` and `rqt_graph`, go to `documentations` folder
+- master branch for `ur_modern_driver` currently doesnt support UR-E series
 
 ## TODO
 - Further Code clean up!!
