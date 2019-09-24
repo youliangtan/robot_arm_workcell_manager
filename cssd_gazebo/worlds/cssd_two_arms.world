@@ -148,6 +148,11 @@
     </include>
 
     <include>
+      <uri>model://CssdTray4</uri>
+      <name>CssdTray4</name>
+    </include>
+
+    <include>
       <uri>model://MiRCartWithTrayPlacement</uri>
       <name>MiRCartWithTrayPlacement</name>
     </include>
@@ -169,37 +174,43 @@
       </model>
 
       <model name='CssdShelf'>
-        <pose frame=''>0.998619 0.1 0.01 1.57 0 -1.57</pose>
+        <pose frame=''>1.1 0.1 0.01 1.57 0 -1.57</pose>
         <scale>1 1 1</scale>
       </model>
 
+      <!-- Distance of 2.8 betwwen shelf 1 and 2 -->
       <model name='CssdShelf_1'>
-        <pose frame=''>1 2.7 0.01 1.57 0 -1.57</pose>
+        <pose frame=''>1.1 2.9 0.01 1.57 0 -1.57</pose>
         <scale>1 1 1</scale>
       </model>
 
       <model name='CssdTray0'>
-        <pose frame=''>0.87 -0.155 0.85 -0.002949 -0.017358 0.010598</pose>
+        <pose frame=''>0.97 0.36 0.85 0.003528 -0.016359 0.002928</pose>
         <scale>1 1 1</scale>
       </model>
-
+      
       <model name='CssdTray1'>
-        <pose frame=''>0.869227 0.360226 0.85 0.003528 -0.016359 0.002928</pose>
+        <pose frame=''>0.97 -0.155 0.85 -0.002949 -0.017358 0.010598</pose>
         <scale>1 1 1</scale>
       </model>
 
       <model name='CssdTray2'>
-        <pose frame=''>0.869227 0.360226 1.15 0.003528 -0.016359 0.002928</pose>
+        <pose frame=''>0.97 0.36 1.15 0.003528 -0.016359 0.002928</pose>
         <scale>1 1 1</scale>
       </model>
 
       <model name='CssdTray3'>
-        <pose frame=''>0.869227 0.360226 1.45 0.003528 -0.016359 0.002928</pose>
+        <pose frame=''>0.97 0.36 1.45 0.003528 -0.016359 0.002928</pose>
         <scale>1 1 1</scale>
       </model>
 
       <model name='CssdTray0_1'>
-        <pose frame=''>0.869227 2.960226 1.15 0.003528 -0.016359 0.002928</pose>
+        <pose frame=''>0.97 2.64 1.15 0.003528 -0.016359 0.002928</pose>
+        <scale>1 1 1</scale>
+      </model>
+
+      <model name='CssdTray4'>
+        <pose frame=''>0.97 3.16 0.85 0.003528 -0.016359 0.002928</pose>
         <scale>1 1 1</scale>
       </model>
 

@@ -9,47 +9,16 @@
       <name>base</name>
     </include>
 
-    <link name='aruco_tag'>
+    <include>
+      <name>aruco_tag</name>
+      <uri>model://aruco_visual_marker_0</uri>
       <pose> -0.154 0.0 0.0824 0 -1.57 0.0</pose>
-
-      <inertial>
-        <mass>0.01</mass>
-        <inertia>
-          <ixx>0.001</ixx>
-          <iyy>0.001</iyy>
-          <izz>0.001</izz>
-        </inertia>
-      </inertial>
-
-      <visual name='marker'>
-        <geometry>
-          <box>
-            <size>0.04 0.04 1e-05</size>
-          </box>
-        </geometry>
-        <material>
-          <script>
-            <uri>model://aruco_visual_marker_0/materials/scripts</uri>
-            <uri>model://aruco_visual_marker_0/materials/textures</uri>
-            <name>ArucoVisualMarker0/Marker</name>
-          </script>
-          <ambient>1 1 1 1</ambient>
-          <diffuse>1 1 1 1</diffuse>
-          <specular>0 0 0 1</specular>
-          <emissive>1 1 1 0</emissive>
-          <shader type='vertex'>
-            <normal_map>__default__</normal_map>
-          </shader>
-        </material>
-        <cast_shadows>1</cast_shadows>
-        <transparency>0</transparency>
-      </visual>
-    </link>
+      <static>true</static>
+    </include>
 
     <joint name="aruco_tag_joint" type="revolute">
       <parent>base::tray</parent>
-      <child>aruco_tag</child>
-
+      <child>aruco_tag::marker</child>
       <!-- Common hack to make this a "fixed" joint -->
       <axis>
         <limit>

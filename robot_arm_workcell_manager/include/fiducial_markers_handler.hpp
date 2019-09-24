@@ -36,6 +36,7 @@ class FiducialMarkersHandler{
         // Set target marker and generate extended tf; @return: Marker's Type
         std::string setTargetMarker(std::string marker_id);
 
+        // Remove previously set target marker
         bool removeTargetMarker();
 
         // TODO
