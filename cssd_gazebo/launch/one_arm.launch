@@ -1,0 +1,35 @@
+<launch>
+  
+    <arg name="arm_type" default="ur10"/>
+    <arg name="gui" default="true" doc="Starts gazebo gui" />
+    
+    <arg name="gazebo_sim"             default="true"/>
+    <arg name="fake_joints_execution"  default="false"/>
+
+    <!--     ****************************  Gazebo Env ****************************     -->
+    
+    <include file="$(find gazebo_ros)/launch/empty_world.launch">
+     <arg name="world_name" default="$(find cssd_gazebo)/worlds/cssd.world"/>
+      <env name="GAZEBO_MODEL_PATH" value="$(find cssd_gazebo)/models" />
+      <arg name="paused" value="true"/>
+      <arg name="gui" value="$(arg gui)"/>
+    </include>
+  
+    <!--     **************************** UR10 Spawner ****************************     -->
+    
+    <param name="tf_prefix" value="" />
+    <include file="$(find cssd_gazebo)/launch/$(arg arm_type)_arm.launch" >
+        <arg name="init_pose" value="-z 0.8" />
+        <arg name="robot_name"  value="robot"/>
+    </include>
+
+    <!--     **************************** MoveitRViz Spawner ****************************     -->
+
+    <!-- Warm up Gazebo so that the controller can load
+    d: How long before attempting to warm up (this should be a bit longer than you expect the URDF to finish loading)
+    i: How many warm-up steps to perform (the CSSD simulation seems to require ~3, so let's do 5 to be safe)
+    w: How long to wait between warm-up steps (this gives time for the simulation to talk to the control_manager)
+    -->
+    <node name="gazebo_warm_start" pkg="cssd_gazebo" type="warm_start" args="-d 6.0 -i 5 -w 1.0" output="screen"/>
+
+</launch>

@@ -1,0 +1,20 @@
+<launch>
+  <!-- Default should run with hardware-->
+  <arg name="ns" default="" />
+  <arg name="sim" default="false" />
+  <arg name="limited" default="false"/>
+  <arg name="debug" default="false" />
+  <arg name="fake_execution" default="false" />
+
+ <!-- Remap follow_joint_trajectory -->
+ <!-- "dirty" way to deal with namespaces -->
+  <remap if="$(arg sim)" from="/follow_joint_trajectory" to="/$(arg ns)/arm_controller/follow_joint_trajectory"/>
+
+  <!-- Launch moveit -->
+  <include file="$(find cssdbot_ur10e_moveit_config)/launch/move_group.launch">
+    <arg name="limited" value="$(arg limited)"/>
+    <arg name="debug" value="$(arg debug)" />
+    <arg name="fake_execution" value="$(arg fake_execution)" />
+  </include>
+
+</launch>
