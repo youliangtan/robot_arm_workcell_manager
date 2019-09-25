@@ -4,7 +4,7 @@ Robot arm manipulation manager package is one of the module for the Central ster
 
 The task sequence starts with the action of picking up a custom design instrument tray from a medical rack, then eventually place the target tray on the transporter cart (follow-up delivery task by a AGV). Fiducial visual markers (aruco) will function as locating markers for pose estimation and id matching. Aruco markers are attached to the trays and AGV cart.
 
-Now with namespace support!, enable two arms to perform choreographed dance!! 🤖🤖
+Now with namespace support!, enable two (or more!) arms to perform a choreographed dance!! 🤖🤖
 
 **Active in Development!!!**
 
@@ -192,6 +192,7 @@ With pure tryout using moveit on rviz, remember:
 - Use Ros_bridge/SOSS to link ros1 msg to ros2, eventually communicates with a ``cssd_workcell_manager`
 - Tune all relevant param for RAWM in `robot_arm_workcell_manager.launch`, including `robot_id` and `transporter_placement`
 - To check out `tf_tree` and `rqt_graph`, go to `documentations` folder
+- To add more arms: expand `cssd_gazebo two_arms.launch`, `two_arms_rviz.launch`, `two_arms_rawm.launch`
 - master branch for `ur_modern_driver` currently doesnt support UR-E series
 
 ## TODO
