@@ -66,4 +66,5 @@
           args="$(eval arg('eef2cam_tf') 
                 + ' ' + arg('arm_ns') + '/camera_link_optical ' + arg('arm_ns') + '/camera 10' )" />   
                 <!-- 0 0 0 -1.57 0 -1.57 $(arg arm_ns)/camera_link_optical $(arg arm_ns)/camera 10"     -->
+  </group>
 </launch>

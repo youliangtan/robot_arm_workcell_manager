@@ -4,13 +4,14 @@ Robot arm manipulation manager package is one of the module for the Central ster
 
 The task sequence starts with the action of picking up a custom design instrument tray from a medical rack, then eventually place the target tray on the transporter cart (follow-up delivery task by a AGV). Fiducial visual markers (aruco) will function as locating markers for pose estimation and id matching. Aruco markers are attached to the trays and AGV cart.
 
-Now with namespace support!, enable two arms to perform choreographed dance!! 🤖🤖
+Now with namespace support!, enable two (or more!) arms to perform a choreographed dance!! 🤖🤖
 
 **Active in Development!!!**
 
 ![alt text](/documentations/two_arms_dance.gif?)
 
 *Full Video Link* (with one arm),  [here](https://drive.google.com/open?id=1dGKh3FVMlUwX8GUMv3mgxQFBm0OnGa8B)
+
 *Full Video Link* (with two arms), [here](https://drive.google.com/open?id=1dT9zQ5bbWr0oMqf9hO2wWMH2uiiHR1AT)
 
 ---
@@ -59,12 +60,14 @@ roslaunch robot_arm_workcell_manager demo.launch sim:=true enable_fake_joints_ex
 roslaunch robot_arm_workcell_manager robot_arm_workcell_manager.launch
 ```
 
+_p/s: Wait each launch terminal to be fully launched before launching the next `.launch`._
+
 ### Run 2 Arms 
 
 In this case, there are 2 `RAWM` workcells running... ✌️
 ```
 # Terminal A: Run Gazebo Env
-roslaunch cssd_gazebo main.launch
+roslaunch cssd_gazebo two_arms.launch
 
 # Terminal B: Run MoveIt Env With Rviz
 roslaunch robot_arm_workcell_manager two_arms_rviz.launch
@@ -72,6 +75,8 @@ roslaunch robot_arm_workcell_manager two_arms_rviz.launch
 # Terminal C: Run RAWM
 roslaunch robot_arm_workcell_manager two_arms_rawm.launch
 ```
+
+_p/s: Wait each launch terminal to be fully launched before launching the next `.launch`._
 
 ---
 
@@ -192,6 +197,7 @@ With pure tryout using moveit on rviz, remember:
 - Use Ros_bridge/SOSS to link ros1 msg to ros2, eventually communicates with a ``cssd_workcell_manager`
 - Tune all relevant param for RAWM in `robot_arm_workcell_manager.launch`, including `robot_id` and `transporter_placement`
 - To check out `tf_tree` and `rqt_graph`, go to `documentations` folder
+- To add more arms: expand `cssd_gazebo two_arms.launch`, `two_arms_rviz.launch`, `two_arms_rawm.launch`
 - master branch for `ur_modern_driver` currently doesnt support UR-E series
 
 ## TODO
