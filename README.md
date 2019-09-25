@@ -60,12 +60,14 @@ roslaunch robot_arm_workcell_manager demo.launch sim:=true enable_fake_joints_ex
 roslaunch robot_arm_workcell_manager robot_arm_workcell_manager.launch
 ```
 
+_p/s: Wait each launch terminal to be fully launched before launching the next `.launch`._
+
 ### Run 2 Arms 
 
 In this case, there are 2 `RAWM` workcells running... ✌️
 ```
 # Terminal A: Run Gazebo Env
-roslaunch cssd_gazebo main.launch
+roslaunch cssd_gazebo two_arms.launch
 
 # Terminal B: Run MoveIt Env With Rviz
 roslaunch robot_arm_workcell_manager two_arms_rviz.launch
@@ -73,6 +75,8 @@ roslaunch robot_arm_workcell_manager two_arms_rviz.launch
 # Terminal C: Run RAWM
 roslaunch robot_arm_workcell_manager two_arms_rawm.launch
 ```
+
+_p/s: Wait each launch terminal to be fully launched before launching the next `.launch`._
 
 ---
 
