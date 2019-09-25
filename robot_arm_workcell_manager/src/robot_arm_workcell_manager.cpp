@@ -114,7 +114,7 @@ void RobotArmWorkcellManager::dispenserRequestCallback(const rmf_msgs::Dispenser
     std::unique_lock<std::mutex> queue_lock(dispenser_task_queue_mutex_); 
     for (rmf_msgs::DispenserRequest& task_in_queue : dispenser_task_queue_){
         if (_msg->request_id == task_in_queue.request_id){
-            ROS_ERROR("    found duplicate task in queue, updating task.";
+            ROS_ERROR("  [Robot: %s] found duplicate task in queue, updating task.", dispenser_name_.c_str());
             dispenser_task_queue_.erase(dispenser_task_queue_.begin());
             dispenser_task_queue_.push_back(*_msg);
             return;
