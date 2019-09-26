@@ -175,9 +175,9 @@ roslaunch robot_arm_workcell_manager robot_arm_workcell_manager.launch
 
 ```
 # For ur10,
-roslaunch cssdbot_ur10_moveit_config hardware_minimal.launch
+roslaunch cssdbot_ur10_moveit_config realistic_minimal.launch
 # or For ur10e,
-roslaunch cssdbot_ur10e_moveit_config hardware_minimal.launch
+roslaunch cssdbot_ur10e_moveit_config realistic_minimal.launch
 ```
 
 With pure tryout using moveit on rviz, remember:
