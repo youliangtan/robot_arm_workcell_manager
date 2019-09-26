@@ -146,11 +146,11 @@ roslaunch robot_arm_workcell_manager robot_arm_workcell_manager.launch
 
 ---
 
-## Testing Arms on HARDWARE! (ToBeTested)
+## Testing Arms on HARDWARE! (UR10e)
 
 ### Prerequisites
 PLEASE KEEP YOUR HANDS ON THE BIG RED BUTTON!
-Also, Download [ur_modern_driver with e series](https://github.com/AdmiralWall/ur_modern_driver/tree/kinetic_ur_5_4). Then install it.
+Also, Download [ur_modern_driver with e series](https://github.com/AdmiralWall/ur_modern_driver/tree/kinetic_ur_5_4). Then install it. (remember to checkout to `kinetic_ur_5_4` branch )
 
 ### 1. Terminal A (robot bringup):
 ```
@@ -164,10 +164,12 @@ roslaunch ur_modern_driver ur10e_bringup.launch robot_ip:=198.168.88.XX
 
 *a) With Full RAWM package*
 ```
-roslaunch robot_arm_workcell_manager demo.launch sim:=false enable_fake_joints_execution:=false
+roslaunch robot_arm_workcell_manager demo.launch sim:=false enable_fake_joints_execution:=false arm_type:=ur10e
 # then on terminal C, run RAWM
-roslaunch robot_arm_workcell_manager robot_arm_workcell_manager.launch 
+roslaunch robot_arm_workcell_manager robot_arm_workcell_manager.launch dispenser_name:=ur10e_001
 ```
+
+Then on Terminal D: Pub dispenser request!!!! Good luck 
 
 *b) Or, just test it with moveit on Rviz (terminal B)*
 
