@@ -214,3 +214,5 @@ With pure tryout using moveit on rviz, remember:
 - Eventually, *FULL* Hardware Test!!!!!!
 - test usb cam on new hardware, and config all usb video path
 - Potential prob: checkout `prob1.png`, encounter yaw prob on ur10e (instead of ur10). Quick fix on cart's aruco marker's yaw angle
+- Dynamic payload setting on Ur10e
+- External camera support, create another new `cssd_hardware_launch` pkg
