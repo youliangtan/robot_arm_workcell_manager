@@ -157,6 +157,12 @@
       <name>MiRCartWithTrayPlacement</name>
     </include>
 
+    <include>
+      <uri>model://cssd_room</uri>
+      <name>CssdRoom</name>
+      <pose frame=''>-5 2.7 0 0 0 3.14</pose>
+    </include>
+
     <state world_name='default'>
       <sim_time>555 529000000</sim_time>
       <real_time>16 616138684</real_time>
@@ -169,53 +175,53 @@
       </model>
 
       <model name='UR10Base_1'>
-        <pose frame=''>-0.4 2.4 -0.48 0 0 0</pose>
+        <pose frame=''>-0.4 1.9 -0.48 0 0 0</pose>
         <scale>1 1 1</scale>
       </model>
 
-      <model name='CssdShelf'>
-        <pose frame=''>1.1 0.1 0.01 1.57 0 -1.57</pose>
+      <model name='CssdShelf'>  
+        <pose frame=''>1.1 0.2 0.01 1.57 0 -1.57</pose>
         <scale>1 1 1</scale>
       </model>
 
-      <!-- Distance of 2.8 betwwen shelf 1 and 2 -->
+      <!-- Distance of 2.4 betwwen shelf 1 and 2 -->
       <model name='CssdShelf_1'>
-        <pose frame=''>1.1 2.9 0.01 1.57 0 -1.57</pose>
+        <pose frame=''>1.1 2.1 0.01 1.57 0 -1.57</pose>
         <scale>1 1 1</scale>
       </model>
 
       <model name='CssdTray0'>
-        <pose frame=''>0.97 0.36 0.85 0.003528 -0.016359 0.002928</pose>
+        <pose frame=''>0.97 0.46 0.85 0.003528 -0.016359 0.002928</pose>
         <scale>1 1 1</scale>
       </model>
       
       <model name='CssdTray1'>
-        <pose frame=''>0.97 -0.155 0.85 -0.002949 -0.017358 0.010598</pose>
+        <pose frame=''>0.97 -0.055 0.85 -0.002949 -0.017358 0.010598</pose>
         <scale>1 1 1</scale>
       </model>
 
       <model name='CssdTray2'>
-        <pose frame=''>0.97 0.36 1.15 0.003528 -0.016359 0.002928</pose>
+        <pose frame=''>0.97 0.46 1.15 0.003528 -0.016359 0.002928</pose>
         <scale>1 1 1</scale>
       </model>
 
       <model name='CssdTray3'>
-        <pose frame=''>0.97 0.36 1.45 0.003528 -0.016359 0.002928</pose>
+        <pose frame=''>0.97 0.46 1.45 0.003528 -0.016359 0.002928</pose>
         <scale>1 1 1</scale>
       </model>
 
       <model name='CssdTray0_1'>
-        <pose frame=''>0.97 2.64 1.15 0.003528 -0.016359 0.002928</pose>
+        <pose frame=''>0.97 1.84 1.15 0.003528 -0.016359 0.002928</pose>
         <scale>1 1 1</scale>
       </model>
 
       <model name='CssdTray4'>
-        <pose frame=''>0.97 3.16 0.85 0.003528 -0.016359 0.002928</pose>
+        <pose frame=''>0.97 2.36 0.85 0.003528 -0.016359 0.002928</pose>
         <scale>1 1 1</scale>
       </model>
 
       <model name='MiRCartWithTrayPlacement'>
-        <pose frame=''>-0.089707 1.3382 0 0 0 -1.57</pose>
+        <pose frame=''>-0.9 1.2 0 0 0 -1.57</pose>
         <scale>1 1 1</scale>
         <link name='body'>
           <pose frame=''>-0.089707 1.3382 0 0 0 -1.57</pose>
@@ -247,5 +253,6 @@
         <projection_type>perspective</projection_type>
       </camera>
     </gui>
+
   </world>
 </sdf>

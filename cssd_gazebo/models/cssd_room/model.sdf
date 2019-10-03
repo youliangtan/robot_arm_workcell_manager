@@ -1,0 +1,337 @@
+<?xml version='1.0'?>
+<sdf version='1.6'>
+  <model name='cssd_room'>
+    <pose frame=''>-7.77555 -1.45787 0 0 -0 0</pose>
+    <link name='Wall_0'>
+      <pose frame=''>-2.28555 0.005002 0 0 -0 1.56929</pose>
+      <visual name='Wall_0_Visual_0'>
+        <pose frame=''>-2.98955 0 1.25 0 -0 0</pose>
+        <geometry>
+          <box>
+            <size>0.800907 0.15 2.5</size>
+          </box>
+        </geometry>
+        <material>
+          <script>
+            <uri>model://cssd_room/materials/scripts/SimpleWall.material</uri>
+            <name>SimpleWall</name>
+          </script>
+          <ambient>1 1 1 1</ambient>
+        </material>
+        <meta>
+          <layer>0</layer>
+        </meta>
+      </visual>
+      <collision name='Wall_0_Collision_0'>
+        <geometry>
+          <box>
+            <size>0.800907 0.15 2.5</size>
+          </box>
+        </geometry>
+        <pose frame=''>-2.98955 0 1.25 0 -0 0</pose>
+      </collision>
+      <visual name='Wall_0_Visual_1'>
+        <pose frame=''>-0.333364 0 1.25 0 -0 0</pose>
+        <geometry>
+          <box>
+            <size>2.19146 0.15 2.5</size>
+          </box>
+        </geometry>
+        <material>
+          <script>
+            <uri>model://cssd_room/materials/scripts/SimpleWall.material</uri>
+            <name>SimpleWall</name>
+            </script>
+          <ambient>1 1 1 1</ambient>
+        </material>
+        <meta>
+          <layer>0</layer>
+        </meta>
+      </visual>
+      <collision name='Wall_0_Collision_1'>
+        <geometry>
+          <box>
+            <size>2.19146 0.15 2.5</size>
+          </box>
+        </geometry>
+        <pose frame=''>-0.333364 0 1.25 0 -0 0</pose>
+      </collision>
+      <visual name='Wall_0_Visual_2'>
+        <pose frame=''>2.94118 0 1.25 0 -0 0</pose>
+        <geometry>
+          <box>
+            <size>0.897634 0.15 2.5</size>
+          </box>
+        </geometry>
+        <material>
+          <script>
+            <uri>model://cssd_room/materials/scripts/SimpleWall.material</uri>
+            <name>SimpleWall</name>
+          </script>
+          <ambient>1 1 1 1</ambient>
+        </material>
+        <meta>
+          <layer>0</layer>
+        </meta>
+      </visual>
+      <collision name='Wall_0_Collision_2'>
+        <geometry>
+          <box>
+            <size>0.897634 0.15 2.5</size>
+          </box>
+        </geometry>
+        <pose frame=''>2.94118 0 1.25 0 -0 0</pose>
+      </collision>
+      <visual name='Wall_0_Visual_3'>
+        <pose frame=''>-2.00909 0 2.25 0 -0 0</pose>
+        <geometry>
+          <box>
+            <size>1.16 0.15 0.5</size>
+          </box>
+        </geometry>
+        <material>
+          <script>
+            <uri>model://cssd_room/materials/scripts/SimpleWall.material</uri>
+            <name>SimpleWall</name>
+          </script>
+          <ambient>1 1 1 1</ambient>
+        </material>
+        <meta>
+          <layer>0</layer>
+        </meta>
+      </visual>
+      <collision name='Wall_0_Collision_3'>
+        <geometry>
+          <box>
+            <size>1.16 0.15 0.5</size>
+          </box>
+        </geometry>
+        <pose frame=''>-2.00909 0 2.25 0 -0 0</pose>
+      </collision>
+      <visual name='Wall_0_Visual_4'>
+        <pose frame=''>1.62737 0 2.25 0 -0 0</pose>
+        <geometry>
+          <box>
+            <size>1.73 0.15 0.5</size>
+          </box>
+        </geometry>
+        <material>
+          <script>
+            <uri>model://cssd_room/materials/scripts/SimpleWall.material</uri>
+            <name>SimpleWall</name>
+          </script>
+          <ambient>1 1 1 1</ambient>
+        </material>
+        <meta>
+          <layer>0</layer>
+        </meta>
+      </visual>
+      <collision name='Wall_0_Collision_4'>
+        <geometry>
+          <box>
+            <size>1.73 0.15 0.5</size>
+          </box>
+        </geometry>
+        <pose frame=''>1.62737 0 2.25 0 -0 0</pose>
+      </collision>
+    </link>
+    <link name='Wall_1'>
+      <collision name='Wall_1_Collision'>
+        <geometry>
+          <box>
+            <size>5.55 0.15 0.8</size>
+          </box>
+        </geometry>
+        <pose frame=''>0 0 0.4 0 -0 0</pose>
+      </collision>
+      <visual name='Wall_1_Visual'>
+        <pose frame=''>0 0 0.4 0 -0 0</pose>
+        <geometry>
+          <box>
+            <size>5.55 0.15 0.8</size>
+          </box>
+        </geometry>
+        <material>
+          <script>
+            <uri>model://cssd_room/materials/scripts/SimpleWall.material</uri>
+            <name>SimpleWall</name>
+          </script>
+          <ambient>1 1 1 1</ambient>
+        </material>
+        <meta>
+          <layer>0</layer>
+        </meta>
+      </visual>
+      <pose frame=''>-4.99055 3.32 0 0 -0 3.14159</pose>
+    </link>
+    <link name='Wall_2'>
+      <collision name='Wall_2_Collision'>
+        <geometry>
+          <box>
+            <size>6.78001 0.15 2.5</size>
+          </box>
+        </geometry>
+        <pose frame=''>0 0 1.25 0 -0 0</pose>
+      </collision>
+      <visual name='Wall_2_Visual'>
+        <pose frame=''>0 0 1.25 0 -0 0</pose>
+        <geometry>
+          <box>
+            <size>6.78001 0.15 2.5</size>
+          </box>
+        </geometry>
+        <material>
+          <script>
+            <uri>model://cssd_room/materials/scripts/SimpleWall.material</uri>
+            <name>SimpleWall</name>
+          </script>
+          <ambient>1 1 1 1</ambient>
+        </material>
+        <meta>
+          <layer>0</layer>
+        </meta>
+      </visual>
+      <pose frame=''>-7.68555 -0.004998 0 0 -0 -1.57231</pose>
+    </link>
+    <link name='Wall_3'>
+      <collision name='Wall_3_Collision'>
+        <geometry>
+          <box>
+            <size>5.56 0.15 2.5</size>
+          </box>
+        </geometry>
+        <pose frame=''>0 0 1.25 0 -0 0</pose>
+      </collision>
+      <visual name='Wall_3_Visual'>
+        <pose frame=''>0 0 1.25 0 -0 0</pose>
+        <geometry>
+          <box>
+            <size>5.56 0.15 2.5</size>
+          </box>
+        </geometry>
+        <material>
+          <script>
+            <uri>model://cssd_room/materials/scripts/SimpleWall.material</uri>
+            <name>SimpleWall</name>
+          </script>
+          <ambient>1 1 1 1</ambient>
+        </material>
+        <meta>
+          <layer>0</layer>
+        </meta>
+      </visual>
+      <pose frame=''>-4.99555 -3.31 0 0 -0 0</pose>
+    </link>
+    <link name='Wall_4'>
+      <collision name='Wall_4_Collision'>
+        <geometry>
+          <box>
+            <size>4.25 0.15 2.5</size>
+          </box>
+        </geometry>
+        <pose frame=''>0 0 1.25 0 -0 0</pose>
+      </collision>
+      <visual name='Wall_4_Visual'>
+        <pose frame=''>0 0 1.25 0 -0 0</pose>
+        <geometry>
+          <box>
+            <size>4.25 0.15 2.5</size>
+          </box>
+        </geometry>
+        <material>
+          <script>
+            <uri>model://cssd_room/materials/scripts/SimpleWall.material</uri>
+            <name>SimpleWall</name>
+          </script>
+          <ambient>1 1 1 1</ambient>
+        </material>
+        <meta>
+          <layer>0</layer>
+        </meta>
+      </visual>
+      <pose frame=''>-4.31055 -0.179998 0 0 -0 3.14159</pose>
+    </link>
+    <link name='Wall_5'>
+      <pose frame=''>-6.36055 -1.73 0 0 -0 -1.5708</pose>
+      <visual name='Wall_5_Visual_0'>
+        <pose frame=''>-0.95 0 1.25 0 -0 0</pose>
+        <geometry>
+          <box>
+            <size>1.35 0.15 2.5</size>
+          </box>
+        </geometry>
+        <material>
+          <script>
+            <uri>model://cssd_room/materials/scripts/SimpleWall.material</uri>
+            <name>SimpleWall</name>
+          </script>
+          <ambient>1 1 1 1</ambient>
+        </material>
+        <meta>
+          <layer>0</layer>
+        </meta>
+      </visual>
+      <collision name='Wall_5_Collision_0'>
+        <geometry>
+          <box>
+            <size>1.35 0.15 2.5</size>
+          </box>
+        </geometry>
+        <pose frame=''>-0.95 0 1.25 0 -0 0</pose>
+      </collision>
+      <visual name='Wall_5_Visual_1'>
+        <pose frame=''>1.225 0 1.25 0 -0 0</pose>
+        <geometry>
+          <box>
+            <size>0.8 0.15 2.5</size>
+          </box>
+        </geometry>
+        <material>
+          <script>
+            <uri>model://cssd_room/materials/scripts/SimpleWall.material</uri>
+            <name>SimpleWall</name>
+          </script>
+          <ambient>1 1 1 1</ambient>
+        </material>
+        <meta>
+          <layer>0</layer>
+        </meta>
+      </visual>
+      <collision name='Wall_5_Collision_1'>
+        <geometry>
+          <box>
+            <size>0.8 0.15 2.5</size>
+          </box>
+        </geometry>
+        <pose frame=''>1.225 0 1.25 0 -0 0</pose>
+      </collision>
+      <visual name='Wall_5_Visual_2'>
+        <pose frame=''>0.275 0 2.25 0 -0 0</pose>
+        <geometry>
+          <box>
+            <size>1.1 0.15 0.5</size>
+          </box>
+        </geometry>
+        <material>
+          <script>
+            <uri>model://cssd_room/materials/scripts/SimpleWall.material</uri>
+            <name>SimpleWall</name>
+          </script>
+          <ambient>1 1 1 1</ambient>
+        </material>
+        <meta>
+          <layer>0</layer>
+        </meta>
+      </visual>
+      <collision name='Wall_5_Collision_2'>
+        <geometry>
+          <box>
+            <size>1.1 0.15 0.5</size>
+          </box>
+        </geometry>
+        <pose frame=''>0.275 0 2.25 0 -0 0</pose>
+      </collision>
+    </link>
+    <static>1</static>
+  </model>
+</sdf>
