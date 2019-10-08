@@ -109,6 +109,7 @@ bool RobotArmController::loadParameters(){
 
         std::string _environment_path ="";
         nh_.getParam("environment_path", _environment_path);
+        std::cout<<_environment_path<<std::endl;
         ENVIRONMENT_CONFIG_ = YAML::LoadFile(_environment_path);
     } 
     catch (std::exception& err){
@@ -129,6 +130,8 @@ bool RobotArmController::loadEnvironment(){
     for (int i=1; i<= number_of_object;i++)
     {
         std::string object = "object_" + std::to_string(i);
+        ROS_INFO(" setting up object %s ", object);  
+
         moveit_msgs::CollisionObject collision_object;
         collision_object.header.frame_id = move_group_->getPlanningFrame();
         collision_object.id = object;

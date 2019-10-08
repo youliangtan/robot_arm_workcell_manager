@@ -18,6 +18,7 @@
 
             <param name="group_name" type="string" value="manipulator" />
             <param name="marker_tf_path" value="$(arg markers_config_file)"/>
+	    <param name="environment_path" value="$(arg environment_config_file)"/>
             <param name="motion_target_yaml_path" type="string" value="$(arg motion_target_file)" />
             <param name="arm_mission_path" type='string' value="pending" />
             <param name="environment_path" type='string' value="$(arg environment_config_file)" />
