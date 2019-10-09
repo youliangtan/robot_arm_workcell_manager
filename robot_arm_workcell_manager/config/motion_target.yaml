@@ -2,7 +2,7 @@
 # Check YAML: http://www.yamllint.com/
 
 named_target:
-  rack_home_position:       {type: "joint_space_goal", values: [0,-2.45,2.5,-0.062,1.614,  0],        velFactor: 0.2}
+  rack_home_position:       {type: "joint_space_goal", values: [0,-2.45, 2.5,-0.062,1.614, 0],        velFactor: 0.2}
   rack_level_0:             {type: "joint_space_goal", values: [0, -2.207, 1.595, 0.554, 1.571,0],    velFactor: 0.2}
   rack_level_1:             {type: "joint_space_goal", values: [0, -2.107, 2.22, -0.13, 1.571,0],     velFactor: 0.2}
   rack_level_2:             {type: "joint_space_goal", values: [0, -1.7, 2.62, -0.93, 1.571,0],       velFactor: 0.2}

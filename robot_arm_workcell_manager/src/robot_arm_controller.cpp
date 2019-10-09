@@ -120,7 +120,7 @@ bool RobotArmController::moveToNamedTarget(const std::string& _target_name){
         vel_factor = NAMED_TARGET_CONFIG_["named_target"][_target_name]["velFactor"].as<double>();
     } 
     catch (std::exception& err){
-        ROS_ERROR("Exception in YAML LOADER while trying to find targer name: %s .\n Error: %s", _target_name.c_str(), err.what());
+        ROS_ERROR("Exception in YAML LOADER while trying to find target name: %s .\n Error: %s", _target_name.c_str(), err.what());
         return false;
     }
     
@@ -216,7 +216,7 @@ int main(int argc, char** argv){
 
     std::cout<<" *********************** Starting to execute arm motion ********************" << std::endl;
     // NAMED!!!
-    ur10_controller.moveToNamedTarget("home_position");
+    ur10_controller.moveToNamedTarget("rack_home_position");
     std::cout<<" ---- Done Named Joint motion 1 -------" << std::endl;
 
     ur10_controller.moveToNamedTarget("pre_place_pose");

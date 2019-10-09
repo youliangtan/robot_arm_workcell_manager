@@ -152,6 +152,12 @@
       <name>CssdTray4</name>
     </include>
 
+    <!-- NOT WORKING -->
+    <!-- <include>
+      <uri>model://MiR100</uri>
+      <name>MiR100</name>
+    </include> -->
+    
     <include>
       <uri>model://MiRCartWithTrayPlacement</uri>
       <name>MiRCartWithTrayPlacement</name>
