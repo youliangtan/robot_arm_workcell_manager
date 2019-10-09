@@ -439,12 +439,13 @@ class ArmManipulation(object):
 if __name__ == '__main__':
   rospy.init_node('robot_manipulator_control_testing_node', anonymous=True)
 
-  ur10 = ArmManipulation( arm_ns_ = "/arm1/" )
+  ur10 = ArmManipulation( arm_ns_ = "/arm2/" )
   print "==================== testing ============ "
 
   # joints_goal = [0,-2.55,2.6,-0.062,1.614,  0]
   # joints_goal = [0,-2.45,2.5,-0.062,1.614,  0]
-  joints_goal = [1.570,-0.7,2.379,-1.7,1.614, 0]
+  joints_goal = [0, -2.107, 2.22, -0.13, 1.871,0]
+  # joints_goal = [1.57, -2.1,2.15,-0.062,1.614, 0]
   print ur10.get_arm_joints()
   ur10.go_to_joint_state(joints_goal, 1)
 

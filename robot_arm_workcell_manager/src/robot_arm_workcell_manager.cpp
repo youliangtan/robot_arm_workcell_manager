@@ -37,14 +37,6 @@ bool RobotArmWorkcellManager::loadParameters(){
         nh_.param<std::string>("dispenser_name", dispenser_name_, "ur10_001");
     }
 
-    if (nh_.getParam("transporter_placement", transporter_placement_)){
-        ROS_INFO(" [PARAM] Got transporter_placement param: %s", transporter_placement_.c_str());
-    }
-    else{
-        ROS_ERROR(" [PARAM] Failed to get param 'transporter_placement', set to default 'left' ");
-        nh_.param<std::string>("transporter_placement", transporter_placement_, "left");
-    }
-
     if (nh_.getParam("dispenser_state_pub_rate", dispenser_pub_rate_)){
         ROS_INFO(" [PARAM] Got path param: %f", dispenser_pub_rate_);
     }
@@ -168,55 +160,34 @@ bool RobotArmWorkcellManager::executeRobotArmMission(){
     // Lookup for target marker at different Rack Level (0, 1, 2...)
     for (int rack_level=0; !markers_detector_.getTransformPose( "base_link", requested_item.item_type) ; rack_level++ ){
         ROS_WARN("Going to rack level: %s ", std::to_string(rack_level).c_str() );
-        if (! arm_controller_.moveToNamedTarget("rack_level_" + std::to_string(rack_level)) ) return false;
+        if (! arm_controller_.moveToNamedTarget( dispenser_name_ + "_rack_level_" + std::to_string(rack_level)) ) return false;
     }
 
     // picking, e.g: requested_item.item_type = "marker_X" 
     if (! executePickPlaceMotion(picking_frame_array , requested_item.item_type ) ) return false;
+    
     // home position facing rack
-    if (! arm_controller_.moveToNamedTarget("rack_home_position") ) return false;
+    if (! arm_controller_.moveToNamedTarget(dispenser_name_ + "_rack_home_position") ) return false;
 
-    // Placing Motion Sequence
-    //* Transporter is at the left of the arm
-    if( transporter_placement_.compare("left") == 0 ){
-        // turn to face trolley
-        if (! arm_controller_.moveToNamedTarget("transporter_left_home") ) return false;
-        // Lower the position
-        if (! arm_controller_.moveToNamedTarget("transporter_left_low") ) return false;
-        // TODO: Scanning feature here... Yaw
-        
-        // placing, e.g: requested_item.compartment_name = "marker_X"
-        if (! executePickPlaceMotion(placing_frame_array , requested_item.compartment_name) ) return false;
-        // back lower home 
-        if (! arm_controller_.moveToNamedTarget("transporter_left_low") ) return false;
-        // turn to face trolley
-        if (! arm_controller_.moveToNamedTarget("transporter_left_home") ) return false;
-    }
-
-    //* Transporter is at the right of the arm
-    else if( transporter_placement_.compare("right") == 0 ){
-        // turn to face trolley
-        if (! arm_controller_.moveToNamedTarget("transporter_right_home") ) return false;
-        // Lower the position
-        if (! arm_controller_.moveToNamedTarget("transporter_right_low") ) return false;
-        // TODO: Scanning feature here... Yaw
-
-        // placing, e.g: requested_item.compartment_name = "marker_X"
-        if (! executePickPlaceMotion(placing_frame_array , requested_item.compartment_name) ) return false;
-        // back lower home 
-        if (! arm_controller_.moveToNamedTarget("transporter_right_low") ) return false;
-        // turn to face trolley
-        if (! arm_controller_.moveToNamedTarget("transporter_right_home") ) return false;
-    }
-
-    else {
-        ROS_ERROR("Param 'transporter_placement_': %s is undefined: End the placing action abruptly!! >,< \n", 
-        transporter_placement_.c_str());
-        return false;
-    }
+    // *Placing Motion Sequence
+    // turn to face trolley
+    if (! arm_controller_.moveToNamedTarget(dispenser_name_ + "_transporter_home") ) return false;
+    
+    // Lower the position
+    if (! arm_controller_.moveToNamedTarget(dispenser_name_ + "_transporter_low") ) return false;
+    // TODO: Scanning feature here... Yaw
+    
+    // placing, e.g: requested_item.compartment_name = "marker_X"
+    if (! executePickPlaceMotion(placing_frame_array , requested_item.compartment_name) ) return false;
+    
+    // back lower home 
+    if (! arm_controller_.moveToNamedTarget(dispenser_name_ + "_transporter_low") ) return false;
+    
+    // turn to face trolley
+    if (! arm_controller_.moveToNamedTarget(dispenser_name_ + "_transporter_home") ) return false;
 
     // Back home position facing rack
-    if (! arm_controller_.moveToNamedTarget("rack_home_position") ) return false;
+    if (! arm_controller_.moveToNamedTarget(dispenser_name_ + "_rack_home_position") ) return false;
 
     ROS_INFO("\n ***** Done with Task with request_id: %s *****", dispenser_curr_task_.request_id.c_str());
     return true;

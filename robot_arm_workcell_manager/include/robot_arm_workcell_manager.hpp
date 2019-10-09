@@ -63,7 +63,6 @@ class RobotArmWorkcellManager{
         std::string dispenser_name_;
         double dispenser_pub_rate_;
         int motion_pause_time_;
-        std::string transporter_placement_;
 
         // Task Stuffs
         std::thread dispenser_task_execution_thread_;

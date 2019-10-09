@@ -157,7 +157,7 @@
       <uri>model://MiR100</uri>
       <name>MiR100</name>
     </include> -->
-    
+
     <include>
       <uri>model://MiRCartWithTrayPlacement</uri>
       <name>MiRCartWithTrayPlacement</name>
@@ -227,7 +227,7 @@
       </model>
 
       <model name='MiRCartWithTrayPlacement'>
-        <pose frame=''>-0.9 1.2 0 0 0 -1.57</pose>
+        <pose frame=''>-0.5 1.15 0 0 0 -1.57</pose>
         <scale>1 1 1</scale>
         <link name='body'>
           <pose frame=''>-0.089707 1.3382 0 0 0 -1.57</pose>
