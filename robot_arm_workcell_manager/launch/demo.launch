@@ -7,7 +7,7 @@
   <arg name="limited"                       default="false"/>
   
   <arg name="enable_usb_cam"                default="false"/>
-  <arg name="enable_zed_cam"                default="true"/>
+  <arg name="enable_zed_cam"                default="false"/>
   <arg name="sim"                           default="false"/>
   <arg name="enable_fake_joints_execution"  default="true"/>
   <arg name="eef2cam_tf"                    default="0 0 0 -1.57 0 -1.57"/>
@@ -79,12 +79,10 @@
                 + ' ' + arg('arm_ns') + '/camera_link_optical ' + arg('arm_ns') + '/camera 10' )" />   
                 <!-- 0 0 0 -1.57 0 -1.57 $(arg arm_ns)/camera_link_optical $(arg arm_ns)/camera 10"     -->
 
+    
     <!--           *******************************************************************************           -->
     <!--           ***************************   ZED Camera Launcher   ***************************           -->
     <!--           *******************************************************************************           -->
-    
-  
-
 
     <node if="$(arg enable_zed_cam)"
 	pkg="zed_cpu_ros" type="zed_cpu_ros" name="zed_cpu_ros_node" output="screen">
@@ -103,4 +101,5 @@
     </node>
 
  </group>
+
 </launch>
