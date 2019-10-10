@@ -8,14 +8,14 @@
        <inertial>
          <!-- tentative mass -->
         <mass>5.5</mass>
-        <pose>0 0 0 0 0 0</pose>
+        <pose>0 0 -0.01 0 0 0</pose>
         <inertia>
-          <ixx>0.1026</ixx>
+          <ixx>0.2026</ixx>
           <ixy>0</ixy>
           <ixz>0</ixz>
-          <iyy>0.206</iyy>
+          <iyy>0.406</iyy>
           <iyz>0</iyz>
-          <izz>0.155</izz>
+          <izz>0.255</izz>
         </inertia>
       </inertial>
 

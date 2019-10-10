@@ -172,7 +172,8 @@ bool RobotArmController::moveToJointsTarget(const std::vector<double>& joints_ta
 bool RobotArmController::moveToEefTarget(const geometry_msgs::Pose _eef_target_pose, double vel_factor ){
 
     const double jump_threshold = 0.0;
-    const double eef_step = 0.01;
+    const double eef_step = 0.03;
+    const int attempts_thresh = 4;
 
     move_group_->setMaxVelocityScalingFactor(vel_factor);
     
@@ -181,9 +182,18 @@ bool RobotArmController::moveToEefTarget(const geometry_msgs::Pose _eef_target_p
     waypoints.push_back(_eef_target_pose);
     moveit_msgs::RobotTrajectory trajectory;
     double fraction = move_group_->computeCartesianPath(waypoints, eef_step, jump_threshold, trajectory);
-    if (fraction != 1.0){
-        ROS_ERROR("Eef Target motion plan: FAILED");
-        return false;
+    int attempt = 0;
+    
+    while (fraction != 1.0  ){
+        if (attempt < attempts_thresh){
+            ROS_WARN("Planning failed with factor: %f, replanning...", fraction);
+            fraction = move_group_->computeCartesianPath(waypoints, eef_step, jump_threshold, trajectory);
+            attempt++;
+        }
+        else{
+            ROS_ERROR(" Reached Max motion planning attempts. Eef Target motion plan: FAILED");
+            return false;
+        }
     }
 
     // TODO: solve trajectory vs plan
