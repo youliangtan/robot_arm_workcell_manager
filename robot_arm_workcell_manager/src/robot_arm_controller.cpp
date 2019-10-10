@@ -51,7 +51,20 @@ RobotArmController::RobotArmController(): nh_("~"){
     move_group_->setPlanningTime(20.0);
     std::cout << "ControlGroup::ControlGroup(" << group_name_ << ") completed." << std::endl;
     load_complete_ = true;
-    
+
+    auto _joints = move_group_->getJointNames();
+    for ( std::string joint : _joints ){
+        std::cout << " - print joint name!! " << joint << std::endl;
+    }
+
+    // Set default constraints, TODO: dynamic constraint
+    moveit_msgs::JointConstraint wrist_3_joint;
+    wrist_3_joint.joint_name="wrist_3_joint";
+    wrist_3_joint.position = 0.0;
+    wrist_3_joint.tolerance_above = 0.73;
+    wrist_3_joint.tolerance_below = 0.73;
+    planning_constraints_.joint_constraints.push_back(wrist_3_joint);
+
     ROS_INFO("RobotArmController::RobotArmController() completed!! \n");
 }
 
@@ -180,7 +193,7 @@ bool RobotArmController::moveToEefTarget(const geometry_msgs::Pose _eef_target_p
     std::vector<geometry_msgs::Pose> waypoints;
     waypoints.push_back(_eef_target_pose);
     moveit_msgs::RobotTrajectory trajectory;
-    double fraction = move_group_->computeCartesianPath(waypoints, eef_step, jump_threshold, trajectory);
+    double fraction = move_group_->computeCartesianPath(waypoints, eef_step, jump_threshold, trajectory, planning_constraints_);
     if (fraction != 1.0){
         ROS_ERROR("Eef Target motion plan: FAILED");
         return false;
@@ -197,9 +210,8 @@ bool RobotArmController::moveToEefTarget(const geometry_msgs::Pose _eef_target_p
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// ----------------------------------------------- MAIN ------------------------------------------------------
+// ------------------------------------- MAIN - Testing code -------------------------------------------------
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
 int main(int argc, char** argv){
     std::cout << " YoYoYo, Robot Arm Controller is alive!!! =) " << std::endl;
@@ -209,10 +221,6 @@ int main(int argc, char** argv){
     RobotArmController ur10_controller;
     ros::AsyncSpinner ros_async_spinner(1);
     ros_async_spinner.start();
-
-
-    // *********************************************************************************
-    // *************************** Starting of testing code ****************************
 
     std::cout<<" *********************** Starting to execute arm motion ********************" << std::endl;
     // NAMED!!!
@@ -248,6 +256,5 @@ int main(int argc, char** argv){
     std::cout<<" ---- Done Cartesian motion 2 -------" << std::endl;
 
     ros::waitForShutdown();
-
     return 0;
 }

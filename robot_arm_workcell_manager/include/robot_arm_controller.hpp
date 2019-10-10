@@ -54,10 +54,13 @@ class RobotArmController{
     
     private:
         std::string group_name_;
-        std::unique_ptr<moveit::planning_interface::MoveGroupInterface> move_group_;
         std::string current_state_name_; // TBC
         bool load_complete_ = false;  //TBC
+
+        // moveit 
+        std::unique_ptr<moveit::planning_interface::MoveGroupInterface> move_group_;
         moveit::planning_interface::MoveGroupInterface::Plan motion_plan_;
+        moveit_msgs::Constraints planning_constraints_;
 
         std::string arm_namespace_;
         ros::NodeHandle nh_;
