@@ -203,7 +203,10 @@ bool RobotArmController::moveToEefTarget(const geometry_msgs::Pose _eef_target_p
     // motion_plan.start_state_ = *(move_group_->getCurrentState());
     motion_plan_.trajectory_ = trajectory;
     ROS_INFO(" Executing Cartesian Space Motion...");   
-    move_group_->execute(motion_plan_);
+    if (move_group_->execute(motion_plan_) != moveit_msgs::MoveItErrorCodes::SUCCESS){
+        ROS_ERROR(" Failed in executing planned motion path");   
+        return false;
+    }
 
     return true;
 }
