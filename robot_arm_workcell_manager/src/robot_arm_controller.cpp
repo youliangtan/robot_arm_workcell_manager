@@ -51,7 +51,7 @@ RobotArmController::RobotArmController(): nh_("~"){
     move_group_->setPlanningTime(20.0);
     std::cout << "ControlGroup::ControlGroup(" << group_name_ << ") completed." << std::endl;
     load_complete_ = true;
-    
+
     ROS_INFO("RobotArmController::RobotArmController() completed!! \n");
 }
 
@@ -181,7 +181,7 @@ bool RobotArmController::moveToEefTarget(const geometry_msgs::Pose _eef_target_p
     std::vector<geometry_msgs::Pose> waypoints;
     waypoints.push_back(_eef_target_pose);
     moveit_msgs::RobotTrajectory trajectory;
-    double fraction = move_group_->computeCartesianPath(waypoints, eef_step, jump_threshold, trajectory);
+    double fraction = move_group_->computeCartesianPath(waypoints, eef_step, jump_threshold, trajectory, planning_constraints_);
     int attempt = 0;
     
     while (fraction != 1.0  ){
@@ -199,17 +199,23 @@ bool RobotArmController::moveToEefTarget(const geometry_msgs::Pose _eef_target_p
     // TODO: solve trajectory vs plan
     // motion_plan.start_state_ = *(move_group_->getCurrentState());
     motion_plan_.trajectory_ = trajectory;
-    ROS_INFO(" Executing Cartesian Space Motion...");   
+    ROS_INFO(" [Arm Controller: %s] Executing Cartesian Space Motion...", arm_namespace_.c_str() );
     move_group_->execute(motion_plan_);
 
     return true;
 }
 
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// ----------------------------------------------- MAIN ------------------------------------------------------
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+bool RobotArmController::setPlanningConstraints(const moveit_msgs::Constraints& constraints ){
+    planning_constraints_ = constraints;
+    ROS_INFO(" Set new planning constraints in Motion planning");   
+};
 
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// ------------------------------------- MAIN - Testing code -------------------------------------------------
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 int main(int argc, char** argv){
     std::cout << " YoYoYo, Robot Arm Controller is alive!!! =) " << std::endl;
@@ -219,10 +225,6 @@ int main(int argc, char** argv){
     RobotArmController ur10_controller;
     ros::AsyncSpinner ros_async_spinner(1);
     ros_async_spinner.start();
-
-
-    // *********************************************************************************
-    // *************************** Starting of testing code ****************************
 
     std::cout<<" *********************** Starting to execute arm motion ********************" << std::endl;
     // NAMED!!!
@@ -258,6 +260,5 @@ int main(int argc, char** argv){
     std::cout<<" ---- Done Cartesian motion 2 -------" << std::endl;
 
     ros::waitForShutdown();
-
     return 0;
 }

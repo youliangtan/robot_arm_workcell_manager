@@ -1,3 +1,11 @@
+/*
+ * RMF Dispenser workcell adapter
+ * Objective: Handle all rmf msgs related stuffs for workcell
+ * Author: Tan You Liang
+ * Refered to OSRF: 'CoffeebotController.cpp'
+ *
+ */
+
 #include "dispenser_workcell_adapter.hpp"
 
 namespace rmf_adapter
@@ -17,9 +25,11 @@ DispenserWorkcellAdapter::DispenserWorkcellAdapter(): nh_("~"){
     ROS_INFO("RobotArmWorkcellManager::RobotArmWorkcellManager() completed!! \n");
 }
 
+
 DispenserWorkcellAdapter::~DispenserWorkcellAdapter(){
     ROS_INFO("Called DispenserWorkcellAdapter destructor \n");
 }
+
 
 // must set this!!!
 void DispenserWorkcellAdapter::setDispenserParams(std::string dispenser_name, double state_pub_rate ){
@@ -88,6 +98,7 @@ void DispenserWorkcellAdapter::dispenserRequestCallback(const rmf_msgs::Dispense
     
     return;
 }
+
 
 // get curr task from queue
 bool DispenserWorkcellAdapter::getCurrTaskFromQueue(rmf_msgs::DispenserRequest& curr_task){

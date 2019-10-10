@@ -7,7 +7,7 @@
       <pose> 0 0 0 0 0 3.14 </pose>
        <inertial>
          <!-- tentative mass -->
-        <mass>5.5</mass>
+        <mass>4.0</mass>
         <pose>0 0 -0.01 0 0 0</pose>
         <inertia>
           <ixx>0.2026</ixx>

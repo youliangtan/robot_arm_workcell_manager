@@ -2,7 +2,6 @@
  * Robot Arm Workcell Manager (RAWM)
  * Objective: Handle Robot Arm's work sequences and logic, one arm to one RAWM
  * Author: Tan You Liang
- * Refered to OSRF: 'CoffeebotController.cpp'
  *
  */
 
@@ -139,23 +138,35 @@ bool RobotArmWorkcellManager::executePickPlaceMotion( std::vector<std::string> f
     return true;
 }
 
+
 // ----------------------------------------------------------------------------------------------------------
 // ---------------------------------- ROBOT_ARM_MISSION_CONTROL: EXECUTION ----------------------------------
 // ----------------------------------------------------------------------------------------------------------
 
-// // TODO: Mission sequences, TBC: name as Task
-// // Make it to a config file @_@
+// Mission sequences, TODO: Make it to a config file @_@
 bool RobotArmWorkcellManager::executeRobotArmMission(){
     ROS_INFO("\n ***** Starting To Execute task, request_id: %s *****", dispenser_curr_task_.request_id.c_str());
     
     bool motion_is_success;
     std::vector<tf::Transform *> tf_array;
     rmf_msgs::DispenserRequestItem requested_item = dispenser_curr_task_.items[0] ;
-    tf::Transform *marker_transform (new tf::Transform); //TODO re-new
+    tf::Transform *marker_transform (new tf::Transform);
 
     // FOR NOW, TODO: No hard coding
     std::vector<std::string> picking_frame_array = {"pre_pick", "insert", "lift", "post_pick"};
     std::vector<std::string> placing_frame_array = {"pre_place", "insert", "drop", "post_place"};
+
+    // Set default constraints, TODO
+    moveit_msgs::Constraints planning_constraints;
+    moveit_msgs::JointConstraint wrist_3_joint;
+    wrist_3_joint.joint_name="wrist_3_joint";
+    wrist_3_joint.position = 0.0;
+    wrist_3_joint.tolerance_above = 0.73;
+    wrist_3_joint.tolerance_below = 0.73;
+    wrist_3_joint.weight = 1;
+
+    planning_constraints.joint_constraints.push_back(wrist_3_joint);
+    arm_controller_.setPlanningConstraints(planning_constraints);
 
     // Lookup for target marker at different Rack Level (0, 1, 2...)
     for (int rack_level=0; !markers_detector_.getTransformPose( "base_link", requested_item.item_type) ; rack_level++ ){
