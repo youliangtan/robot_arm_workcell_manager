@@ -51,6 +51,7 @@ class RobotArmController{
 
     protected:
         bool loadParameters();
+        bool loadEnvironment();
     
     private:
         std::string group_name_;
@@ -62,6 +63,10 @@ class RobotArmController{
         std::string arm_namespace_;
         ros::NodeHandle nh_;
         YAML::Node NAMED_TARGET_CONFIG_;
+
+        //environment stuff
+        moveit::planning_interface::PlanningSceneInterface planning_scene_interface;
+        YAML::Node ENVIRONMENT_CONFIG_;
 };
 
 

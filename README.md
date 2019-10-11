@@ -54,7 +54,7 @@ Motion are planned dynamically and markers are being detected by the eef cameras
 roslaunch cssd_gazebo one_arm.launch
 
 # Terminal B: Run MoveIt Env With Rviz
-roslaunch robot_arm_workcell_manager demo.launch sim:=true enable_fake_joints_execution:=false
+roslaunch robot_arm_workcell_manager demo.launch sim:=true enable_fake_joints_execution:=false enable_zed_cam:=false
 
 # Terminal C: Run RAWM
 roslaunch robot_arm_workcell_manager robot_arm_workcell_manager.launch
