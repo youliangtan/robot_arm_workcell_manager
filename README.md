@@ -155,9 +155,9 @@ Also, Download [ur_modern_driver with e series](https://github.com/AdmiralWall/u
 ### 1. Terminal A (robot bringup):
 ```
 # For ur10
-roslaunch ur_modern_driver ur10_bringup.launch robot_ip:=198.168.88.XX
+roslaunch ur_modern_driver ur10_bringup.launch robot_ip:=192.168.88.XX
 # For ur10e,
-roslaunch ur_modern_driver ur10e_bringup.launch robot_ip:=198.168.88.XX
+roslaunch ur_modern_driver ur10e_bringup.launch robot_ip:=192.168.88.XX
 ```
 
 ### 2. Terminal B (moveit & Rviz):
