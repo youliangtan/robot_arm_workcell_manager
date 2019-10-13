@@ -7,6 +7,7 @@
   <arg name="limited"                       default="false"/>
   
   <arg name="enable_usb_cam"                default="false"/>
+
   <arg name="sim"                           default="false"/>
   <arg name="enable_fake_joints_execution"  default="true"/>
   <arg name="eef2cam_tf"                    default="0 0 0 -1.57 0 -1.57"/>
@@ -79,4 +80,5 @@
           args="0.055 0.06 0.0825 0 0 0 ee_link camera_link_optical 10" />   
 
  </group>
+
 </launch>
