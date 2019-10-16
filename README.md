@@ -202,6 +202,15 @@ With pure tryout using moveit on rviz, remember:
 - To add more arms: expand `cssd_gazebo two_arms.launch`, `two_arms_rviz.launch`, `two_arms_rawm.launch`
 - master branch for `ur_modern_driver` currently doesnt support UR-E series
 
+PENDING
+- now the when using ompl planner in `planning_pipeline.launch`, there will be a jump during cartesian planning
+- chomp planner is used instead of the default ompl, due to some constant jump during planning
+
+## Debuging process
+- Jittering Problem during picking up of tray with Eef:  use `velocity_controllers` instead of `position_controller`
+- MoveIt Namespace issue: In `robot_arm_controller.cpp` there's a declaration of namespace in for the movegroup by `ros::NodeHandle moveit_nh(arm_namespace_)`
+- `GOAL_TOLERANCE_VIOLATED` error code in action server: As mentioned in [here](https://github.com/ros-planning/moveit/issues/1475#issuecomment-504364419), move group setTolerance is not working here. Will need to manually change it in `ur_velocity/position_controller.yaml`. This is the input param for `ros_control/joint_trajectory_controller` during spawn
+
 ## TODO
 - Further Code clean up!!
 - gazebo model clean upssss

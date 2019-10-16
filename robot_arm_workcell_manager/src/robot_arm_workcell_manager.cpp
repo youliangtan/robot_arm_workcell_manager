@@ -161,8 +161,8 @@ bool RobotArmWorkcellManager::executeRobotArmMission(){
     moveit_msgs::JointConstraint wrist_3_joint;
     wrist_3_joint.joint_name="wrist_3_joint";
     wrist_3_joint.position = 0.0;
-    wrist_3_joint.tolerance_above = 0.73;
-    wrist_3_joint.tolerance_below = 0.73;
+    wrist_3_joint.tolerance_above = 0.7;
+    wrist_3_joint.tolerance_below = 0.7;
     wrist_3_joint.weight = 1;
 
     planning_constraints.joint_constraints.push_back(wrist_3_joint);
