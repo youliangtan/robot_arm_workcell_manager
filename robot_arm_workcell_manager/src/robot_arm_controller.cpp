@@ -8,7 +8,9 @@
 #include "robot_arm_controller.hpp"
 
 
-RobotArmController::RobotArmController(): nh_("~"){
+RobotArmController::RobotArmController(): nh_("~"),    // init new action client
+    execute_action_client_("arm_controller/follow_joint_trajectory", true)
+{
 
     std::cout << std::endl << " Starting RobotArmController::RobotArmController() "<< std::endl;
 
@@ -52,7 +54,9 @@ RobotArmController::RobotArmController(): nh_("~"){
     move_group_->setPlanningTime(20.0);
     std::cout << "ControlGroup::ControlGroup(" << group_name_ << ") completed." << std::endl;
     load_complete_ = true;
+
     loadEnvironment();
+
     ROS_INFO("RobotArmController::RobotArmController() completed!! \n");
 }
 
@@ -176,7 +180,7 @@ bool RobotArmController::moveToNamedTarget(const std::string& _target_name){
         vel_factor = NAMED_TARGET_CONFIG_["named_target"][_target_name]["velFactor"].as<double>();
     } 
     catch (std::exception& err){
-        ROS_ERROR("Exception in YAML LOADER while trying to find targer name: %s .\n Error: %s", _target_name.c_str(), err.what());
+        ROS_ERROR("Exception in YAML LOADER while trying to find target name: %s .\n Error: %s", _target_name.c_str(), err.what());
         return false;
     }
     
@@ -219,43 +223,90 @@ bool RobotArmController::moveToJointsTarget(const std::vector<double>& joints_ta
         return false;
     }
 
-    ROS_INFO(" Executing Joint Space Motion...");
-    move_group_->execute(motion_plan_);
+    ROS_INFO(" [Arm Controller: %s] Executing Joint Space Motion...", arm_namespace_.c_str() );
+    
+    if (move_group_->execute(motion_plan_) != moveit_msgs::MoveItErrorCodes::SUCCESS){
+        ROS_ERROR(" Failed in executing planned motion path");   
+        return false;
+    }
+
     return true;
 }
 
 
 bool RobotArmController::moveToEefTarget(const geometry_msgs::Pose _eef_target_pose, double vel_factor ){
 
-    const double jump_threshold = 0.0;
-    const double eef_step = 0.01;
+    const double jump_threshold = 2.0;
+    const double eef_step = 0.03;
+    const int attempts_thresh = 3;
 
     move_group_->setMaxVelocityScalingFactor(vel_factor);
+    move_group_->setStartStateToCurrentState();
     
     // TODO: now only support cartesian, assume only one waypoint
     std::vector<geometry_msgs::Pose> waypoints;
     waypoints.push_back(_eef_target_pose);
     moveit_msgs::RobotTrajectory trajectory;
-    double fraction = move_group_->computeCartesianPath(waypoints, eef_step, jump_threshold, trajectory);
-    if (fraction != 1.0){
-        ROS_ERROR("Eef Target motion plan: FAILED");
-        return false;
+
+    double fraction = move_group_->computeCartesianPath(waypoints, eef_step, jump_threshold, trajectory, planning_constraints_);
+    int attempt = 0;
+    
+    while (fraction != 1.0  ){
+        if (attempt < attempts_thresh){
+            ROS_WARN("Planning failed with factor: %f, replanning...", fraction);
+            fraction = move_group_->computeCartesianPath(waypoints, eef_step, jump_threshold, trajectory, planning_constraints_);
+            attempt++;
+        }
+        else{
+            ROS_ERROR(" Reached Max motion planning attempts. Eef Target motion plan: FAILED");
+            return false;
+        }
     }
 
-    // TODO: solve trajectory vs plan
-    // motion_plan.start_state_ = *(move_group_->getCurrentState());
     motion_plan_.trajectory_ = trajectory;
-    ROS_INFO(" Executing Cartesian Space Motion...");   
-    move_group_->execute(motion_plan_);
+    ROS_INFO(" [Arm Controller: %s] Executing Cartesian Space Motion...", arm_namespace_.c_str() );
+    // moveArm(motion_plan_);
+
+    if (move_group_->execute(motion_plan_) != moveit_msgs::MoveItErrorCodes::SUCCESS){
+        ROS_ERROR(" Failed in executing planned motion path");   
+        return false;
+    }
 
     return true;
 }
 
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// ----------------------------------------------- MAIN ------------------------------------------------------
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+bool RobotArmController::setPlanningConstraints(const moveit_msgs::Constraints& constraints ){
+    planning_constraints_ = constraints;
+    ROS_INFO(" Set new planning constraints in Motion planning");   
+};
 
+
+// By pass moveit and directly send trajectory to arm_controller action server
+void RobotArmController::moveArm(moveit::planning_interface::MoveGroupInterface::Plan& plan)
+{
+    control_msgs::FollowJointTrajectoryGoal goal;
+    // manually set tolerance here: TODO
+    goal.trajectory = plan.trajectory_.joint_trajectory;
+
+    execute_action_client_.sendGoal(goal);
+    ROS_INFO("Sent arm Command to Action Server!");
+
+    bool finished_before_timeout = execute_action_client_.waitForResult(ros::Duration(10));
+
+    if (finished_before_timeout)
+    {
+        actionlib::SimpleClientGoalState arm_state = execute_action_client_.getState();
+        ROS_INFO(" YEah!! Action finished: %s", arm_state.toString().c_str());  
+    }
+    else
+        ROS_ERROR("Action did not finish before the time out.");
+}
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// ------------------------------------- MAIN - Testing code -------------------------------------------------
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 int main(int argc, char** argv){
     std::cout << " YoYoYo, Robot Arm Controller is alive!!! =) " << std::endl;
@@ -266,17 +317,10 @@ int main(int argc, char** argv){
     ros::AsyncSpinner ros_async_spinner(1);
     ros_async_spinner.start();
 
-
-    // *********************************************************************************
-    // *************************** Starting of testing code ****************************
-
     std::cout<<" *********************** Starting to execute arm motion ********************" << std::endl;
-    // NAMED!!!
-    ur10_controller.moveToNamedTarget("home_position");
-    std::cout<<" ---- Done Named Joint motion 1 -------" << std::endl;
 
-    ur10_controller.moveToNamedTarget("pre_place_pose");
-    std::cout<<" ---- Done Named Cartesian motion 1 -------" << std::endl;
+    ur10_controller.moveToNamedTarget("ur10_001_rack_level_0");
+    std::cout<<" ---- Done Named Joint motion 1 -------" << std::endl;
 
     // test code!!!!!!!!!!!
     std::vector<double> joints_target_1 = {1, -1.7, 1.8, -0.1, 2.5, 0};
@@ -304,6 +348,5 @@ int main(int argc, char** argv){
     std::cout<<" ---- Done Cartesian motion 2 -------" << std::endl;
 
     ros::waitForShutdown();
-
     return 0;
 }

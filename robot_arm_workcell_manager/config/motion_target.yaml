@@ -1,12 +1,22 @@
 # Storing all named motion target
 # Check YAML: http://www.yamllint.com/
+# ur10_001: the arm on the left, transporter on its right
+# ur10_001e: the arm on the right, transporter on its left
 
 named_target:
-  rack_home_position:       {type: "joint_space_goal", values: [0,-2.45,2.5,-0.062,1.614,  0],        velFactor: 0.2}
-  rack_level_0:             {type: "joint_space_goal", values: [0, -2.207, 1.595, 0.554, 1.571,0],    velFactor: 0.2}
-  rack_level_1:             {type: "joint_space_goal", values: [0, -2.107, 2.22, -0.13, 1.571,0],     velFactor: 0.2}
-  rack_level_2:             {type: "joint_space_goal", values: [0, -1.7, 2.62, -0.93, 1.571,0],       velFactor: 0.2}
-  transporter_left_home:    {type: "joint_space_goal", values: [1.57, -2.427,2.479,-0.062,1.614, 0],  velFactor: 0.2}
-  transporter_left_low:     {type: "joint_space_goal", values: [1.57, -0.7,2.379,-1.7,1.614, 0],      velFactor: 0.2}
-  transporter_right_home:   {type: "joint_space_goal", values: [-1.57, -2.427,2.479,-0.062,1.614, 0], velFactor: 0.2}
-  transporter_right_low:    {type: "joint_space_goal", values: [-1.57, -0.53,2.479,-1.95,1.614, 0],   velFactor: 0.2}
+  ur10_001_rack_home_position:  {type: "joint_space_goal", values: [0,-2.45, 2.5,-0.062,1.614, 0],        velFactor: 0.2}
+  ur10e_001_rack_home_position: {type: "joint_space_goal", values: [0,-2.45, 2.5,-0.062,1.614, 0],        velFactor: 0.2}
+
+  ur10_001_rack_level_0:        {type: "joint_space_goal", values: [0, -2.207, 1.595, 0.554, 1.571,0],    velFactor: 0.2}
+  ur10_001_rack_level_1:        {type: "joint_space_goal", values: [0, -2.107, 2.22, -0.13, 1.571,0],     velFactor: 0.2}
+  ur10_001_rack_level_2:        {type: "joint_space_goal", values: [0, -1.7, 2.62, -0.93, 1.571,0],       velFactor: 0.2}
+
+  ur10e_001_rack_level_0:       {type: "joint_space_goal", values: [0, -2.207, 1.595, 0.554, 1.871,0],    velFactor: 0.2}
+  ur10e_001_rack_level_1:       {type: "joint_space_goal", values: [0, -2.107, 2.22, -0.13, 1.871,0],     velFactor: 0.2}
+  ur10e_001_rack_level_2:       {type: "joint_space_goal", values: [0, -1.7, 2.62, -0.93, 1.871,0],       velFactor: 0.2}
+
+  ur10_001_transporter_home:    {type: "joint_space_goal", values: [1.57, -2.1,2.15,-0.062,1.614, 0],  velFactor: 0.2}
+  ur10_001_transporter_low:     {type: "joint_space_goal", values: [2.7, -0.7,2.1,-1.45,2.7, 0],      velFactor: 0.2}
+  ur10e_001_transporter_home:   {type: "joint_space_goal", values: [-1.57, -2.1,2.15,-0.062,1.614, 0], velFactor: 0.2}
+  ur10e_001_transporter_low:    {type: "joint_space_goal", values: [-3.3, -0.6,1.9,-1.25,-0.3, -0.05],   velFactor: 0.2}
+  

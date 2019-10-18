@@ -7,13 +7,13 @@
       <pose> 0 0 0 0 0 3.14 </pose>
        <inertial>
          <!-- tentative mass -->
-        <mass>5.5</mass>
-        <pose>0 0 0 0 0 0</pose>
+        <mass>3.0</mass>
+        <pose>0 0 -0.01 0 0 0</pose>
         <inertia>
           <ixx>0.1026</ixx>
           <ixy>0</ixy>
           <ixz>0</ixz>
-          <iyy>0.206</iyy>
+          <iyy>0.106</iyy>
           <iyz>0</iyz>
           <izz>0.155</izz>
         </inertia>
