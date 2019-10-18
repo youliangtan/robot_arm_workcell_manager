@@ -10,7 +10,7 @@ Now with namespace support! Enabling two (or more!) arms to perform a choreograp
 
 ![alt text](/documentations/two_arms_dance.gif?)
 
-![alt text](/documentations/robot_in_room2.gif?)
+![alt text](/documentations/robot_in_room2.png?)
 
 *Full Video Link* (with one arm),  [here](https://drive.google.com/open?id=1dGKh3FVMlUwX8GUMv3mgxQFBm0OnGa8B)
 
