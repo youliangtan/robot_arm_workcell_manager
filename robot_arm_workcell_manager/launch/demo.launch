@@ -6,7 +6,6 @@
   <arg name="debug"                         default="false" />
   <arg name="limited"                       default="false"/>
   
-  <arg name="enable_usb_cam"                default="false"/>
 
   <arg name="sim"                           default="false"/>
   <arg name="enable_fake_joints_execution"  default="true"/>
@@ -57,8 +56,6 @@
 
     <include file="$(find robot_arm_workcell_manager )/launch/markers_detector.launch">
         <arg name="ns"             value="$(arg arm_ns)"/>
-        <arg name="camSelect"      default="/dev/video1"/>
-        <arg name="enable_usb_cam" value="$(arg enable_usb_cam)"/>
     </include>
 
     <!-- Currently handle the 'static tf publisher' in a dirty way, due to '/' issue -->
