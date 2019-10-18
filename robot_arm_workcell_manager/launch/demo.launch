@@ -7,20 +7,11 @@
   <arg name="limited"                       default="false"/>
   
   <arg name="enable_usb_cam"                default="false"/>
-  <arg name="enable_zed_cam"                default="false"/>
+
   <arg name="sim"                           default="false"/>
   <arg name="enable_fake_joints_execution"  default="true"/>
   <arg name="eef2cam_tf"                    default="0 0 0 -1.57 0 -1.57"/>
   
-  <!-- ************************ Camera Stuff ************************** -->
-  <arg name="config_file_location" default="$(find zed_cpu_ros)/config/SN23242.conf"/>
-  <!-- to find your device name, use ls /dev/ and look for the name begin with video -->
-  <arg name="device_name" value="/dev/video0"/>
-  <arg name="resolution" default="0"/>
-  <arg name="frame_rate" default="15"/>
-  <arg name="show_image" default="false"/>
-  <arg name="encoding" default="bgr8"/>
-  <arg name="use_zed_config" default="true"/>
 
 
   <group ns="$(arg arm_ns)">
@@ -40,7 +31,9 @@
       <!-- Given the published joint states, publish tf for the robot links -->
       <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="true" output="screen">
         <param name="/tf_prefix" value="$(arg arm_ns)"/>
-      </node>>
+      </node>>s
+
+
 
     </group>
 
@@ -79,26 +72,12 @@
                 + ' ' + arg('arm_ns') + '/camera_link_optical ' + arg('arm_ns') + '/camera 10' )" />   
                 <!-- 0 0 0 -1.57 0 -1.57 $(arg arm_ns)/camera_link_optical $(arg arm_ns)/camera 10"     -->
 
-    
-    <!--           *******************************************************************************           -->
-    <!--           ***************************   ZED Camera Launcher   ***************************           -->
-    <!--           *******************************************************************************           -->
 
-    <node if="$(arg enable_zed_cam)"
-	pkg="zed_cpu_ros" type="zed_cpu_ros" name="zed_cpu_ros_node" output="screen">
 
-    	<param name="resolution" value="$(arg resolution)" unless="$(eval resolution>3)"/>
-    	<param name="frame_rate" value="$(arg frame_rate)"/>
-    	<param name="config_file_location" value="$(arg config_file_location)"/>
-    	<param name="show_image" value="$(arg show_image)"/>
-    	<param name="left_frame_id" value="left_frame"/>
-    	<param name="right_frame_id" value="right_frame"/>
-    	<param name="use_zed_config" value="$(arg use_zed_config)"/>
-    	<param name="device_name" value="$(arg device_name)"/>
-    	<param name="encoding" value="$(arg encoding)"/>
-      <remap from="$(arg arm_ns)/left/image_raw" to ="$(arg arm_ns)/image"/>
-      <remap from="$(arg arm_ns)/left/camera_info"  to="$(arg arm_ns)/camera_info"/>
-    </node>
+
+<!-- TODO : CLEAN!!!!! -->
+       <node pkg="tf" type="static_transform_publisher" name="eef_to_camera_optical" 
+          args="0.055 0.06 0.0825 0 0 0 ee_link camera_link_optical 10" />   
 
  </group>
 
