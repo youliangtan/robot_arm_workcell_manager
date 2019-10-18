@@ -3,7 +3,7 @@
 
   <xacro:include filename="$(find cssdbot_description)/urdf/ur10/ur.transmission.xacro" />
   <xacro:include filename="$(find cssdbot_description)/urdf/ur10/ur.gazebo.xacro" />
-  <xacro:include filename="$(find realsense_gazebo_plugin)/urdf/realsense-D435.macro.xacro"/>
+
 
   <xacro:macro name="cylinder_inertial" params="radius length mass *origin">
     <inertial>
@@ -371,11 +371,9 @@
 -->
 <!--end of end effector-->
 
-
-<!-- normal start of camera -->
-
+<!-- start of camera -->
+  <joint name="camera_optical_joint" type="fixed">
     <!-- satisfy both gazebo convention and aruco pkg convetion. looking from x axis and z axis respectively. -->
-<!--  <joint name="camera_optical_joint" type="fixed">
     <origin xyz=" 0.055 0.06 0.0825" rpy="0 0.0 0" />>
     <parent link="${prefix}end_effector_link"/>
     <child link="${prefix}camera_link_optical"/>
@@ -392,6 +390,7 @@
         <image>
           <width>3840</width>
           <height>1080</height>
+          <!--<format>R8G8B8</format> -->
           <format>R8G8B8</format>
         </image>
         <clip>
@@ -400,7 +399,9 @@
         </clip>
         <noise>
           <type>gaussian</type>
-
+          <!-- Noise is sampled independently per pixel on each frame.
+               That pixel's noise value is added to each of its color
+               channels, which at that point lie in the range [0,1]. -->
           <mean>0.0</mean>
           <stddev>0.007</stddev>
         </noise>
@@ -420,18 +421,9 @@
         <distortionT2>0.0</distortionT2>
       </plugin>
     </sensor>
-  </gazebo> -->
+  </gazebo>
 <!--camera link-->
-<!--end of normal camera link-->
-
-
-
-<!-- start of stero cam intel realsense-->
-
-    <xacro:realsense-D435 prefix="" parent="${prefix}end_effector_link">
-        <origin xyz="0.055 0.06 0.0825" rpy="0 0 0" />   
-    </xacro:realsense-D435>
-<!-- end of stereo cam-->
+<!--end of camera link-->
 
     <!-- ROS base_link to UR 'Base' Coordinates transform -->
     <link name="${prefix}base"/>

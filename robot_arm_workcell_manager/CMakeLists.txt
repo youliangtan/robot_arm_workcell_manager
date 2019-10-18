@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(robot_arm_workcell_manager)
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 
 find_package(catkin REQUIRED COMPONENTS
   roscpp
