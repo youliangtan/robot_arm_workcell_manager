@@ -70,7 +70,6 @@ class RobotArmController{
         //environment stuff
         moveit::planning_interface::PlanningSceneInterface planning_scene_interface;
         YAML::Node ENVIRONMENT_CONFIG_;
-};
 
         // Robot arm control action client
         actionlib::SimpleActionClient<control_msgs::FollowJointTrajectoryAction> execute_action_client_;

@@ -134,7 +134,7 @@ bool RobotArmController::loadEnvironment(){
     for (int i=1; i<= number_of_object;i++)
     {
         std::string object = "object_" + std::to_string(i);
-        ROS_INFO(" setting up object %s ", object);  
+        ROS_INFO(" setting up object %s ", object.c_str());  
 
         moveit_msgs::CollisionObject collision_object;
         collision_object.header.frame_id = move_group_->getPlanningFrame();
