@@ -69,6 +69,7 @@ manipulator:
   ##Note: commenting the following line lets moveit chose RRTConnect as default planner rather than LBKPIECE
   #projection_evaluator: joints(shoulder_pan_joint,shoulder_lift_joint)
   longest_valid_segment_fraction: 0.01
+  enforce_joint_model_state_space: true
 endeffector:
   planner_configs:
     - SBLkConfigDefault

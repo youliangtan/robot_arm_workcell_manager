@@ -70,7 +70,7 @@ Visualization Manager:
           Z: 2
       Name: MotionPlanning
       Planned Path:
-        Color Enabled: false
+        Color Enabled: true
         Interrupt Display: false
         Links:
           All Links Enabled: true
@@ -139,13 +139,13 @@ Visualization Manager:
             Show Axes: false
             Show Trail: false
             Value: true
-        Loop Animation: false
-        Robot Alpha: 0.5
+        Loop Animation: true
+        Robot Alpha: 0.800000011920929
         Robot Color: 150; 50; 150
         Show Robot Collision: false
         Show Robot Visual: true
         Show Trail: false
-        State Display Time: 0.05 s
+        State Display Time: 0.2 s
         Trail Step Size: 1
         Trajectory Topic: move_group/display_planned_path
       Planning Metrics:
@@ -370,6 +370,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/XYOrbit
+      Distance: 1.8627309799194336
       Distance: 0.9741300940513611
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
@@ -385,10 +386,10 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.16479666531085968
+      Pitch: 0.6347966194152832
       Target Frame: world
       Value: XYOrbit (rviz)
-      Yaw: 0.8117642402648926
+      Yaw: 2.476766586303711
     Saved: ~
 Window Geometry:
   Displays:
