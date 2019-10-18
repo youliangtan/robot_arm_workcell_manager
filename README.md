@@ -90,6 +90,9 @@ The config file is in rawm package called environment_object. This is to set the
 - The object must be called object_1, object_2 and so on. 
 - type 1 for box, 2 sphere, 3 clinder, 4 cone. 
 
+## Octomapping 
+Information is pulled from the depth camera and added to the planning scene. The params can be found at cssdbot_ur10_moveitconfig package, sensor_manager.launch.xml and sensors_kinect_pointcloud.yaml
+
 ## Request a Task 
 
 Open another terminal, then use rostopic to publish a `DispenserRequest.msg` to start the pick and place motion. Each request will execute one pick and place task. Intotal, 4 requests will be sent out to fill up the Transporter!!
