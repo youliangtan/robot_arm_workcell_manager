@@ -159,7 +159,6 @@ roslaunch robot_arm_workcell_manager robot_arm_workcell_manager.launch
 
 ---
 
-
 ## Notes
 - Custom designed "fork-lift" end effector, trays and tray placements are used in this application.
 - 3 executables are used in this application, namely: `robot_arm_workcell_manager` (MAIN), `robot_arm_controller`, `fiducial_markers_handler`.
