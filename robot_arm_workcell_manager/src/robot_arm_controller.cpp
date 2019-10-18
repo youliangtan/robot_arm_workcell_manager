@@ -179,11 +179,12 @@ bool RobotArmController::moveToJointsTarget(const std::vector<double>& joints_ta
 
 bool RobotArmController::moveToEefTarget(const geometry_msgs::Pose _eef_target_pose, double vel_factor ){
 
-    const double jump_threshold = 4.0;
-    const double eef_step = 0.04;
-    const int attempts_thresh = 4;
+    const double jump_threshold = 2.0;
+    const double eef_step = 0.03;
+    const int attempts_thresh = 3;
 
     move_group_->setMaxVelocityScalingFactor(vel_factor);
+    move_group_->setStartStateToCurrentState();
     
     // TODO: now only support cartesian, assume only one waypoint
     std::vector<geometry_msgs::Pose> waypoints;
@@ -195,7 +196,14 @@ bool RobotArmController::moveToEefTarget(const geometry_msgs::Pose _eef_target_p
     
     while (fraction != 1.0  ){
         if (attempt < attempts_thresh){
-            ROS_WARN("Planning failed with factor: %f, replanning...", fraction);
+            ROS_WARN("Planning failed with factor: %f, execute partially and then replanning...", fraction);
+            motion_plan_.trajectory_ = trajectory;
+            
+            if (move_group_->execute(motion_plan_) != moveit_msgs::MoveItErrorCodes::SUCCESS){
+                ROS_ERROR(" Failed in executing planned motion path");   
+                return false;
+            }
+            
             fraction = move_group_->computeCartesianPath(waypoints, eef_step, jump_threshold, trajectory, planning_constraints_);
             attempt++;
         }

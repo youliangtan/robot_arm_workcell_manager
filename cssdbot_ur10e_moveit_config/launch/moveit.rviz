@@ -6,7 +6,7 @@ Panels:
       Expanded:
         - /Status1
         - /MotionPlanning1
-        - /MotionPlanning1/Planning Request1
+        - /MotionPlanning1/Planned Path1
         - /TF1/Frames1
         - /TF1/Tree1
       Splitter Ratio: 0.5219465494155884
@@ -69,7 +69,7 @@ Visualization Manager:
           Z: 2
       Name: MotionPlanning
       Planned Path:
-        Color Enabled: false
+        Color Enabled: true
         Interrupt Display: false
         Links:
           All Links Enabled: true
@@ -138,13 +138,13 @@ Visualization Manager:
             Show Axes: false
             Show Trail: false
             Value: true
-        Loop Animation: false
-        Robot Alpha: 0.5
+        Loop Animation: true
+        Robot Alpha: 0.800000011920929
         Robot Color: 150; 50; 150
         Show Robot Collision: false
         Show Robot Visual: true
         Show Trail: false
-        State Display Time: 0.05 s
+        State Display Time: 0.2 s
         Trail Step Size: 1
         Trajectory Topic: move_group/display_planned_path
       Planning Metrics:
@@ -291,25 +291,25 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/XYOrbit
-      Distance: 2.708667278289795
+      Distance: 1.8627309799194336
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: 0.18084019422531128
-        Y: -0.1365882158279419
-        Z: 9.38773723646591e-7
+        X: -0.6236943006515503
+        Y: 0.15088164806365967
+        Z: 1.1771923027481535e-6
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.2597966194152832
+      Pitch: 0.6347966194152832
       Target Frame: world
       Value: XYOrbit (rviz)
-      Yaw: 1.9067636728286743
+      Yaw: 2.476766586303711
     Saved: ~
 Window Geometry:
   Displays:
