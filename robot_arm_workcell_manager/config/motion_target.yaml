@@ -3,6 +3,8 @@
 # ur10_001: the arm on the left, transporter on its right
 # ur10_001e: the arm on the right, transporter on its left
 
+# Format: <ROBOT_ID>_named_position
+
 named_target:
   ur10_001_rack_home_position:  {type: "joint_space_goal", values: [0,-2.45, 2.5,-0.062,1.614, 0],        velFactor: 0.2}
   ur10e_001_rack_home_position: {type: "joint_space_goal", values: [0,-2.45, 2.5,-0.062,1.614, 0],        velFactor: 0.2}
