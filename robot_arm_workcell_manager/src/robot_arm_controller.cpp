@@ -17,6 +17,7 @@ RobotArmController::RobotArmController(): nh_("~"),    // init new action client
     // Load yaml path via ros param
     loadParameters();
     
+    
     std::cout << "ControlGroup::ControlGroup(" << group_name_ << ") enter" << std::endl;
 
     ros::NodeHandle moveit_nh(arm_namespace_);
@@ -54,6 +55,7 @@ RobotArmController::RobotArmController(): nh_("~"),    // init new action client
     std::cout << "ControlGroup::ControlGroup(" << group_name_ << ") completed." << std::endl;
     load_complete_ = true;
 
+    loadEnvironment();
 
     ROS_INFO("RobotArmController::RobotArmController() completed!! \n");
 }
@@ -107,9 +109,64 @@ bool RobotArmController::loadParameters(){
     }
     ROS_INFO(" Motion Target YAML: Loading Completed! ");
 
+    try {
+
+        std::string _environment_path ="";
+        nh_.getParam("environment_path", _environment_path);
+        std::cout<<_environment_path<<std::endl;
+        ENVIRONMENT_CONFIG_ = YAML::LoadFile(_environment_path);
+    } 
+    catch (std::exception& err){
+        ROS_ERROR("exception in YAML LOADER: %s", err.what());
+        return false;
+    }
+    ROS_INFO(" Enviroment YAML: Loading Completed! ");
+
     return true;
 }
 
+bool RobotArmController::loadEnvironment(){
+    int number_of_object = std::size(ENVIRONMENT_CONFIG_["objects"]);
+        std::cout<<number_of_object<<std::endl;
+
+    std::vector<moveit_msgs::CollisionObject> collision_objects;
+
+    for (int i=1; i<= number_of_object;i++)
+    {
+        std::string object = "object_" + std::to_string(i);
+        ROS_INFO(" setting up object %s ", object);  
+
+        moveit_msgs::CollisionObject collision_object;
+        collision_object.header.frame_id = move_group_->getPlanningFrame();
+        collision_object.id = object;
+
+        shape_msgs::SolidPrimitive primitive;
+        primitive.type = ENVIRONMENT_CONFIG_["objects"][object]["type"].as<double>();
+        
+        //dimensions
+        primitive.dimensions.resize(3);
+        std::vector<double> dimensions = ENVIRONMENT_CONFIG_["objects"][object]["dimensions"].as<std::vector<double>>();
+        primitive.dimensions[0] = dimensions[0];
+        primitive.dimensions[1] = dimensions[1];
+        primitive.dimensions[2] = dimensions[2];
+
+        //pose
+        std::vector<double> pose_vector = ENVIRONMENT_CONFIG_["objects"][object]["pose"].as<std::vector<double>>();
+        geometry_msgs::Pose object_pose;
+        object_pose.orientation.w = 1;
+        object_pose.position.x = pose_vector[0];
+        object_pose.position.y = pose_vector[1];
+        object_pose.position.z = pose_vector[2];
+
+        collision_object.primitives.push_back(primitive);
+        collision_object.primitive_poses.push_back(object_pose);
+        collision_object.operation = collision_object.ADD;
+        collision_objects.push_back(collision_object);
+    }
+    planning_scene_interface.applyCollisionObjects(collision_objects);
+    ROS_INFO(" Enviroment Setup Completed! ");
+    return true;
+}
 
 bool RobotArmController::moveToNamedTarget(const std::string& _target_name){
     
