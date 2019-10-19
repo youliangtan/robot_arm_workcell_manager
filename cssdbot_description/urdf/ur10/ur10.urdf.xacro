@@ -3,7 +3,7 @@
 
   <xacro:include filename="$(find cssdbot_description)/urdf/ur10/ur.transmission.xacro" />
   <xacro:include filename="$(find cssdbot_description)/urdf/ur10/ur.gazebo.xacro" />
-  <xacro:include filename="$(find realsense_gazebo_plugin)/urdf/realsense-D435.macro.xacro"/>
+  <!-- <xacro:include filename="$(find realsense_gazebo_plugin)/urdf/realsense-D435.macro.xacro"/> -->
 
   <xacro:macro name="cylinder_inertial" params="radius length mass *origin">
     <inertial>

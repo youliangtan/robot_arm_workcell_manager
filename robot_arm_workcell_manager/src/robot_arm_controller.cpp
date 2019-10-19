@@ -243,33 +243,53 @@ bool RobotArmController::moveToEefTarget(const geometry_msgs::Pose _eef_target_p
     move_group_->setMaxVelocityScalingFactor(vel_factor);
     move_group_->setStartStateToCurrentState();
     
-    // TODO: now only support cartesian, assume only one waypoint
-    std::vector<geometry_msgs::Pose> waypoints;
-    waypoints.push_back(_eef_target_pose);
-    moveit_msgs::RobotTrajectory trajectory;
+    // nonworking due to flipping ='(
+    if (false){
+        move_group_->setJointValueTarget(_eef_target_pose);
 
-    double fraction = move_group_->computeCartesianPath(waypoints, eef_step, jump_threshold, trajectory, planning_constraints_);
-    int attempt = 0;
-    
-    while (fraction != 1.0  ){
-        if (attempt < attempts_thresh){
-            ROS_WARN("Planning failed with factor: %f, replanning...", fraction);
-            fraction = move_group_->computeCartesianPath(waypoints, eef_step, jump_threshold, trajectory, planning_constraints_);
-            attempt++;
-        }
-        else{
-            ROS_ERROR(" Reached Max motion planning attempts. Eef Target motion plan: FAILED");
+        if (move_group_->plan(motion_plan_) != moveit::planning_interface::MoveItErrorCode::SUCCESS){
+            ROS_ERROR("Eef Pose Target motion planning: FAILED");
             return false;
         }
+
+        ROS_INFO(" [Arm Controller: %s] Executing Cartesian Pose Space Motion...", arm_namespace_.c_str() );
+    
+        if (move_group_->execute(motion_plan_) != moveit_msgs::MoveItErrorCodes::SUCCESS){
+            ROS_ERROR(" Failed in executing cartesian planned motion path");   
+            return false;
+        }
+        
     }
+    // stepped cartesian
+    else{
+        // TODO: now only support cartesian, assume only one waypoint
+        std::vector<geometry_msgs::Pose> waypoints;
+        waypoints.push_back(_eef_target_pose);
+        moveit_msgs::RobotTrajectory trajectory;
 
-    motion_plan_.trajectory_ = trajectory;
-    ROS_INFO(" [Arm Controller: %s] Executing Cartesian Space Motion...", arm_namespace_.c_str() );
-    // moveArm(motion_plan_);
+        double fraction = move_group_->computeCartesianPath(waypoints, eef_step, jump_threshold, trajectory, planning_constraints_);
+        int attempt = 0;
+        
+        while (fraction != 1.0  ){
+            if (attempt < attempts_thresh){
+                ROS_WARN("Planning failed with factor: %f, replanning...", fraction);
+                fraction = move_group_->computeCartesianPath(waypoints, eef_step, jump_threshold, trajectory, planning_constraints_);
+                attempt++;
+            }
+            else{
+                ROS_ERROR(" Reached Max motion planning attempts. Eef Target motion plan: FAILED");
+                return false;
+            }
+        }
 
-    if (move_group_->execute(motion_plan_) != moveit_msgs::MoveItErrorCodes::SUCCESS){
-        ROS_ERROR(" Failed in executing planned motion path");   
-        return false;
+        motion_plan_.trajectory_ = trajectory;
+        ROS_INFO(" [Arm Controller: %s] Executing Stepped Cartesian path Motion...", arm_namespace_.c_str() );
+        // moveArm(motion_plan_);
+
+        if (move_group_->execute(motion_plan_) != moveit_msgs::MoveItErrorCodes::SUCCESS){
+            ROS_ERROR(" Failed in executing planned motion path");   
+            return false;
+        }
     }
 
     return true;

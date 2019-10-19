@@ -70,13 +70,11 @@
                 <!-- 0 0 0 -1.57 0 -1.57 $(arg arm_ns)/camera_link_optical $(arg arm_ns)/camera 10"     -->
 
 
-    <include file="$(find realsense_gazebo_plugin)/launch/D435_depth_proc.launch"/>
+    <!-- TODO : CLEAN!!!!! -->
+    <!-- <include file="$(find realsense_gazebo_plugin)/launch/D435_depth_proc.launch"/> -->
 
-<!-- TODO : CLEAN!!!!! -->
-       <node pkg="tf" type="static_transform_publisher" name="eef_to_camera_optical" 
-          args="0.055 0.06 0.0825 0 0 0 ee_link camera_link_optical 10" />   
-
-
+    <!-- <node pkg="tf" type="static_transform_publisher" name="eef_to_camera_optical" 
+      args="0.055 0.06 0.0825 0 0 0 ee_link camera_link_optical 10" />    -->
  
   </group>
 
