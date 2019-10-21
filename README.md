@@ -14,7 +14,7 @@ Now with namespace support! Enabling two (or more!) arms to perform a choreograp
 
 *Full Video Link* (with one arm),  [here](https://drive.google.com/open?id=1dGKh3FVMlUwX8GUMv3mgxQFBm0OnGa8B)
 
-*Full Video Link* (with two arms), [here](https://drive.google.com/open?id=1dT9zQ5bbWr0oMqf9hO2wWMH2uiiHR1AT)	
+*Full Video Link* (with two arms), [here](https://drive.google.com/open?id=1dT9zQ5bbWr0oMqf9hO2wWMH2uiiHR1AT)
 
 ---
 
@@ -78,20 +78,9 @@ roslaunch robot_arm_workcell_manager two_arms_rviz.launch
 roslaunch robot_arm_workcell_manager two_arms_rawm.launch
 ```
 
-
 _p/s: Wait each launch terminal to be fully launched before launching the next `.launch`._
 
-------
-
-## Setting environment
-
-The config file is in rawm package called environment_object. This is to set the environment in moveit. Please subscribe to planning scene in rviz to see the objects.
-
-- The object must be called object_1, object_2 and so on. 
-- type 1 for box, 2 sphere, 3 clinder, 4 cone. 
-
-## Octomapping 
-Information is pulled from the depth camera and added to the planning scene. The params can be found at cssdbot_ur10_moveitconfig package, sensor_manager.launch.xml and sensors_kinect_pointcloud.yaml
+---
 
 ## Request a Task 
 
@@ -161,47 +150,25 @@ roslaunch robot_arm_workcell_manager robot_arm_workcell_manager.launch
 
 ---
 
+## Setting environment
 
-## Testing Arms on HARDWARE! (UR10e)
+The config file is in rawm package called environment_object. This is to set the environment in moveit. Please subscribe to planning scene in rviz to see the objects.
 
-### Prerequisites
-PLEASE KEEP YOUR HANDS ON THE BIG RED BUTTON!
-Also, Download [ur_modern_driver with e series](https://github.com/AdmiralWall/ur_modern_driver/tree/kinetic_ur_5_4). Then install it. (remember to checkout to `kinetic_ur_5_4` branch )
+- The object must be called object_1, object_2 and so on. 
+- type 1 for box, 2 sphere, 3 clinder, 4 cone. 
 
-### 1. Terminal A (robot bringup):
-```bash
-# For ur10
-roslaunch ur_modern_driver ur10_bringup.launch robot_ip:=198.168.88.XX
-# For ur10e,
-roslaunch ur_modern_driver ur10e_bringup.launch robot_ip:=198.168.88.XX
-```
+## Octomapping 
+Information is pulled from the depth camera and added to the planning scene. The params can be found at cssdbot_ur10_moveitconfig package, sensor_manager.launch.xml and sensors_kinect_pointcloud.yaml
 
-### 2. Terminal B (moveit & Rviz):
+---
 
-*a) With Full RAWM package*
-```bash
-roslaunch robot_arm_workcell_manager demo.launch sim:=false enable_fake_joints_execution:=false arm_type:=ur10e
-# then on terminal C, run RAWM
-roslaunch robot_arm_workcell_manager robot_arm_workcell_manager.launch dispenser_name:=ur10e_001
-```
+## Testing Arms on HARDWARE!
 
-Then on Terminal D: Pub dispenser request!!!! Good luck 
+Please Refer to the readme in README in [cssd_hardware](/cssd_hardware/).
 
-*b) Or, just test it with moveit on Rviz (terminal B)*
+![alt text](/documentations/test_on_hardware.gif?)
 
-![alt text](/documentations/rviz.gif?)
-
-```bash
-# For ur10,
-roslaunch cssdbot_ur10_moveit_config realistic_minimal.launch
-# or For ur10e,
-roslaunch cssdbot_ur10e_moveit_config realistic_minimal.launch
-```
-
-With pure tryout using moveit on rviz, remember:
-- !!!PLAN BEFORE EXECUTING. SCALE YORU VELOCITY!!!!
-- Remember `CURRENT STATE` should always be :`<current_state>`, `GROUP` should be: `MANIPULATOR`
-- Joint states can be altered in `cssdbot_urxx_moveit_config/config/urxx.srdf`
+---
 
 ## Notes
 - Custom designed "fork-lift" end effector, trays and tray placements are used in this application.
