@@ -6,7 +6,6 @@
   <arg name="debug"                         default="false" />
   <arg name="limited"                       default="false"/>
   
-  <arg name="enable_usb_cam"                default="false"/>
 
   <arg name="sim"                           default="false"/>
   <arg name="enable_fake_joints_execution"  default="true"/>
@@ -57,8 +56,6 @@
 
     <include file="$(find robot_arm_workcell_manager )/launch/markers_detector.launch">
         <arg name="ns"             value="$(arg arm_ns)"/>
-        <arg name="camSelect"      default="/dev/video1"/>
-        <arg name="enable_usb_cam" value="$(arg enable_usb_cam)"/>
     </include>
 
     <!-- Currently handle the 'static tf publisher' in a dirty way, due to '/' issue -->
@@ -73,13 +70,11 @@
                 <!-- 0 0 0 -1.57 0 -1.57 $(arg arm_ns)/camera_link_optical $(arg arm_ns)/camera 10"     -->
 
 
-    <include file="$(find realsense_gazebo_plugin)/launch/D435_depth_proc.launch"/>
+    <!-- TODO : CLEAN!!!!! -->
+    <!-- <include file="$(find realsense_gazebo_plugin)/launch/D435_depth_proc.launch"/> -->
 
-<!-- TODO : CLEAN!!!!! -->
-       <node pkg="tf" type="static_transform_publisher" name="eef_to_camera_optical" 
-          args="0.055 0.06 0.0825 0 0 0 ee_link camera_link_optical 10" />   
-
-
+    <!-- <node pkg="tf" type="static_transform_publisher" name="eef_to_camera_optical" 
+      args="0.055 0.06 0.0825 0 0 0 ee_link camera_link_optical 10" />    -->
  
   </group>
 

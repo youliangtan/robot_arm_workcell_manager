@@ -161,12 +161,12 @@ bool RobotArmWorkcellManager::executeRobotArmMission(){
     moveit_msgs::JointConstraint wrist_3_joint;
     wrist_3_joint.joint_name="wrist_3_joint";
     wrist_3_joint.position = 0.0;
-    wrist_3_joint.tolerance_above = 0.7;
-    wrist_3_joint.tolerance_below = 0.7;
+    wrist_3_joint.tolerance_above = 1.57;
+    wrist_3_joint.tolerance_below = 1.57;
     wrist_3_joint.weight = 1;
 
     planning_constraints.joint_constraints.push_back(wrist_3_joint);
-    arm_controller_.setPlanningConstraints(planning_constraints);
+    // arm_controller_.setPlanningConstraints(planning_constraints);
 
     // Lookup for target marker at different Rack Level (0, 1, 2...)
     for (int rack_level=0; !markers_detector_.getTransformPose( "base_link", requested_item.item_type) ; rack_level++ ){
