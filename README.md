@@ -37,6 +37,7 @@ sudo apt-get install ros-melodic-fiducial-msgs
 ```
 - rmf_msgs: [here](https://github.com/RMFHOPE/rmf_msgs_ros1), **Phasing Out Soon
 - CSSD_workcell_manager (ROS2): [Here](https://github.com/sharp-rmf/rmf-workcell/tree/cssd_workcell/cssd_workcell_manager) Not Necessary
+- [Realsense gazebo plugin](https://github.com/tanyouliang95/realsense_gazebo_plugin.git)
 
 ### Make and Build
 ```bash
