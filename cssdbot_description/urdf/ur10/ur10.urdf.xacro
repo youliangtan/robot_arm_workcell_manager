@@ -4,6 +4,7 @@
   <xacro:include filename="$(find cssdbot_description)/urdf/ur10/ur.transmission.xacro" />
   <xacro:include filename="$(find cssdbot_description)/urdf/ur10/ur.gazebo.xacro" />
   <xacro:include filename="$(find realsense_gazebo_plugin)/urdf/realsense-D435.macro.xacro"/>
+  <xacro:arg name="camera_ns" default="arm" />
 
   <xacro:macro name="cylinder_inertial" params="radius length mass *origin">
     <inertial>
@@ -375,7 +376,8 @@
 <!-- normal start of camera -->
 
     <!-- satisfy both gazebo convention and aruco pkg convetion. looking from x axis and z axis respectively. -->
-<!--  <joint name="camera_optical_joint" type="fixed">
+
+ <!--<joint name="camera_optical_joint" type="fixed">
     <origin xyz=" 0.055 0.06 0.0825" rpy="0 0.0 0" />>
     <parent link="${prefix}end_effector_link"/>
     <child link="${prefix}camera_link_optical"/>
@@ -428,9 +430,10 @@
 
 <!-- start of stero cam intel realsense-->
 
-    <xacro:realsense-D435 prefix="" parent="${prefix}end_effector_link">
-        <origin xyz="0.055 0.06 0.0825" rpy="0 0 0" />   
-    </xacro:realsense-D435>
+    <xacro:realsense-D435 prefix="$(arg camera_ns)" parent="${prefix}end_effector_link">
+        <origin xyz="0.045 0.06 0.09" rpy="0 0 0" />   
+    </xacro:realsense-D435> 
+
 <!-- end of stereo cam-->
 
     <!-- ROS base_link to UR 'Base' Coordinates transform -->
