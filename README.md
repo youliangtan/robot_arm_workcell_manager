@@ -225,15 +225,4 @@ With pure tryout using moveit on rviz, remember:
 - Joint IK flip issue while placing to ``marker_103` : Tried switch the planner from `ompl` to `stomp` (in `planning_context.launch`), still not able to fully solve the issue.
 
 ## TODO
-- Further Code clean up!!
-- gazebo model clean upssss
-- collision model creation on the scene in moveit
-- Warm start Issue!!!! Also ability to launch gazebo with rviz (Controller issue!!!)
-- tune the PID for the arms / and physics params for physical models, seems to jitter slightly.
-- robot arm left right scanning feature when searching for the mir transporter cart
-- intergration with greater RMF environment
-- Eventually, *FULL* Hardware Test!!!!!!
-- test usb cam on new hardware, and config all usb video path
-- Potential prob: checkout `prob1.png`, encounter yaw prob on ur10e (instead of ur10). Quick fix on cart's aruco marker's yaw angle
-- Dynamic payload setting on Ur10e
-- External camera support, create another new `cssd_hardware_launch` pkg
+- octo mapping for ur10 and ur10e
