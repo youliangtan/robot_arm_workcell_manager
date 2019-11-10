@@ -412,7 +412,7 @@
 <!-- start of camera -->
 
     <!-- satisfy both gazebo convention and aruco pkg convetion. looking from x axis and z axis respectively. -->
-<!--
+
   <joint name="${prefix}camera_optical_joint" type="fixed">
     <origin xyz=" 0.055 0.06 0.0825" rpy="0 0.0 0" />>
     <parent link="${prefix}end_effector_link"/>
@@ -458,16 +458,11 @@
         <distortionT2>0.0</distortionT2>
       </plugin>
     </sensor>
-  </gazebo> -->
+  </gazebo> 
 <!--camera link-->
 <!--end of camera link-->
 
 
-<!-- start of stero cam intel realsense-->
-    <xacro:realsense-D435 prefix="$(arg camera_ns)" parent="${prefix}end_effector_link">
-        <origin xyz="0.055 0.06 0.0825" rpy="0 0 0" />   
-    </xacro:realsense-D435> 
-<!-- end of stereo cam-->
 
     <!-- ROS base_link to UR 'Base' Coordinates transform -->
     <link name="${prefix}base"/>

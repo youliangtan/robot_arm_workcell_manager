@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>cssd_hardware</name>
+  <version>1.0.0</version>
+  <description>
+    Drivers, description, and utilities for Robot Arm Workcell Manipulation Workcell, Using moveit 
+  </description>
+  <maintainer email="tan_you_liang@hotmail.com">Tan You Liang</maintainer>
+  <license>BSD</license>
+
+
+
+  <buildtool_depend>catkin</buildtool_depend>
+</package>

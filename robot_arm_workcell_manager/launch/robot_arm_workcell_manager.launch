@@ -6,6 +6,7 @@
     <arg name="environment_config_file"  default="$(find robot_arm_workcell_manager)/config/environment_object.yaml" />
     <arg name="arm_ns" default="/"/>
     <arg name="dispenser_name" default="ur10_001"/>
+    <arg name="transporter_placement" default="left"/>
 
     <group ns="$(arg arm_ns)">
 

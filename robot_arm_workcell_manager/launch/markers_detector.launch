@@ -1,31 +1,6 @@
 <launch>
 
 
-  <!--              ************************************************************************************              -->
-  <!--              ********************************* USB Camera Input *********************************              -->
-  <!--              ************************************************************************************              -->
-
-  <arg name="enable_usb_cam"  default="true"/>
-  <arg name="camSelect"       default="/dev/video0"/>
-  <arg name="pixelFormat"     default="yuyv"/>    <!-- refer to usb_cam ros documentation -->
-  <arg name="cameraConfig"    default="file://$(find robot_arm_workcell_manager)/config/usb_cam.yaml"/>
-  
-  <arg name="cam_frame"       default="camera"/>
-  <arg name="ref_frame"       default=""/>  <!-- leave empty and the pose will be published wrt param parent_name -->
-
-  <group if="$(arg enable_usb_cam)">
-
-    <node pkg="usb_cam" type="usb_cam_node" name="usb_camera">
-      <remap from="/usb_camera/camera_info"  to="/camera_info"/>
-      <remap from="/usb_camera/image_raw"  to="/image" />   
-      <param name="camera_frame_id"     value="$(arg cam_frame)"/>
-      <param name="video_device"        value="$(arg camSelect)"/>
-      <param name="pixel_format"        value="$(arg pixelFormat)"/>
-      <param name="camera_info_url" type="string" value="$(arg cameraConfig)" />
-    </node>
-    
-  </group>
-
 
   <!--              ************************************************************************************              -->
   <!--              ******************************** Aruco Detector node *******************************              -->
@@ -33,6 +8,7 @@
 
   <!-- Run the aruco_detect node -->
   <!-- namespace for camera input -->
+  <arg name="sim" default="false"/>
   <arg name="ns" default=""/>
   <arg name="image" default="/image"/>
   <arg name="transport" default="compressed"/>
@@ -57,5 +33,10 @@
     <remap from="/fiducial_transforms" to="fiducial_transforms"/>
     <remap from="/fiducial_vertices" to="fiducial_vertices"/>
   </node>
+
+<group unless="$(arg sim)">
+  <remap from="$(arg ns)/camera_info" to="$(arg ns)/camera/color/camera_info"/>
+  <remap from="$(arg ns)/$(arg image)/$(arg transport)" to="$(arg ns)/camera/color/$(arg image)/$(arg transport)"/> 
+</group>
 
 </launch>
