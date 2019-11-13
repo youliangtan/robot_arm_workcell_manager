@@ -12,7 +12,7 @@
     <!-- <arg name="gazebo_sim"             default="false"/>
     <arg name="fake_joints_execution"  default="true"/> -->
 
-    <!-- If running on Gazebo-->
+    <!-- If running on hardware Robot-->
     <!-- <arg name="gazebo_sim"             default="false"/>
     <arg name="fake_joints_execution"  default="false"/> -->
 

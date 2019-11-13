@@ -6,11 +6,10 @@
 
   <maintainer email="tan_you_liang@hotmail.com">youLiang</maintainer>
 
-
   <license>TODO</license>
-
+  <depend>gazebo_ros</depend>
+  <depend>gazebo_ros_control</depend>
   <buildtool_depend>catkin</buildtool_depend>
-
 
   <export>
   </export>

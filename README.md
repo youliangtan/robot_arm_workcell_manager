@@ -10,7 +10,7 @@ Now with namespace support! Enabling two (or more!) arms to perform a choreograp
 
 ![alt text](/documentations/two_arms_dance.gif?)
 
-![alt text](/documentations/robot_in_room2.png?)
+<img src="/documentations/robot_in_room2.png" width="600">
 
 *Full Video Link* (with one arm),  [here](https://drive.google.com/open?id=1dGKh3FVMlUwX8GUMv3mgxQFBm0OnGa8B)
 
@@ -32,8 +32,7 @@ Now with namespace support! Enabling two (or more!) arms to perform a choreograp
 - Universal Robot: [here](https://github.com/ros-industrial/universal_robot), **Remember to switch branch
 - Fiducial Marker Detector: [here](https://github.com/UbiquityRobotics/fiducials)
 ```bash
-sudo apt-get install ros-melodic-aruco-detect
-sudo apt-get install ros-melodic-fiducial-msgs
+sudo apt-get install ros-melodic-aruco-detect ros-melodic-fiducial-msgs
 ```
 - realsense_gazebo_plugin
 - realsense-ros (for hardware)  
@@ -42,8 +41,8 @@ sudo apt-get install ros-melodic-fiducial-msgs
 
 ### Make and Build
 ```bash
-catkin_make --pkg cssdbot_moveit_config cssdbot_description cssd_gazebo
 catkin_make --pkg robot_arm_workcell_manager -j4
+catkin_make --pkg cssdbot_moveit_config cssdbot_description cssd_gazebo
 ```
 
 ---
@@ -79,7 +78,6 @@ roslaunch robot_arm_workcell_manager two_arms_rviz.launch
 # Terminal C: Run RAWM
 roslaunch robot_arm_workcell_manager two_arms_rawm.launch
 ```
-
 
 _p/s: Wait each launch terminal to be fully launched before launching the next `.launch`._
 
@@ -120,6 +118,10 @@ By now, the robot dispenser will execute the task according to the `DispenserReq
 _p/s: You can play with the gazebo model by manually move the position of the transporter cart_
 
 ---
+
+## Run on Hardware
+
+Please refer to the readme [here](/cssd_hardware)
 
 ---
 
@@ -163,48 +165,6 @@ roslaunch robot_arm_workcell_manager robot_arm_workcell_manager.launch
 
 ---
 
-
-## Testing Arms on HARDWARE! (UR10e)
-
-### Prerequisites
-PLEASE KEEP YOUR HANDS ON THE BIG RED BUTTON!
-Also, Download [ur_modern_driver with e series](https://github.com/AdmiralWall/ur_modern_driver/tree/kinetic_ur_5_4). Then install it. (remember to checkout to `kinetic_ur_5_4` branch )
-
-### 1. Terminal A (robot bringup):
-```bash
-# For ur10
-roslaunch ur_modern_driver ur10_bringup.launch robot_ip:=198.168.88.XX
-# For ur10e,
-roslaunch ur_modern_driver ur10e_bringup.launch robot_ip:=198.168.88.XX
-```
-
-### 2. Terminal B (moveit & Rviz):
-
-*a) With Full RAWM package*
-```bash
-roslaunch robot_arm_workcell_manager demo.launch sim:=false enable_fake_joints_execution:=false arm_type:=ur10e
-# then on terminal C, run RAWM
-roslaunch robot_arm_workcell_manager robot_arm_workcell_manager.launch dispenser_name:=ur10e_001
-```
-
-Then on Terminal D: Pub dispenser request!!!! Good luck 
-
-*b) Or, just test it with moveit on Rviz (terminal B)*
-
-![alt text](/documentations/rviz.gif?)
-
-```bash
-# For ur10,
-roslaunch cssdbot_ur10_moveit_config realistic_minimal.launch
-# or For ur10e,
-roslaunch cssdbot_ur10e_moveit_config realistic_minimal.launch
-```
-
-With pure tryout using moveit on rviz, remember:
-- !!!PLAN BEFORE EXECUTING. SCALE YORU VELOCITY!!!!
-- Remember `CURRENT STATE` should always be :`<current_state>`, `GROUP` should be: `MANIPULATOR`
-- Joint states can be altered in `cssdbot_urxx_moveit_config/config/urxx.srdf`
-
 ## Notes
 - Custom designed "fork-lift" end effector, trays and tray placements are used in this application.
 - 3 executables are used in this application, namely: `robot_arm_workcell_manager` (MAIN), `robot_arm_controller`, `fiducial_markers_handler`.
@@ -218,6 +178,7 @@ With pure tryout using moveit on rviz, remember:
 - To check out `tf_tree` and `rqt_graph`, go to `documentations` folder
 - To add more arms: expand `cssd_gazebo two_arms.launch`, `two_arms_rviz.launch`, `two_arms_rawm.launch`
 - master branch for `ur_modern_driver` currently doesn't support UR-E series
+- When using realsense, the `camera_info` which consists of the camera-matrix is locaated auto generated when launching `realsense2_ros`
 
 ## Debuging process
 - Jittering Problem during picking up of tray with Eef:  use `velocity_controllers` instead of `position_controller`
@@ -226,15 +187,4 @@ With pure tryout using moveit on rviz, remember:
 - Joint IK flip issue while placing to ``marker_103` : Tried switch the planner from `ompl` to `stomp` (in `planning_context.launch`), still not able to fully solve the issue.
 
 ## TODO
-- Further Code clean up!!
-- gazebo model clean upssss
-- collision model creation on the scene in moveit
-- Warm start Issue!!!! Also ability to launch gazebo with rviz (Controller issue!!!)
-- tune the PID for the arms / and physics params for physical models, seems to jitter slightly.
-- robot arm left right scanning feature when searching for the mir transporter cart
-- intergration with greater RMF environment
-- Eventually, *FULL* Hardware Test!!!!!!
-- test usb cam on new hardware, and config all usb video path
-- Potential prob: checkout `prob1.png`, encounter yaw prob on ur10e (instead of ur10). Quick fix on cart's aruco marker's yaw angle
-- Dynamic payload setting on Ur10e
-- External camera support, create another new `cssd_hardware_launch` pkg
+- octo mapping for ur10 and ur10e
