@@ -32,8 +32,7 @@ Now with namespace support! Enabling two (or more!) arms to perform a choreograp
 - Universal Robot: [here](https://github.com/ros-industrial/universal_robot), **Remember to switch branch
 - Fiducial Marker Detector: [here](https://github.com/UbiquityRobotics/fiducials)
 ```bash
-sudo apt-get install ros-melodic-aruco-detect
-sudo apt-get install ros-melodic-fiducial-msgs
+sudo apt-get install ros-melodic-aruco-detect ros-melodic-fiducial-msgs
 ```
 - rmf_msgs: [here](https://github.com/RMFHOPE/rmf_msgs_ros1), **Phasing Out Soon
 - CSSD_workcell_manager (ROS2): [Here](https://github.com/sharp-rmf/rmf-workcell/tree/cssd_workcell/cssd_workcell_manager) Not Necessary
@@ -41,8 +40,8 @@ sudo apt-get install ros-melodic-fiducial-msgs
 
 ### Make and Build
 ```bash
-catkin_make --pkg cssdbot_moveit_config cssdbot_description cssd_gazebo
 catkin_make --pkg robot_arm_workcell_manager -j4
+catkin_make --pkg cssdbot_moveit_config cssdbot_description cssd_gazebo cssd_hardware
 ```
 
 ---
@@ -78,7 +77,6 @@ roslaunch robot_arm_workcell_manager two_arms_rviz.launch
 # Terminal C: Run RAWM
 roslaunch robot_arm_workcell_manager two_arms_rawm.launch
 ```
-
 
 _p/s: Wait each launch terminal to be fully launched before launching the next `.launch`._
 
