@@ -10,9 +10,7 @@ Now with namespace support! Enabling two (or more!) arms to perform a choreograp
 
 ![alt text](/documentations/two_arms_dance.gif?)
 
-<!-- ![alt text](/documentations/robot_in_room2.png){:height="36px" width="36px"} -->
-
-<img src="/documentations/robot_in_room2.png" width="200">
+<img src="/documentations/robot_in_room2.png" width="600">
 
 *Full Video Link* (with one arm),  [here](https://drive.google.com/open?id=1dGKh3FVMlUwX8GUMv3mgxQFBm0OnGa8B)
 
@@ -38,7 +36,6 @@ sudo apt-get install ros-melodic-aruco-detect ros-melodic-fiducial-msgs
 ```
 - rmf_msgs: [here](https://github.com/RMFHOPE/rmf_msgs_ros1), **Phasing Out Soon
 - CSSD_workcell_manager (ROS2): [Here](https://github.com/sharp-rmf/rmf-workcell/tree/cssd_workcell/cssd_workcell_manager) Not Necessary
-- [Realsense gazebo plugin](https://github.com/tanyouliang95/realsense_gazebo_plugin.git)
 
 ### Make and Build
 ```bash

@@ -2,6 +2,8 @@
 # robot_arm_workcell_manager (RAWM)
 Testing Arms on HARDWARE! (Testing on Going). Here, the test is mainly on UR10e.  PLEASE KEEP YOUR HANDS ON THE BIG RED BUTTON!
 
+**For now, to test on hardware, user will need to switch the topic in `` **
+
 ## Prerequisites
 
  - Intel Realsense, install from [here](https://github.com/IntelRealSense/realsense-ros)
@@ -24,9 +26,10 @@ After bringup, send a `dispenserRequest` to move the arm
 rostopic pub /cssd_workcell/dispenser_request rmf_msgs/DispenserRequest '{request_id: 0xx03, dispenser_name: ur10e_001, items:[{item_type: marker_1, quantity: 1, compartment_name: 'marker_100'}] }' --once
 ```
 
-Again, PLEASE KEEP YOUR HANDS ON THE BIG RED BUTTON!
+Again, PLEASE KEEP YOUR HANDS ON THE BIG RED BUTTON! :fire:
 
 ## Launching of two arms
+**Not Yet Ready :frowning_man:**
 
 - Please change launch file below to set the ip of robot, and all other parameters
 
