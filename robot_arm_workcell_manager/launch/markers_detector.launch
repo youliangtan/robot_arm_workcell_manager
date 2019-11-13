@@ -18,8 +18,7 @@
   <arg name="ignore_fiducials" default="" />
   <arg name="fiducial_len_override" default="" />
 
-  <node pkg="aruco_detect" name="aruco_detect"
-    type="aruco_detect" respawn="false">
+  <node pkg="aruco_detect" name="aruco_detect" type="aruco_detect" respawn="false">
     <param name="image_transport" value="$(arg transport)"/>
     <param name="publish_images" value="true" />
     <param name="fiducial_len" value="$(arg markerSize)"/>
@@ -34,9 +33,9 @@
     <remap from="/fiducial_vertices" to="fiducial_vertices"/>
   </node>
 
-<group unless="$(arg sim)">
-  <remap from="$(arg ns)/camera_info" to="$(arg ns)/camera/color/camera_info"/>
-  <remap from="$(arg ns)/$(arg image)/$(arg transport)" to="$(arg ns)/camera/color/$(arg image)/$(arg transport)"/> 
-</group>
+  <group unless="$(arg sim)">
+    <remap from="$(arg ns)/camera_info" to="$(arg ns)/camera/color/camera_info"/>
+    <remap from="$(arg ns)/$(arg image)/$(arg transport)" to="$(arg ns)/camera/color/$(arg image)/$(arg transport)"/> 
+  </group>
 
 </launch>
