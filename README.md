@@ -34,6 +34,8 @@ Now with namespace support! Enabling two (or more!) arms to perform a choreograp
 ```bash
 sudo apt-get install ros-melodic-aruco-detect ros-melodic-fiducial-msgs
 ```
+- realsense_gazebo_plugin
+- realsense-ros (for hardware)  
 - rmf_msgs: [here](https://github.com/RMFHOPE/rmf_msgs_ros1), **Phasing Out Soon
 - CSSD_workcell_manager (ROS2): [Here](https://github.com/sharp-rmf/rmf-workcell/tree/cssd_workcell/cssd_workcell_manager) Not Necessary
 

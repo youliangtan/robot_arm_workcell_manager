@@ -9,7 +9,7 @@ Panels:
         - /TF1
         - /TF1/Frames1
       Splitter Ratio: 0.7425600290298462
-    Tree Height: 258
+    Tree Height: 167
   - Class: rviz/Help
     Name: Help
   - Class: rviz/Views
@@ -320,11 +320,11 @@ Visualization Manager:
           Value: true
         base:
           Value: true
-        base_link:
+        arm1/base_link:
           Value: true
-        camera:
+        arm1/camera:
           Value: true
-        camera_link_optical:
+        arm1/camera_link_optical:
           Value: true
         color:
           Value: true
@@ -342,17 +342,81 @@ Visualization Manager:
           Value: true
         shoulder_link:
           Value: true
-        tool0:
+        arm1/insert:
           Value: true
         upper_arm_link:
           Value: true
+        arm1/marker_1:
+          Value: true
+        arm1/marker_2:
+          Value: true
+        arm1/marker_3:
+          Value: true
+        arm1/post_pick:
+          Value: true
+        arm1/pre_pick:
+          Value: true
+        arm1/rescan_pos:
+          Value: true
+        arm1/shoulder_link:
+          Value: true
+        arm1/tool0:
+          Value: true
+        arm1/upper_arm_link:
+          Value: true
+        arm1/world:
+          Value: true
+        arm1/wrist_1_link:
+          Value: true
+        arm1/wrist_2_link:
+          Value: true
+        arm1/wrist_3_link:
+          Value: true
+        arm2/base:
+          Value: true
+        arm2/base_link:
+          Value: true
+        arm2/camera:
+          Value: true
+        arm2/camera_link_optical:
+          Value: true
+        arm2/ee_link:
+          Value: true
+        arm2/end_effector_link:
+          Value: true
+        arm2/forearm_link:
+          Value: true
+        arm2/insert:
+          Value: true
+        arm2/lift:
+          Value: true
+        arm2/marker_0:
+          Value: true
+        arm2/post_pick:
+          Value: true
+        arm2/pre_pick:
+          Value: true
+        arm2/rescan_pos:
+          Value: true
+        arm2/shoulder_link:
+          Value: true
+        arm2/tool0:
+          Value: true
+        arm2/upper_arm_link:
+          Value: true
+        arm2/world:
+          Value: true
+        arm2/wrist_1_link:
+          Value: true
+        arm2/wrist_2_link:
+          Value: true
+        arm2/wrist_3_link:
+          Value: true
+        camera_link_optical:
+          Value: true
+        ee_link:
+          Value: true
         world:
-          Value: true
-        wrist_1_link:
-          Value: true
-        wrist_2_link:
-          Value: true
-        wrist_3_link:
           Value: true
       Marker Scale: 1
       Name: TF

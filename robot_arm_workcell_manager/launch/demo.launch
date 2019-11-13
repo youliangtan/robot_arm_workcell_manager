@@ -49,7 +49,6 @@
 
     <include file="$(find robot_arm_workcell_manager )/launch/markers_detector.launch">
       <arg name="ns"             value="$(arg arm_ns)"/>
-      <arg name="sim"     	     value="$(arg sim)"/>
     </include>
 
     <!-- Currently handle the 'static tf publisher' in a dirty way, due to '/' issue -->
