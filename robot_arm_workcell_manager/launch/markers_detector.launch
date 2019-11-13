@@ -4,12 +4,8 @@
 
   <!-- Run the aruco_detect node -->
   <!-- namespace for camera input -->
-
-  <!-- TODO: camera ns having issue, gazebo hardware switch by commenting -->
   <arg name="sim" default="false"/>
-  <arg name="ns" default=""/>
-  <arg name="image" default="image_raw"/>
-  <!-- <arg name="image" default="image"/> -->
+  <arg name="ns" default=""/>  
   <arg name="transport" default="compressed"/>
   <arg name="markerSize"      default="0.04"/>    <!-- in m -->
   <arg name="dictionary" default="7"/>
@@ -25,20 +21,13 @@
     <param name="do_pose_estimation" value="$(arg do_pose_estimation)"/>
     <param name="ignore_fiducials" value="$(arg ignore_fiducials)"/>
     <param name="fiducial_len_override" value="$(arg fiducial_len_override)"/>
-    <!-- <remap from="/camera/compressed" to="$(arg ns)/$(arg image)/$(arg transport)"/> 
-    <remap from="/camera_info" to="$(arg ns)/camera_info"/>
-     -->
-    <remap from="/camera/compressed" to="$(arg ns)/color/$(arg image)/$(arg transport)"/>  <!-- TODO: Clean up-->
-    <remap from="/camera_info" to="$(arg ns)/color/camera_info"/>
+    
+    <remap from="/camera/compressed" to="$(arg ns)/image/$(arg transport)"/> 
+    <remap from="/camera_info" to="$(arg ns)/camera_info"/> 
+
     <remap from="/fiducial_images" to="fiducial_images"/>
     <remap from="/fiducial_transforms" to="fiducial_transforms"/>
     <remap from="/fiducial_vertices" to="fiducial_vertices"/>
   </node>
-
-  <!-- TODO , when trying on hardware... -->
-  <!-- <group unless="$(arg sim)"> -->
-    <!-- <remap from="/camera_info" to="$(arg ns)/color/camera_info"/>
-    <remap from="/$(arg transport)" to="$(arg ns)/color/$(arg image)/$(arg transport)"/>  -->
-  <!-- </group> -->
 
 </launch>

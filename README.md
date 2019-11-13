@@ -10,7 +10,9 @@ Now with namespace support! Enabling two (or more!) arms to perform a choreograp
 
 ![alt text](/documentations/two_arms_dance.gif?)
 
-![alt text](/documentations/robot_in_room2.png?)
+<!-- ![alt text](/documentations/robot_in_room2.png){:height="36px" width="36px"} -->
+
+<img src="/documentations/robot_in_room2.png" width="200">
 
 *Full Video Link* (with one arm),  [here](https://drive.google.com/open?id=1dGKh3FVMlUwX8GUMv3mgxQFBm0OnGa8B)
 
@@ -164,25 +166,6 @@ roslaunch robot_arm_workcell_manager robot_arm_workcell_manager.launch
 
 ---
 
-
-## Testing Arms on HARDWARE! (UR10e)
-
-### Prerequisites
-PLEASE KEEP YOUR HANDS ON THE BIG RED BUTTON!
-Also, Download [ur_modern_driver with e series](https://github.com/AdmiralWall/ur_modern_driver/tree/kinetic_ur_5_4). Then install it. (remember to checkout to `kinetic_ur_5_4` branch )
-
-```bash
-# For ur10
-roslaunch cssd_hardware single_arm.launch robot_ip:=172.16.17.2
-```
-
-
-
-With pure tryout using moveit on rviz, remember:
-- !!!PLAN BEFORE EXECUTING. SCALE YORU VELOCITY!!!!
-- Remember `CURRENT STATE` should always be :`<current_state>`, `GROUP` should be: `MANIPULATOR`
-- Joint states can be altered in `cssdbot_urxx_moveit_config/config/urxx.srdf`
-
 ## Notes
 - Custom designed "fork-lift" end effector, trays and tray placements are used in this application.
 - 3 executables are used in this application, namely: `robot_arm_workcell_manager` (MAIN), `robot_arm_controller`, `fiducial_markers_handler`.
@@ -196,6 +179,7 @@ With pure tryout using moveit on rviz, remember:
 - To check out `tf_tree` and `rqt_graph`, go to `documentations` folder
 - To add more arms: expand `cssd_gazebo two_arms.launch`, `two_arms_rviz.launch`, `two_arms_rawm.launch`
 - master branch for `ur_modern_driver` currently doesn't support UR-E series
+- When using realsense, the `camera_info` which consists of the camera-matrix is locaated auto generated when launching `realsense2_ros`
 
 ## Debuging process
 - Jittering Problem during picking up of tray with Eef:  use `velocity_controllers` instead of `position_controller`

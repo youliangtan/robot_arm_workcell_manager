@@ -10,21 +10,21 @@
   	<arg name="robot_ip" value="$(arg robot_ip)"/>
   </include>
 
+  <!-- Remapping of realsense image topics, some 'weird restrictions' need place this remap before spawning rs.launch -->
+  <remap from="$(arg arm_ns)/color/camera_info" to="$(arg arm_ns)/camera_info"/>
+  <remap from="$(arg arm_ns)/color/image_raw/compressed" to="$(arg arm_ns)/image/compressed"/>
+
   <include file="$(find realsense2_camera)/launch/rs_camera.launch">
   	<arg name="filters"             value="pointcloud"/>
     <arg name="camera"              value="/"/>
-
     <arg name="enable_gyro"         default="false"/>
     <arg name="enable_accel"        default="false"/>
     <arg name="publish_tf"          default="false"/>
+    <arg name="enable_depth"        default="true"/>
     <arg name="enable_infra1"       default="false"/>
     <arg name="enable_infra2"       default="false"/>
-    <!-- <remap from="$(arg ns)/camera/color/camera_info" to="$(arg ns)/camera_info"/> -->
   </include>
 
-  <!-- <remap from="/color/camera_info" to="/camera_info"/> -->
-
- 
   <include file="$(find robot_arm_workcell_manager)/launch/robot_arm_workcell_manager.launch">
   	<arg name="dispenser_name"   value="$(arg dispenser_name)"/>
     <arg name="arm_ns"           value="$(arg arm_ns)"/>

@@ -5,7 +5,7 @@ Testing Arms on HARDWARE! (Testing on Going). Here, the test is mainly on UR10e.
 ## Prerequisites
 
  - Intel Realsense, install from [here](https://github.com/IntelRealSense/realsense-ros)
- - UR_modern_driver: [ur_modern_driver with e series](https://github.com/AdmiralWall/ur_modern_driver/tree/kinetic_ur_5_4)
+ - UR_modern_driver: [ur_modern_driver with e series](https://github.com/AdmiralWall/ur_modern_driver/tree/kinetic_ur_5_4), `kinectic_ur_5_4` branch
 
 ```
 catkin_make --pkg cssd_hardware -j4
@@ -34,9 +34,21 @@ Again, PLEASE KEEP YOUR HANDS ON THE BIG RED BUTTON!
 roslaunch cssd_hardware two_arm.launch
 ```
 
+
 ## Notes
 
-To purely tryout using moveit GUIon rviz, remember:
+To test it with moveit on Rviz (terminal B)*
+
+![alt text](/documentations/rviz.gif?)
+
+```bash
+# For ur10e,
+roslaunch ur_modern_driver ur10e_bringup.launch robot_ip:=XXXXXXX
+# Another terminal, For ur10e,
+roslaunch cssdbot_ur10e_moveit_config realistic_minimal.launch
+```
+
+To purely tryout using moveit on rviz, remember:
 - !!!PLAN BEFORE EXECUTING. SCALE YORU VELOCITY!!!!
 - Remember `CURRENT STATE` should always be :`<current_state>`, `GROUP` should be: `MANIPULATOR`
 - Joint states can be altered in `cssdbot_urxx_moveit_config/config/urxx.srdf`
