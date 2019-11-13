@@ -12,20 +12,11 @@ Also, Download [ur_modern_driver with e series](https://github.com/AdmiralWall/u
 roslaunch cssd_hardware single_arm.launch
 ```
 
-
-
 ### Launching of two arms
 
 - Please change launch file below to set the ip of robot, and all other parameters
 
-  
 
-  ```
-  roslaunch cssd_hardware two_arm.launch
-  ```
-
-  
-
-  
-
-  
+```
+roslaunch cssd_hardware two_arm.launch
+```

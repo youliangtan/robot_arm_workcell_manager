@@ -6,6 +6,7 @@
   <arg name="debug"                         default="false" />
   <arg name="limited"                       default="false"/>
 
+
   <arg name="sim"                           default="false"/>
   <arg name="enable_fake_joints_execution"  default="true"/>
   <arg name="eef2cam_tf"                    default="0 0 0 -1.57 0 -1.57"/>
@@ -31,8 +32,6 @@
         <param name="/tf_prefix" value="$(arg arm_ns)"/>
       </node>>s
 
-
-
     </group>
 
     <!--           ******************************************************************************           -->
@@ -54,8 +53,8 @@
     <!--           *******************************************************************************           -->
 
     <include file="$(find robot_arm_workcell_manager )/launch/markers_detector.launch">
-        <arg name="ns"             value="$(arg arm_ns)"/>
-        <arg name="sim"     	   value="$(arg sim)"/>
+      <arg name="ns"             value="$(arg arm_ns)"/>
+      <arg name="sim"     	     value="$(arg sim)"/>
     </include>
 
     <!-- Currently handle the 'static tf publisher' in a dirty way, due to '/' issue -->
@@ -68,13 +67,6 @@
           args="$(eval arg('eef2cam_tf') 
                 + ' ' + arg('arm_ns') + '/camera_link_optical ' + arg('arm_ns') + '/camera 10' )" />   
                 <!-- 0 0 0 -1.57 0 -1.57 $(arg arm_ns)/camera_link_optical $(arg arm_ns)/camera 10"     -->
-
-
-
-<!-- TODO : CLEAN!!!!! -->
-       <node pkg="tf" type="static_transform_publisher" name="eef_to_camera_optical" args="0.04 0.035 0.09 0 0 0 ee_link camera_link_optical 10" />   
-
-
  
   </group>
 
