@@ -41,7 +41,7 @@ sudo apt-get install ros-melodic-aruco-detect ros-melodic-fiducial-msgs
 ### Make and Build
 ```bash
 catkin_make --pkg robot_arm_workcell_manager -j4
-catkin_make --pkg cssdbot_moveit_config cssdbot_description cssd_gazebo cssd_hardware
+catkin_make --pkg cssdbot_moveit_config cssdbot_description cssd_gazebo
 ```
 
 ---
@@ -117,6 +117,10 @@ By now, the robot dispenser will execute the task according to the `DispenserReq
 _p/s: You can play with the gazebo model by manually move the position of the transporter cart_
 
 ---
+
+## Run on Hardware
+
+Please refer to the readme [here](/cssd_hardware)
 
 ---
 
