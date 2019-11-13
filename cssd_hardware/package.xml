@@ -8,7 +8,9 @@
   <maintainer email="tan_you_liang@hotmail.com">Tan You Liang</maintainer>
   <license>BSD</license>
 
-
+  <depend>robot_arm_workcell_manager</depend>
+  <depend>ur_modern_driver</depend>
+  <depend>realsense2_camera</depend>
 
   <buildtool_depend>catkin</buildtool_depend>
 </package>

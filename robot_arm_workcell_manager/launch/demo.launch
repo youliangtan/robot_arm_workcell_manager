@@ -2,16 +2,11 @@
    
   <arg name="arm_ns"                        default="/"/>
   <arg name="arm_type"                      default="ur10"/>
-  
   <arg name="debug"                         default="false" />
   <arg name="limited"                       default="false"/>
-
-
   <arg name="sim"                           default="false"/>
   <arg name="enable_fake_joints_execution"  default="true"/>
   <arg name="eef2cam_tf"                    default="0 0 0 -1.57 0 -1.57"/>
-  
-
 
   <group ns="$(arg arm_ns)">
       
