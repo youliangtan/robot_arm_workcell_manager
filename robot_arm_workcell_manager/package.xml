@@ -37,4 +37,6 @@
   <depend>rmf_msgs</depend>
 
   <buildtool_depend>catkin</buildtool_depend>
+  <buildtool_depend>rmf_msgs</buildtool_depend>
+
 </package>
