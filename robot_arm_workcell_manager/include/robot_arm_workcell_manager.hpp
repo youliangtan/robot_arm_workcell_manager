@@ -55,6 +55,8 @@ class RobotArmWorkcellManager{
 
         bool executePickPlaceMotion( std::vector<std::string> frame_array, std::string marker_frame_id );
 
+        void removePitchRoll(tf::Transform& pose);
+
     private:
         // ros stuffs
         ros::NodeHandle nh_;
