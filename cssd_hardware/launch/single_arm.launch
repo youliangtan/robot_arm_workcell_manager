@@ -11,8 +11,19 @@
   </include>
 
   <include file="$(find realsense2_camera)/launch/rs_camera.launch">
-  	<arg name="filters" value="pointcloud"/>
+  	<arg name="filters"             value="pointcloud"/>
+    <arg name="camera"              value="/"/>
+
+    <arg name="enable_gyro"         default="false"/>
+    <arg name="enable_accel"        default="false"/>
+    <arg name="publish_tf"          default="false"/>
+    <arg name="enable_infra1"       default="false"/>
+    <arg name="enable_infra2"       default="false"/>
+    <!-- <remap from="$(arg ns)/camera/color/camera_info" to="$(arg ns)/camera_info"/> -->
   </include>
+
+  <!-- <remap from="/color/camera_info" to="/camera_info"/> -->
+
  
   <include file="$(find robot_arm_workcell_manager)/launch/robot_arm_workcell_manager.launch">
   	<arg name="dispenser_name"   value="$(arg dispenser_name)"/>
@@ -26,7 +37,6 @@
   </include>
 	
   <node pkg="tf" type="static_transform_publisher" name="eef_to_camera_optical" 
-    args="0.025 0.06 0.0825 0 0 0 ee_link camera_link_optical 10" />
-
+    args="0.032 0.037 0.095 0 0 0 ee_link camera_link_optical 10" />
 
 </launch>

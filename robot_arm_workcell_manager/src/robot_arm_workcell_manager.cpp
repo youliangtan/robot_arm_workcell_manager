@@ -113,7 +113,7 @@ bool RobotArmWorkcellManager::executePickPlaceMotion( std::vector<std::string> f
 
     // Reposition to 'rescan_pos' (front of marker), and reupdate  fiducial marker positon, ensures low deviation
     if (! markers_detector_.getTransformPose( "base_link", "rescan_pos", target_tf ) ) return false;
-    removePitchRoll(*target_tf);
+    // removePitchRoll(*target_tf);
     tf::poseTFToMsg(*target_tf, *_eef_target_pose);
     if (! arm_controller_.moveToEefTarget(*_eef_target_pose, 0.15) ) return false;
  
@@ -121,7 +121,7 @@ bool RobotArmWorkcellManager::executePickPlaceMotion( std::vector<std::string> f
     for (std::string frame : frame_array){
         target_tf = new tf::Transform;
         if (! markers_detector_.getTransformPose( "base_link", frame,  target_tf ) ) return false;
-        removePitchRoll(*target_tf);
+        // removePitchRoll(*target_tf);
         _tf_array.push_back(target_tf);
     }
     markers_detector_.removeTargetMarker();
