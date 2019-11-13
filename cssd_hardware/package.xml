@@ -3,9 +3,9 @@
   <name>cssd_hardware</name>
   <version>1.0.0</version>
   <description>
-    Drivers, description, and utilities for Robot Arm Workcell Manipulation Workcell, Using moveit 
+    Simplifying launch file for hardware 
   </description>
-  <maintainer email="tan_you_liang@hotmail.com">Tan You Liang</maintainer>
+  <maintainer email="malcom_neo@hopetechnik.com">Malcom</maintainer>
   <license>BSD</license>
 
   <depend>robot_arm_workcell_manager</depend>

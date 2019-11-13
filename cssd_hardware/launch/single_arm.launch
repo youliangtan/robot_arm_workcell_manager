@@ -1,8 +1,10 @@
+
 <launch>
    
-  <arg name="arm_ns" default="/"/>
-  <arg name="robot_ip" default="172.16.17.2"/>
-  <arg name="arm_type" default="ur10e"/>
+  <arg name="arm_ns"              default="/" />
+  <arg name="robot_ip"            default="172.16.17.2"/>
+  <arg name="arm_type"            default="ur10e"/>
+  <arg name="dispenser_name"      default="ur10e_001"/>
 
   <include file="$(find ur_modern_driver)/launch/$(arg arm_type)_bringup.launch">
   	<arg name="robot_ip" value="$(arg robot_ip)"/>
@@ -13,17 +15,18 @@
   </include>
  
   <include file="$(find robot_arm_workcell_manager)/launch/robot_arm_workcell_manager.launch">
-  	<arg name="dispenser_name" value="ur10e_001"/>
+  	<arg name="dispenser_name"   value="$(arg dispenser_name)"/>
+    <arg name="arm_ns"           value="$(arg arm_ns)"/>
   </include>
 
   <include file="$(find robot_arm_workcell_manager)/launch/demo.launch">
-  	<arg name="arm_type" value="$(arg arm_type)"/>
+  	<arg name="arm_type"                      value="$(arg arm_type)"/>
     <arg name="sim"                           value="false"/>
     <arg name="enable_fake_joints_execution"  value="false"/>
   </include>
 	
-  <!-- TODO : CLEAN!!!!! -->
   <node pkg="tf" type="static_transform_publisher" name="eef_to_camera_optical" 
     args="0.025 0.06 0.0825 0 0 0 ee_link camera_link_optical 10" />
+
 
 </launch>
