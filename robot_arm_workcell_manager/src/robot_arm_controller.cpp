@@ -236,8 +236,8 @@ bool RobotArmController::moveToJointsTarget(const std::vector<double>& joints_ta
 
 bool RobotArmController::moveToEefTarget(const geometry_msgs::Pose _eef_target_pose, double vel_factor ){
 
-    const double jump_threshold = 2.0;
-    const double eef_step = 0.03;
+    const double jump_threshold = 0.0; //2.0, TODO
+    const double eef_step = 0.02;
     const int attempts_thresh = 3;
 
     move_group_->setMaxVelocityScalingFactor(vel_factor);
