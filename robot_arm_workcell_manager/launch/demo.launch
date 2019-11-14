@@ -61,6 +61,9 @@
           args="$(eval arg('eef2cam_tf') 
                 + ' ' + arg('arm_ns') + '/camera_link_optical ' + arg('arm_ns') + '/camera 10' )" />   
                 <!-- 0 0 0 -1.57 0 -1.57 $(arg arm_ns)/camera_link_optical $(arg arm_ns)/camera 10"     -->
+
+    <!-- TODO : Realsense Gazebo enhancement!!!!! -->
+    <!-- <include file="$(find realsense_gazebo_plugin)/launch/D435_depth_proc.launch"/> -->
  
   </group>
 

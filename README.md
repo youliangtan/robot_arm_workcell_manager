@@ -14,7 +14,7 @@ Now with namespace support! Enabling two (or more!) arms to perform a choreograp
 
 *Full Video Link* (with one arm),  [here](https://drive.google.com/open?id=1dGKh3FVMlUwX8GUMv3mgxQFBm0OnGa8B)
 
-*Full Video Link* (with two arms), [here](https://drive.google.com/open?id=1dT9zQ5bbWr0oMqf9hO2wWMH2uiiHR1AT)	
+*Full Video Link* (with two arms), [here](https://drive.google.com/open?id=1dT9zQ5bbWr0oMqf9hO2wWMH2uiiHR1AT)
 
 ---
 
@@ -81,17 +81,7 @@ roslaunch robot_arm_workcell_manager two_arms_rawm.launch
 
 _p/s: Wait each launch terminal to be fully launched before launching the next `.launch`._
 
-------
-
-## Setting environment
-
-The config file is in rawm package called environment_object. This is to set the environment in moveit. Please subscribe to planning scene in rviz to see the objects.
-
-- The object must be called object_1, object_2 and so on. 
-- type 1 for box, 2 sphere, 3 clinder, 4 cone. 
-
-## Octomapping 
-Information is pulled from the depth camera and added to the planning scene. The params can be found at cssdbot_ur10_moveitconfig package, sensor_manager.launch.xml and sensors_kinect_pointcloud.yaml
+---
 
 ## Request a Task 
 
@@ -165,6 +155,18 @@ roslaunch robot_arm_workcell_manager robot_arm_workcell_manager.launch
 
 ---
 
+
+## Setting of MoveIt Scene Env
+
+The config file is in rawm package called environment_object. This is to set the environment in moveit. Please subscribe to planning scene in rviz to see the objects.
+
+- The object must be called object_1, object_2 and so on. 
+- type 1 for box, 2 sphere, 3 clinder, 4 cone. 
+
+### Octomapping 
+Information is pulled from the depth camera and added to the planning scene. The params can be found at cssdbot_ur10_moveitconfig package, sensor_manager.launch.xml and sensors_kinect_pointcloud.yaml
+
+
 ## Notes
 - Custom designed "fork-lift" end effector, trays and tray placements are used in this application.
 - 3 executables are used in this application, namely: `robot_arm_workcell_manager` (MAIN), `robot_arm_controller`, `fiducial_markers_handler`.
@@ -187,4 +189,5 @@ roslaunch robot_arm_workcell_manager robot_arm_workcell_manager.launch
 - Joint IK flip issue while placing to ``marker_103` : Tried switch the planner from `ompl` to `stomp` (in `planning_context.launch`), still not able to fully solve the issue.
 
 ## TODO
-- octo mapping for ur10 and ur10e
+- full octo mapping for ur10 and ur10e
+- full realsense integration on gazebo
