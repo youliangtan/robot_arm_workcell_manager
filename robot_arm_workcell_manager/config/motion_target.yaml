@@ -17,10 +17,14 @@ named_target:
   ur10e_001_rack_level_1:       {type: "joint_space_goal", values: [0, -2.107, 2.22, -0.13, 1.871,0],     velFactor: 0.2}
   ur10e_001_rack_level_2:       {type: "joint_space_goal", values: [0, -1.7, 2.62, -0.93, 1.871,0],       velFactor: 0.2}
 
-  ur10_001_transporter_home:    {type: "joint_space_goal", values: [1.57, -2.1,2.15,-0.062,1.614, 0],  velFactor: 0.2}
-  ur10_001_transporter_low:     {type: "joint_space_goal", values: [2.7, -0.7,2.1,-1.45,2.7, 0],      velFactor: 0.2}
+  ur10_001_transporter_home:    {type: "joint_space_goal", values: [1.57, -2.1,2.15,-0.062,1.614, 0],     velFactor: 0.2}
+  ur10_001_transporter_scan:     {type: "joint_space_goal", values: [2.7, -0.7,2.1,-1.45,2.7, 0],          velFactor: 0.2}
 
-  ur10e_001_transporter_home:   {type: "joint_space_goal", values: [-1.57, -2.1,2.15,-0.062,1.614, 0], velFactor: 0.2}
-  ur10e_001_transporter_low:    {type: "joint_space_goal", values: [-2.971, -0.755, 2.322, -1.518, 0.6352, -0.01522],   velFactor: 0.2}
+  ur10e_001_transporter_home:   {type: "joint_space_goal", values: [-1.57, -2.1,2.15,-0.062,1.614, 0],    velFactor: 0.2}
   
-#  ur10e_001_transporter_low:    {type: "joint_space_goal", values: [-3.3, -0.6,1.9,-1.25,-0.3, -0.05],   velFactor: 0.2}
+  # Depreciated
+  ur10e_001_transporter_low:    {type: "joint_space_goal", values: [-3.1, -0.755, 2.322, -1.518, 0.5352, -0.01522],   velFactor: 0.2}
+  # ur10e_001_transporter_low:    {type: "joint_space_goal", values: [-3.3, -0.6,1.9,-1.25,-0.3, -0.05],   velFactor: 0.2}
+
+  ur10e_001_transporter_scan:    {type: "joint_space_goal", values: [-3.1, -0.72, 2.42, -1.62, 0.5352, -0.05],   velFactor: 0.2}
+  ur10e_001_transporter_scan_left:  {type: "joint_space_goal", values: [-3.0, -0.51, 2.42, -1.8, 0.2, -0.09],   velFactor: 0.2}

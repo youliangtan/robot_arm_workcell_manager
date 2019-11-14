@@ -444,9 +444,12 @@ if __name__ == '__main__':
 
   # joints_goal = [0,-2.55,2.6,-0.062,1.614,  0]
   # joints_goal = [0,-2.45,2.5,-0.062,1.614,  0]
-  joints_goal = [-3.3, -0.6,1.9,-1.25,-0.3, -0.05]
-  # joints_goal = [1.57, -2.1,2.15,-0.062,1.614, 0]
+
+  # Scanning
+  # joints_goal = [-3.1, -0.71, 2.42, -1.62, 0.5352, -0.05]
+  joints_goal = [-3.0, -0.51, 2.42, -1.8, 0.2, -0.09]
+
+  joints_goal = [0,-2.45, 2.35, 0.08,1.614, 0]
+
   print ur10.get_arm_joints()
   ur10.go_to_joint_state(joints_goal, 1)
-
-

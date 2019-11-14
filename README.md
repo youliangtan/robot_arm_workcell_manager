@@ -6,6 +6,8 @@ The task sequence starts with the action of picking up a custom design instrumen
 
 Now with namespace support! Enabling two (or more!) arms to perform a choreographed dance!! 🤖🤖
 
+_Note that this package work together with ros2: `cssd_workcell_manger`, refer to [here](https://github.com/sharp-rmf/rmf-workcell)_
+
 **Active in Development!!!**
 
 ![alt text](/documentations/two_arms_dance.gif?)
@@ -15,6 +17,8 @@ Now with namespace support! Enabling two (or more!) arms to perform a choreograp
 *Full Video Link* (with one arm),  [here](https://drive.google.com/open?id=1dGKh3FVMlUwX8GUMv3mgxQFBm0OnGa8B)
 
 *Full Video Link* (with two arms), [here](https://drive.google.com/open?id=1dT9zQ5bbWr0oMqf9hO2wWMH2uiiHR1AT)
+
+*Full Video Link* (with two arms in room, almost success), [here](https://drive.google.com/file/d/1IOWEiMg8CTTilpSejEei760nLFyPn-po/view?usp=sharing)
 
 ---
 
@@ -189,5 +193,15 @@ Information is pulled from the depth camera and added to the planning scene. The
 - Joint IK flip issue while placing to ``marker_103` : Tried switch the planner from `ompl` to `stomp` (in `planning_context.launch`), still not able to fully solve the issue.
 
 ## TODO
+- further cleanupsssss
+- collision model creation on the scene in moveit (_on-going_)
+- Warm start Issue!!!! Also ability to launch gazebo with rviz (Controller issue!!!)
+- tune the PID for the arms / and physics params for physical models, seems to jitter slightly.
+- robot arm left right scanning feature when searching for the mir transporter cart
+- intergration with greater RMF environment
+- Potential prob: checkout `prob1.png`, encounter yaw prob on ur10e (instead of ur10). Quick fix on cart's aruco marker's yaw angle
+- Dynamic payload setting on Ur10e
+- some collision bouncing issue on robot eef and tray
+- `realsense_gazebo_ros` pkg intergration
 - full octo mapping for ur10 and ur10e
 - full realsense integration on gazebo
