@@ -1,0 +1,72 @@
+
+<!-- TOBE TESTED and cont developed -->
+
+<launch>
+   
+  <!-- first arm argument -->
+  <arg name="arm1_ns" default="/arm1"/>
+  <arg name="robot1_ip" default="172.16.17.2"/>
+  <arg name="arm1_type" default="ur10e"/>
+  <arg name="dispenser1_name" default="ur10e_001"/>
+
+  <!-- second arm argument -->
+  <arg name="arm2_ns" default="/arm2"/>
+  <arg name="robot2_ip" default=""/>
+  <arg name="arm2_type" default="ur10"/>
+  <arg name="dispenser2_name" default="ur10_002"/>
+
+  <!-- launch first arm -->
+  <group ns="$(arg arm1_ns)">
+    <include file="$(find ur_modern_driver)/launch/$(arg arm1_type)_bringup.launch">
+      <arg name="robot_ip" value="$(arg robot1_ip)"/>
+    </include>
+
+    <include file="$(find realsense2_camera)/lauch/rs_camera.launch">
+      <arg name="filters" value="pointcloud"/>
+    </include>
+  </group>
+
+  <include file="$(find robot_arm_workcell_manager)/launch/robot_arm_workcell_manager.launch">
+    <arg name="arm_ns" value="$(arg arm1_ns)"/>
+    <arg name="dispenser_name" value="$(arg dispenser1_name)"/>
+  </include>
+
+  <include file="$(find robot_arm_workcell_manager)/launch/demo.launch">
+    <arg name="arm_type"                      value="$(arg arm1_type)"/>
+    <arg name="sim"                           value="false"/>
+    <arg name="enable_fake_joints_execution"  value="false"/>
+  </include>
+
+  <!-- tf publisher for eef to camera -->
+  <node pkg="tf" type="static_transform_publisher" name="eef_to_camera_optical" 
+    args="0.055 0.06 0.0825 0 0 0 $(arg arm1_ns)/ee_link $(arg arm1_ns)/camera_link_optical 10" />
+
+
+  <!-- launch second arm -->
+  <group ns="$(arg arm2_ns)">
+    <include file="$(find ur_modern_driver)/launch/$(arg arm2_type)_bringup.launch">
+      <arg name="robot_ip" value="$(arg robot2_ip)"/>
+    </include>
+
+    <include file="$(find realsense2_camera)/lauch/rs_camera.launch">
+      <arg name="filters" value="pointcloud"/>
+    </include>
+  </group>
+
+  <include file="$(find robot_arm_workcell_manager)/launch/robot_arm_workcell_manager.launch">
+    <arg name="arm_ns" value="$(arg arm2_ns)"/>
+    <arg name="dispenser_name" value="$(arg dispenser2_name)"/>
+  </include>
+
+  <include file="$(find robot_arm_workcell_manager)/launch/demo.launch">
+    <arg name="arm_type"                      value="$(arg arm2_type)"/>
+    <arg name="sim"                           value="false"/>
+    <arg name="enable_fake_joints_execution"  value="false"/>
+  </include>
+
+  <!-- tf publisher for eef to camera -->
+  <node pkg="tf" type="static_transform_publisher" name="eef_to_camera_optical" 
+    args="0.055 0.06 0.0825 0 0 0 $(arg arm2_ns)/ee_link $(arg arm2_ns)/camera_link_optical 10" />
+
+
+</launch>

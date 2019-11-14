@@ -2,15 +2,12 @@
    
   <arg name="arm_ns"                        default="/"/>
   <arg name="arm_type"                      default="ur10"/>
-  
   <arg name="debug"                         default="false" />
   <arg name="limited"                       default="false"/>
-  
-  <arg name="enable_usb_cam"                default="false"/>
   <arg name="sim"                           default="false"/>
   <arg name="enable_fake_joints_execution"  default="true"/>
   <arg name="eef2cam_tf"                    default="0 0 0 -1.57 0 -1.57"/>
-  
+
   <group ns="$(arg arm_ns)">
       
     <!--           ******************************************************************************           -->
@@ -28,7 +25,7 @@
       <!-- Given the published joint states, publish tf for the robot links -->
       <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="true" output="screen">
         <param name="/tf_prefix" value="$(arg arm_ns)"/>
-      </node>>
+      </node>>s
 
     </group>
 
@@ -51,9 +48,7 @@
     <!--           *******************************************************************************           -->
 
     <include file="$(find robot_arm_workcell_manager )/launch/markers_detector.launch">
-        <arg name="ns"             value="$(arg arm_ns)"/>
-        <arg name="camSelect"      default="/dev/video1"/>
-        <arg name="enable_usb_cam" value="$(arg enable_usb_cam)"/>
+      <arg name="ns"             value="$(arg arm_ns)"/>
     </include>
 
     <!-- Currently handle the 'static tf publisher' in a dirty way, due to '/' issue -->
@@ -66,5 +61,10 @@
           args="$(eval arg('eef2cam_tf') 
                 + ' ' + arg('arm_ns') + '/camera_link_optical ' + arg('arm_ns') + '/camera 10' )" />   
                 <!-- 0 0 0 -1.57 0 -1.57 $(arg arm_ns)/camera_link_optical $(arg arm_ns)/camera 10"     -->
+
+    <!-- TODO : Realsense Gazebo enhancement!!!!! -->
+    <!-- <include file="$(find realsense_gazebo_plugin)/launch/D435_depth_proc.launch"/> -->
+ 
   </group>
+
 </launch>

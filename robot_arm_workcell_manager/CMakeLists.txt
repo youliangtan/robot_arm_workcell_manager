@@ -1,9 +1,10 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(robot_arm_workcell_manager)
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 
 find_package(catkin REQUIRED COMPONENTS
   roscpp
+  rospy
   std_msgs
   interactive_markers
   moveit_core
@@ -51,7 +52,6 @@ catkin_package(
 
 #---------------------------------- Exec Stuffs--------------------------------------------------
 
-
 include_directories(
   include
   ${catkin_INCLUDE_DIRS}
@@ -65,13 +65,14 @@ target_link_libraries(  robot_arm_controller  ${catkin_LIBRARIES} ${YAML_CPP_LIB
 add_executable( robot_arm_controller_node src/robot_arm_controller.cpp )
 target_link_libraries(  robot_arm_controller_node  ${catkin_LIBRARIES} ${YAML_CPP_LIBRARIES} )
 
-
 add_library( fiducial_markers_handler src/fiducial_markers_handler.cpp )
 target_link_libraries( fiducial_markers_handler  ${catkin_LIBRARIES}  ${YAML_CPP_LIBRARIES}  )
 
 add_executable( fiducial_markers_handler_node src/fiducial_markers_handler.cpp )
 target_link_libraries( fiducial_markers_handler_node  ${catkin_LIBRARIES}  ${YAML_CPP_LIBRARIES}  )
 
+add_library( dispenser_workcell_adapter src/dispenser_workcell_adapter.cpp )
+target_link_libraries(  dispenser_workcell_adapter  ${catkin_LIBRARIES} )
 
 ## -------------------------------- Main Exec for RAWM Package -----------------------------------
 
@@ -80,9 +81,10 @@ target_link_libraries(  robot_arm_workcell_manager
                         ${catkin_LIBRARIES}
                         robot_arm_controller
                         fiducial_markers_handler
+                        dispenser_workcell_adapter
                       ) #${GAZEBO_INCLUDE_DIRS}  ${catkin_INCLUDE_DIRS} )
 
 install(
-  DIRECTORY python/
+  DIRECTORY scripts/
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )

@@ -2,27 +2,24 @@
  * Robot Arm Workcell Manager (RAWM)
  * Objective: Handle Robot Arm's work sequences and logic, one arm to one RAWM
  * Author: Tan You Liang
- * Refered to OSRF: 'CoffeebotController.cpp'
  *
  */
 
 #include "robot_arm_workcell_manager.hpp"
 
+namespace cssd_workcell
+{
 
 RobotArmWorkcellManager::RobotArmWorkcellManager(): nh_("~"){
 
-    dispenser_request_sub_ = nh_.subscribe ("/cssd_workcell/dispenser_request", 10 ,&RobotArmWorkcellManager::dispenserRequestCallback,this);
-    dispenser_state_pub_   = nh_.advertise<rmf_msgs::DispenserState>("/cssd_workcell/dispenser_state", 10);
-    dispenser_result_pub_  = nh_.advertise<rmf_msgs::DispenserResult>("/cssd_workcell/dispenser_result", 10);
-
     loadParameters();
+    workcell_adapter_.setDispenserParams(dispenser_name_, dispenser_pub_rate_);
 
-    // start spinning moveit and ros threads
-    spin_ros_thread_ = std::thread(std::bind(&RobotArmWorkcellManager::spinRosThread, this));
-    dispenser_task_execution_thread_ = std::thread( std::bind(&RobotArmWorkcellManager::dispenserTaskExecutionThread, this));
+    dispenser_task_execution_thread_ = std::thread( std::bind(&cssd_workcell::RobotArmWorkcellManager::dispenserTaskExecutionThread, this));
 
     ROS_INFO("RobotArmWorkcellManager::RobotArmWorkcellManager() completed!! \n");
 }
+
 
 RobotArmWorkcellManager::~RobotArmWorkcellManager(){
     std::cout << "Called Robot Arm Workcell Manager " << " destructor" << std::endl;
@@ -37,14 +34,6 @@ bool RobotArmWorkcellManager::loadParameters(){
     else{
         ROS_ERROR(" [PARAM] Failed to get param 'dispenser_name', set to default 'ur10_001' ");
         nh_.param<std::string>("dispenser_name", dispenser_name_, "ur10_001");
-    }
-
-    if (nh_.getParam("transporter_placement", transporter_placement_)){
-        ROS_INFO(" [PARAM] Got transporter_placement param: %s", transporter_placement_.c_str());
-    }
-    else{
-        ROS_ERROR(" [PARAM] Failed to get param 'transporter_placement', set to default 'left' ");
-        nh_.param<std::string>("transporter_placement", transporter_placement_, "left");
     }
 
     if (nh_.getParam("dispenser_state_pub_rate", dispenser_pub_rate_)){
@@ -75,131 +64,6 @@ bool RobotArmWorkcellManager::loadParameters(){
     return true;
 }
 
-// ---------------------------------- Callback Zone ----------------------------------
-
-// Callback!!!! TODO
-void RobotArmWorkcellManager::dispenserRequestCallback(const rmf_msgs::DispenserRequestConstPtr& _msg){
-    
-    ROS_INFO(" \n ------- [Robot: %s] Received 1 Job request with id: %s ---------\n", 
-            dispenser_name_.c_str(), _msg->request_id.c_str() );
-
-    if (_msg->dispenser_name != dispenser_name_){
-        ROS_ERROR(" [Robot: %s] Invalid Dispenser Name...", dispenser_name_.c_str());
-        return;
-    }
-
-    // already performing this request
-    if (_msg->request_id == dispenser_curr_task_.request_id){
-        ROS_ERROR(" [Robot: %s] Task Request has been performed previously", dispenser_name_.c_str());
-        return;
-    }
-
-    // already made a request, publish results, TODO
-    if (dispenser_completed_request_ids_.find(_msg->request_id) != dispenser_completed_request_ids_.end()) {
-        std::cout << " Task Request has been requested previously, with success result of: " 
-                    << dispenser_completed_request_ids_[_msg->request_id] << std::endl;
-        publishDispenserResult(_msg->request_id, dispenser_completed_request_ids_[_msg->request_id]);
-        return;
-    }
-
-    // Check if quantity and item size number
-    // TODO, Check Compartment_ID
-    if (_msg->items.size() != 1 || _msg->items[0].quantity != 1 )  {
-        ROS_ERROR("  [Robot: %s] Currently only supports 1 item request of quantity 1 ", dispenser_name_.c_str());
-        publishDispenserResult(_msg->request_id, false);
-        return;
-    }
-    
-    // Check dispenser_req queue, if request_id existed (dulplication)
-    std::unique_lock<std::mutex> queue_lock(dispenser_task_queue_mutex_); 
-    for (rmf_msgs::DispenserRequest& task_in_queue : dispenser_task_queue_){
-        if (_msg->request_id == task_in_queue.request_id){
-            ROS_ERROR("  [Robot: %s] found duplicate task in queue, updating task.", dispenser_name_.c_str());
-            dispenser_task_queue_.erase(dispenser_task_queue_.begin());
-            dispenser_task_queue_.push_back(*_msg);
-            return;
-        }
-    }  
-
-    for (auto task_in_queue = dispenser_task_queue_.begin(); task_in_queue != dispenser_task_queue_.end(); ) {
-        if (_msg->request_id == task_in_queue->request_id) {
-            std::cout << "    found duplicate task in queue, updating task."  << std::endl;
-            task_in_queue = dispenser_task_queue_.erase(task_in_queue);
-        }
-        else{
-            ++task_in_queue;
-        }
-    }
-
-    // All Valid!! Expand request queue
-    dispenser_task_queue_.push_back(*_msg);
-    ROS_INFO(" \n  --------- [Robot: %s] Successfully added request task: %s  to queue -----------\n", 
-            dispenser_name_.c_str(), _msg->request_id.c_str() );
-    
-    return;
-}
-
-
-// ----------------------------------Task Handler ----------------------------------
-
-// TODO!!!!!
-bool RobotArmWorkcellManager::getNextTaskFromQueue(){
-
-    std::unique_lock<std::mutex> queue_lock(dispenser_task_queue_mutex_, std::defer_lock);
-    if (!queue_lock.try_lock())
-        return false;
-    
-    // If no more queuing task
-    if (dispenser_task_queue_.empty()) {
-        dispenser_state_msg_.dispenser_mode = dispenser_state_msg_.DISPENSER_MODE_IDLE;
-        rmf_msgs::DispenserRequest empty_request;  // TODO, use a properway
-        dispenser_curr_task_ = empty_request;
-        return false;
-    }
-    // If there's queuing task
-    else {
-        dispenser_state_msg_.dispenser_mode = dispenser_state_msg_.DISPENSER_MODE_BUSY;
-        dispenser_curr_task_ = dispenser_task_queue_.front();
-        dispenser_task_queue_.pop_front();
-        return true;
-    }
-}
-
-
-// Seperate Thread, mainly to pub Dispenser State
-// TBC: move this under timer???
-void RobotArmWorkcellManager::spinRosThread(){
-
-    ROS_INFO(" Spinning Ros Dispenser Thread...");
-    ros::Rate loop_rate(dispenser_pub_rate_);
-
-    while(nh_.ok()){
-        dispenser_state_msg_.dispenser_time = ros::Time::now();
-        dispenser_state_msg_.dispenser_name = dispenser_name_;
-        dispenser_state_msg_.seconds_remaining = 10.0; // TODO: arbitrary value for now
-        dispenser_state_msg_.request_ids.clear();
-        
-        if (dispenser_curr_task_.request_id != "")
-            dispenser_state_msg_.request_ids.push_back(dispenser_curr_task_.request_id);
-        for (const auto& task : dispenser_task_queue_){
-            dispenser_state_msg_.request_ids.push_back(task.request_id);
-        }
-        dispenser_state_pub_.publish(dispenser_state_msg_);
-        ROS_DEBUG("- Publishing Dispenser State");
-        loop_rate.sleep();
-    }
-    ROS_ERROR("Nodehandler is Not Okay =(");
-}
-
-
-void RobotArmWorkcellManager::publishDispenserResult(std::string request_id, bool success){
-    dispenser_result_msg_.dispenser_time = ros::Time::now();
-    dispenser_result_msg_.dispenser_name = dispenser_name_;
-    dispenser_result_msg_.request_id = request_id;
-    dispenser_result_msg_.success = success;
-    dispenser_result_pub_.publish(dispenser_result_msg_);
-}
-
 
 // ---------------------------------- ROBOT_ARM_MISSION_CONTROL ----------------------------------
 
@@ -209,10 +73,9 @@ void RobotArmWorkcellManager::dispenserTaskExecutionThread(){
     bool mission_success;
 
     while (nh_.ok()){
-
         // getting the next task
-        if (!getNextTaskFromQueue()){
-            // std::cout<< "[TASK_EXECUTOR] No Pending Task" << std::endl;
+        if (!workcell_adapter_.getCurrTaskFromQueue( dispenser_curr_task_ )){
+            ROS_INFO("[Robot: %s] No Pending Task",dispenser_name_.c_str());
             loop_rate.sleep();
         }
         // If there's new task, execute it!!
@@ -228,9 +91,7 @@ void RobotArmWorkcellManager::dispenserTaskExecutionThread(){
                 ROS_ERROR("\n *************** [Robot: %s] Task Failed for Request ID: %s *************** \n", 
                     dispenser_name_.c_str(), dispenser_curr_task_.request_id.c_str());
             }
-            
-            dispenser_completed_request_ids_[dispenser_curr_task_.request_id] =  mission_success;
-            publishDispenserResult(dispenser_curr_task_.request_id, mission_success);
+            workcell_adapter_.setCurrTaskResult(mission_success);
         }
     }
 }
@@ -252,13 +113,15 @@ bool RobotArmWorkcellManager::executePickPlaceMotion( std::vector<std::string> f
 
     // Reposition to 'rescan_pos' (front of marker), and reupdate  fiducial marker positon, ensures low deviation
     if (! markers_detector_.getTransformPose( "base_link", "rescan_pos", target_tf ) ) return false;
+    fixPitchRoll(*target_tf, -3.14, 0.0);
     tf::poseTFToMsg(*target_tf, *_eef_target_pose);
-    if (! arm_controller_.moveToEefTarget(*_eef_target_pose, 0.15) ) return false;
+    if (! arm_controller_.moveToEefTarget(*_eef_target_pose, 0.1) ) return false;
  
     // Get transform from tf detection, and store in local var
     for (std::string frame : frame_array){
         target_tf = new tf::Transform;
         if (! markers_detector_.getTransformPose( "base_link", frame,  target_tf ) ) return false;
+        fixPitchRoll(*target_tf, -3.14, 0.0);
         _tf_array.push_back(target_tf);
     }
     markers_detector_.removeTargetMarker();
@@ -277,88 +140,102 @@ bool RobotArmWorkcellManager::executePickPlaceMotion( std::vector<std::string> f
     return true;
 }
 
+
+// util fn to fix pitch roll of a pose
+void RobotArmWorkcellManager::fixPitchRoll(tf::Transform& pose, double pitch, double roll){
+    double _roll, _pitch, _yaw;
+    tf::Quaternion quat;
+
+    tf::Matrix3x3(pose.getRotation()).getRPY(_roll, _pitch, _yaw);
+    std::cout << " ### current pitch roll: " << _roll << " " << _pitch << " " << _yaw << std::endl;
+    quat.setRPY(pitch, roll, _yaw);
+    pose.setRotation(quat);
+}
+
+
 // ----------------------------------------------------------------------------------------------------------
 // ---------------------------------- ROBOT_ARM_MISSION_CONTROL: EXECUTION ----------------------------------
 // ----------------------------------------------------------------------------------------------------------
 
-// // TODO: Mission sequences, TBC: name as Task
-// // Make it to a config file @_@
+// Mission sequences, TODO: Make it to a config file @_@
 bool RobotArmWorkcellManager::executeRobotArmMission(){
     ROS_INFO("\n ***** Starting To Execute task, request_id: %s *****", dispenser_curr_task_.request_id.c_str());
     
     bool motion_is_success;
     std::vector<tf::Transform *> tf_array;
     rmf_msgs::DispenserRequestItem requested_item = dispenser_curr_task_.items[0] ;
-    tf::Transform *marker_transform (new tf::Transform); //TODO re-new
+    tf::Transform *marker_transform (new tf::Transform);
 
     // FOR NOW, TODO: No hard coding
     std::vector<std::string> picking_frame_array = {"pre_pick", "insert", "lift", "post_pick"};
     std::vector<std::string> placing_frame_array = {"pre_place", "insert", "drop", "post_place"};
 
+    // Set default constraints, TODO
+    moveit_msgs::Constraints planning_constraints;
+    moveit_msgs::JointConstraint wrist_3_joint;
+    wrist_3_joint.joint_name="wrist_3_joint";
+    wrist_3_joint.position = 0.0;
+    wrist_3_joint.tolerance_above = 1.57;
+    wrist_3_joint.tolerance_below = 1.57;
+    wrist_3_joint.weight = 1;
+
+    planning_constraints.joint_constraints.push_back(wrist_3_joint);
+    // arm_controller_.setPlanningConstraints(planning_constraints);
+
     // Lookup for target marker at different Rack Level (0, 1, 2...)
     for (int rack_level=0; !markers_detector_.getTransformPose( "base_link", requested_item.item_type) ; rack_level++ ){
-        ROS_ERROR("Going to rack level: %s ", std::to_string(rack_level).c_str() );
-        if (! arm_controller_.moveToNamedTarget("rack_level_" + std::to_string(rack_level)) ) return false;
+        ROS_WARN("Going to rack level: %s ", std::to_string(rack_level).c_str() );
+        if (! arm_controller_.moveToNamedTarget( dispenser_name_ + "_rack_level_" + std::to_string(rack_level)) ) return false;
     }
 
     // picking, e.g: requested_item.item_type = "marker_X" 
     if (! executePickPlaceMotion(picking_frame_array , requested_item.item_type ) ) return false;
+    
     // home position facing rack
-    if (! arm_controller_.moveToNamedTarget("rack_home_position") ) return false;
+    if (! arm_controller_.moveToNamedTarget(dispenser_name_ + "_rack_home_position") ) return false;
 
-    // Placing Motion Sequence
-    //* Transporter is at the left of the arm
-    if( transporter_placement_.compare("left") == 0 ){
-        // turn to face trolley
-        if (! arm_controller_.moveToNamedTarget("transporter_left_home") ) return false;
-        // Lower the position
-        if (! arm_controller_.moveToNamedTarget("transporter_left_low") ) return false;
-        // TODO: Scanning feature here... Yaw
-        
-        // placing, e.g: requested_item.compartment_name = "marker_X"
-        if (! executePickPlaceMotion(placing_frame_array , requested_item.compartment_name) ) return false;
-        // back lower home 
-        if (! arm_controller_.moveToNamedTarget("transporter_left_low") ) return false;
-        // turn to face trolley
-        if (! arm_controller_.moveToNamedTarget("transporter_left_home") ) return false;
+    // *Placing Motion Sequence
+    // turn to face trolley
+    if (! arm_controller_.moveToNamedTarget(dispenser_name_ + "_transporter_home") ) return false;
+    
+    // Lower the position
+    if (! arm_controller_.moveToNamedTarget(dispenser_name_ + "_transporter_scan") ) return false;
+    
+    // Scanning feature here... Yaw, TODO:enhancement
+    if (! markers_detector_.getTransformPose( "base_link", requested_item.compartment_name ) ){
+        if (! arm_controller_.moveToNamedTarget(dispenser_name_ + "_transporter_scan_left") ) return false;
     }
 
-    //* Transporter is at the right of the arm
-    else if( transporter_placement_.compare("right") == 0 ){
-        // turn to face trolley
-        if (! arm_controller_.moveToNamedTarget("transporter_right_home") ) return false;
-        // Lower the position
-        if (! arm_controller_.moveToNamedTarget("transporter_right_low") ) return false;
-        // TODO: Scanning feature here... Yaw
-
-        // placing, e.g: requested_item.compartment_name = "marker_X"
-        if (! executePickPlaceMotion(placing_frame_array , requested_item.compartment_name) ) return false;
-        // back lower home 
-        if (! arm_controller_.moveToNamedTarget("transporter_right_low") ) return false;
-        // turn to face trolley
-        if (! arm_controller_.moveToNamedTarget("transporter_right_home") ) return false;
-    }
-
-    else {
-        ROS_ERROR("Param 'transporter_placement_': %s is undefined: End the placing action abruptly!! >,< \n", 
-        transporter_placement_.c_str());
-        return false;
-    }
+    // placing, e.g: requested_item.compartment_name = "marker_X"
+    if (! executePickPlaceMotion(placing_frame_array , requested_item.compartment_name) ) return false;
+    
+    // back lower home 
+    if (! arm_controller_.moveToNamedTarget(dispenser_name_ + "_transporter_scan") ) return false;
+    
+    // turn to face trolley
+    if (! arm_controller_.moveToNamedTarget(dispenser_name_ + "_transporter_home") ) return false;
 
     // Back home position facing rack
-    if (! arm_controller_.moveToNamedTarget("rack_home_position") ) return false;
+    if (! arm_controller_.moveToNamedTarget(dispenser_name_ + "_rack_home_position") ) return false;
+
+    // Back to rack level 0
+    if (! arm_controller_.moveToNamedTarget(dispenser_name_ + "_rack_level_0") ) return false;
 
     ROS_INFO("\n ***** Done with Task with request_id: %s *****", dispenser_curr_task_.request_id.c_str());
     return true;
 }
 
-//-----------------------------------------------------------------------------
+} //end namespace
+
 
 int main(int argc, char** argv){
-    std::cout<<" YoYoYo!, Arm Workcell Manager is alive!!!"<< std::endl;
+    std::cout<<" YoYoYo!, Robot Arm Workcell Manager is alive!!!"<< std::endl;
     
     ros::init(argc, argv, "robot_arm_workcell_manager", ros::init_options::NoSigintHandler);
-    RobotArmWorkcellManager ur10_workcell;
+    cssd_workcell::RobotArmWorkcellManager ur10_workcell;
+
+    std::cout<<" All Ready!!!"<< std::endl;
+
     ros::AsyncSpinner ros_async_spinner(1);
     ros_async_spinner.start();
     ros::waitForShutdown();    

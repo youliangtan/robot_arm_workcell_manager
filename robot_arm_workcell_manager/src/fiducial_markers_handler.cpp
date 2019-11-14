@@ -118,7 +118,7 @@ bool FiducialMarkersHandler::getTransformPose(std::string target_frame_id, std::
 	  	tf_listener_.lookupTransform(prefix_target_frame_id, prefix_frame_id, ros::Time(0), stamped_transform);
     }
     catch (tf::TransformException ex) {
-        ROS_ERROR(" Get Transform Error!! Most likely tf is not existed between 2 input frames. error:%s",ex.what());
+        ROS_WARN(" Not getting any Transform!! Most likely tf is not existed between 2 input frames. error:%s",ex.what());
         return false;
     }
 
