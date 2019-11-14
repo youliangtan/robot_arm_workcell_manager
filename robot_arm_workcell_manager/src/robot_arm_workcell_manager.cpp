@@ -113,6 +113,7 @@ bool RobotArmWorkcellManager::executePickPlaceMotion( std::vector<std::string> f
 
     // Reposition to 'rescan_pos' (front of marker), and reupdate  fiducial marker positon, ensures low deviation
     if (! markers_detector_.getTransformPose( "base_link", "rescan_pos", target_tf ) ) return false;
+    // removePitchRoll(*target_tf);
     tf::poseTFToMsg(*target_tf, *_eef_target_pose);
     if (! arm_controller_.moveToEefTarget(*_eef_target_pose, 0.15) ) return false;
  
@@ -120,6 +121,7 @@ bool RobotArmWorkcellManager::executePickPlaceMotion( std::vector<std::string> f
     for (std::string frame : frame_array){
         target_tf = new tf::Transform;
         if (! markers_detector_.getTransformPose( "base_link", frame,  target_tf ) ) return false;
+        // removePitchRoll(*target_tf);
         _tf_array.push_back(target_tf);
     }
     markers_detector_.removeTargetMarker();
@@ -136,6 +138,17 @@ bool RobotArmWorkcellManager::executePickPlaceMotion( std::vector<std::string> f
     }
 
     return true;
+}
+
+
+// util to remove pitch roll of a pose
+void RobotArmWorkcellManager::removePitchRoll(tf::Transform& pose){
+    double roll, pitch, yaw;
+    tf::Quaternion quat;
+
+    tf::Matrix3x3(pose.getRotation()).getRPY(roll, pitch, yaw);
+    quat.setRPY(0, 0, yaw);
+    pose.setRotation(quat);
 }
 
 

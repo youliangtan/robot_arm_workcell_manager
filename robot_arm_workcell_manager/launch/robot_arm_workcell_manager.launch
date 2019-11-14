@@ -1,3 +1,4 @@
+<!--  ** Spawning robot_arm_workcell_manager node **  -->
 
 <launch>
 
@@ -13,22 +14,20 @@
             <param name="arm_namespace" value="$(arg arm_ns)" />
             <param name="tf_prefix" value="$(arg arm_ns)" />
             <param name="dispenser_name" value="$(arg dispenser_name)" />
-
             <param name="group_name" type="string" value="manipulator" />
             <param name="marker_tf_path" value="$(arg markers_config_file)"/>
 	        <param name="environment_path" value="$(arg environment_config_file)"/>
             <param name="motion_target_yaml_path" type="string" value="$(arg motion_target_file)" />
             <param name="arm_mission_path" type='string' value="pending" />
             <param name="environment_path" type='string' value="$(arg environment_config_file)" />
-
             <param name="camera_frame_id" value="camera" />
             <param name="group_name" type="string" value="manipulator" />
             <param name="dispenser_state_pub_rate" type="double" value="0.5" />
             <param name="motion_pause_time" type="int" value="1" />
             <param name="flip_marker" type="bool" value="true" />
 
-            <remap from="/fiducial_transforms" to="$(arg arm_ns)/fiducial_transforms"/>    
-        </node>
+            <remap from="/fiducial_transforms" to="$(arg arm_ns)/fiducial_transforms"/>
+        </node>>
     </group>
 
 </launch>

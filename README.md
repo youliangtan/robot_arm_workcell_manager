@@ -10,7 +10,7 @@ Now with namespace support! Enabling two (or more!) arms to perform a choreograp
 
 ![alt text](/documentations/two_arms_dance.gif?)
 
-![alt text](/documentations/robot_in_room2.png?)
+<img src="/documentations/robot_in_room2.png" width="600">
 
 *Full Video Link* (with one arm),  [here](https://drive.google.com/open?id=1dGKh3FVMlUwX8GUMv3mgxQFBm0OnGa8B)
 
@@ -32,8 +32,7 @@ Now with namespace support! Enabling two (or more!) arms to perform a choreograp
 - Universal Robot: [here](https://github.com/ros-industrial/universal_robot), **Remember to switch branch
 - Fiducial Marker Detector: [here](https://github.com/UbiquityRobotics/fiducials)
 ```bash
-sudo apt-get install ros-melodic-aruco-detect
-sudo apt-get install ros-melodic-fiducial-msgs
+sudo apt-get install ros-melodic-aruco-detect ros-melodic-fiducial-msgs
 ```
 - realsense_gazebo_plugin
 - realsense-ros (for hardware)  
@@ -42,8 +41,8 @@ sudo apt-get install ros-melodic-fiducial-msgs
 
 ### Make and Build
 ```bash
-catkin_make --pkg cssdbot_moveit_config cssdbot_description cssd_gazebo
 catkin_make --pkg robot_arm_workcell_manager -j4
+catkin_make --pkg cssdbot_moveit_config cssdbot_description cssd_gazebo
 ```
 
 ---
@@ -110,6 +109,10 @@ _p/s: You can play with the gazebo model by manually move the position of the tr
 
 ---
 
+## Run on Hardware
+
+Please refer to the readme [here](/cssd_hardware)
+
 ---
 
 ## Testing on submodules and lib 
@@ -152,25 +155,17 @@ roslaunch robot_arm_workcell_manager robot_arm_workcell_manager.launch
 
 ---
 
-## Setting environment
+
+## Setting of MoveIt Scene Env
 
 The config file is in rawm package called environment_object. This is to set the environment in moveit. Please subscribe to planning scene in rviz to see the objects.
 
 - The object must be called object_1, object_2 and so on. 
 - type 1 for box, 2 sphere, 3 clinder, 4 cone. 
 
-## Octomapping 
+### Octomapping 
 Information is pulled from the depth camera and added to the planning scene. The params can be found at cssdbot_ur10_moveitconfig package, sensor_manager.launch.xml and sensors_kinect_pointcloud.yaml
 
----
-
-## Testing Arms on HARDWARE!
-
-Please Refer to the readme in README in [cssd_hardware](/cssd_hardware/).
-
-![alt text](/documentations/test_on_hardware.gif?)
-
----
 
 ## Notes
 - Custom designed "fork-lift" end effector, trays and tray placements are used in this application.
@@ -185,6 +180,7 @@ Please Refer to the readme in README in [cssd_hardware](/cssd_hardware/).
 - To check out `tf_tree` and `rqt_graph`, go to `documentations` folder
 - To add more arms: expand `cssd_gazebo two_arms.launch`, `two_arms_rviz.launch`, `two_arms_rawm.launch`
 - master branch for `ur_modern_driver` currently doesn't support UR-E series
+- When using realsense, the `camera_info` which consists of the camera-matrix is locaated auto generated when launching `realsense2_ros`
 
 ## Debuging process
 - Jittering Problem during picking up of tray with Eef:  use `velocity_controllers` instead of `position_controller`
@@ -193,15 +189,5 @@ Please Refer to the readme in README in [cssd_hardware](/cssd_hardware/).
 - Joint IK flip issue while placing to ``marker_103` : Tried switch the planner from `ompl` to `stomp` (in `planning_context.launch`), still not able to fully solve the issue.
 
 ## TODO
-- Further Code clean up!!
-- gazebo model clean upssss
-- collision model creation on the scene in moveit
-- Warm start Issue!!!! Also ability to launch gazebo with rviz (Controller issue!!!)
-- tune the PID for the arms / and physics params for physical models, seems to jitter slightly.
-- robot arm left right scanning feature when searching for the mir transporter cart
-- intergration with greater RMF environment
-- Eventually, *FULL* Hardware Test!!!!!!
-- test usb cam on new hardware, and config all usb video path
-- Potential prob: checkout `prob1.png`, encounter yaw prob on ur10e (instead of ur10). Quick fix on cart's aruco marker's yaw angle
-- Dynamic payload setting on Ur10e
-- External camera support, create another new `cssd_hardware_launch` pkg
+- full octo mapping for ur10 and ur10e
+- full realsense integration on gazebo

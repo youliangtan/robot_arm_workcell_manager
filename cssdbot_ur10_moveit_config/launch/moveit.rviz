@@ -72,6 +72,11 @@ Visualization Manager:
         Interrupt Display: false
         Links:
           All Links Enabled: true
+          D435_camera:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
           Expand Joint Details: false
           Expand Link Details: false
           Expand Tree: false
@@ -85,7 +90,11 @@ Visualization Manager:
             Show Axes: false
             Show Trail: false
             Value: true
-          camera_link_optical:
+          color:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+          depth:
             Alpha: 1
             Show Axes: false
             Show Trail: false
@@ -104,6 +113,14 @@ Visualization Manager:
             Show Axes: false
             Show Trail: false
             Value: true
+          ired1:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+          ired2:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
           shoulder_link:
             Alpha: 1
             Show Axes: false
@@ -178,6 +195,11 @@ Visualization Manager:
         Attached Body Color: 150; 50; 150
         Links:
           All Links Enabled: true
+          D435_camera:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
           Expand Joint Details: false
           Expand Link Details: false
           Expand Tree: false
@@ -191,7 +213,11 @@ Visualization Manager:
             Show Axes: false
             Show Trail: false
             Value: true
-          camera_link_optical:
+          color:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+          depth:
             Alpha: 1
             Show Axes: false
             Show Trail: false
@@ -210,6 +236,14 @@ Visualization Manager:
             Show Axes: false
             Show Trail: false
             Value: true
+          ired1:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+          ired2:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
           shoulder_link:
             Alpha: 1
             Show Axes: false
@@ -259,7 +293,6 @@ Visualization Manager:
       Unreliable: false
       Value: false
       Visibility:
-        "": true
         Grid: true
         Image: true
         MotionPlanning: true
@@ -283,7 +316,9 @@ Visualization Manager:
       Frame Timeout: 15
       Frames:
         All Enabled: false
-        arm1/base:
+        D435_camera:
+          Value: true
+        base:
           Value: true
         arm1/base_link:
           Value: true
@@ -291,17 +326,25 @@ Visualization Manager:
           Value: true
         arm1/camera_link_optical:
           Value: true
-        arm1/ee_link:
+        color:
           Value: true
-        arm1/end_effector_link:
+        depth:
           Value: true
-        arm1/forearm_link:
+        ee_link:
+          Value: true
+        end_effector_link:
+          Value: true
+        forearm_link:
+          Value: true
+        ired1:
+          Value: true
+        ired2:
+          Value: true
+        shoulder_link:
           Value: true
         arm1/insert:
           Value: true
-        arm1/lift:
-          Value: true
-        arm1/marker_0:
+        upper_arm_link:
           Value: true
         arm1/marker_1:
           Value: true
@@ -382,66 +425,31 @@ Visualization Manager:
       Show Names: true
       Tree:
         world:
-          arm1/world:
-            arm1/base_link:
-              arm1/base:
-                {}
-              arm1/shoulder_link:
-                arm1/upper_arm_link:
-                  arm1/forearm_link:
-                    arm1/wrist_1_link:
-                      arm1/wrist_2_link:
-                        arm1/wrist_3_link:
-                          arm1/ee_link:
-                            arm1/end_effector_link:
-                              arm1/camera_link_optical:
-                                arm1/camera:
-                                  arm1/marker_0:
-                                    {}
-                                  arm1/marker_1:
-                                    arm1/insert:
-                                      {}
-                                    arm1/lift:
-                                      {}
-                                    arm1/post_pick:
-                                      {}
-                                    arm1/pre_pick:
-                                      {}
-                                    arm1/rescan_pos:
-                                      {}
-                                  arm1/marker_2:
-                                    {}
-                                  arm1/marker_3:
-                                    {}
-                          arm1/tool0:
-                            {}
-          arm2/world:
-            arm2/base_link:
-              arm2/base:
-                {}
-              arm2/shoulder_link:
-                arm2/upper_arm_link:
-                  arm2/forearm_link:
-                    arm2/wrist_1_link:
-                      arm2/wrist_2_link:
-                        arm2/wrist_3_link:
-                          arm2/ee_link:
-                            arm2/end_effector_link:
-                              arm2/camera_link_optical:
-                                arm2/camera:
-                                  arm2/marker_0:
-                                    arm2/insert:
-                                      {}
-                                    arm2/lift:
-                                      {}
-                                    arm2/post_pick:
-                                      {}
-                                    arm2/pre_pick:
-                                      {}
-                                    arm2/rescan_pos:
-                                      {}
-                          arm2/tool0:
-                            {}
+          base_link:
+            base:
+              {}
+            shoulder_link:
+              upper_arm_link:
+                forearm_link:
+                  wrist_1_link:
+                    wrist_2_link:
+                      wrist_3_link:
+                        ee_link:
+                          camera_link_optical:
+                            camera:
+                              {}
+                          end_effector_link:
+                            D435_camera:
+                              color:
+                                {}
+                              depth:
+                                {}
+                              ired1:
+                                {}
+                              ired2:
+                                {}
+                        tool0:
+                          {}
       Update Interval: 0
       Value: true
     - Class: rviz/Image
@@ -457,7 +465,7 @@ Visualization Manager:
       Unreliable: false
       Value: false
     - Class: rviz/Image
-      Enabled: true
+      Enabled: false
       Image Topic: /fiducial_images
       Max Value: 1
       Median window: 5
@@ -467,9 +475,9 @@ Visualization Manager:
       Queue Size: 2
       Transport Hint: raw
       Unreliable: false
-      Value: true
+      Value: false
     - Class: rviz/Image
-      Enabled: true
+      Enabled: false
       Image Topic: /arm1/image
       Max Value: 1
       Median window: 5
@@ -479,7 +487,7 @@ Visualization Manager:
       Queue Size: 2
       Transport Hint: raw
       Unreliable: false
-      Value: true
+      Value: false
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
@@ -503,18 +511,18 @@ Visualization Manager:
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: 0.3121870160102844
-        Y: -0.145041823387146
-        Z: -1.4900592759659048e-8
+        X: 0.9111209511756897
+        Y: 0.07424914836883545
+        Z: -2.5331917186122155e-7
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.5297962427139282
+      Pitch: 0.3547964096069336
       Target Frame: world
       Value: XYOrbit (rviz)
-      Yaw: 4.521761417388916
+      Yaw: 4.671764850616455
     Saved: ~
 Window Geometry:
   Camera:
@@ -532,7 +540,7 @@ Window Geometry:
     collapsed: false
   MotionPlanning - Trajectory Slider:
     collapsed: false
-  QMainWindow State: 000000ff00000000fd0000000100000000000002a2000003a7fc020000000cfb000000100044006900730070006c006100790073010000003d00000138000000c900fffffffb0000000800480065006c00700000000342000000bb0000006e00fffffffb0000000a0056006900650077007300000003b0000000b0000000a400fffffffb0000000c00430061006d00650072006100000002ff000001610000001600fffffffb0000001e004d006f00740069006f006e00200050006c0061006e006e0069006e00670100000374000001890000000000000000fb00000044004d006f00740069006f006e0050006c0061006e006e0069006e00670020002d0020005400720061006a006500630074006f0072007900200053006c00690064006500720000000000ffffffff0000004100fffffffb0000001c004d006f00740069006f006e0050006c0061006e006e0069006e006700000001080000018e0000019b00fffffffb0000000c00430061006d006500720061000000029c000000400000000000000000fb0000000a0049006d0061006700650000000217000001cd0000001600fffffffb0000000a0049006d00610067006500000001590000011a0000001600fffffffb0000000a0049006d006100670065010000017b000000b20000001600fffffffb0000000a0049006d0061006700650100000233000001b10000001600ffffff00000495000003a700000001000000020000000100000002fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  QMainWindow State: 000000ff00000000fd0000000100000000000002a2000003a7fc020000000cfb000000100044006900730070006c006100790073010000003d000003a7000000c900fffffffb0000000800480065006c00700000000342000000bb0000006e00fffffffb0000000a0056006900650077007300000003b0000000b0000000a400fffffffb0000000c00430061006d00650072006100000002ff000001610000001600fffffffb0000001e004d006f00740069006f006e00200050006c0061006e006e0069006e00670100000374000001890000000000000000fb00000044004d006f00740069006f006e0050006c0061006e006e0069006e00670020002d0020005400720061006a006500630074006f0072007900200053006c00690064006500720000000000ffffffff0000004100fffffffb0000001c004d006f00740069006f006e0050006c0061006e006e0069006e006700000001080000018e0000019b00fffffffb0000000c00430061006d006500720061000000029c000000400000000000000000fb0000000a0049006d0061006700650000000217000001cd0000001600fffffffb0000000a0049006d00610067006500000001590000011a0000001600fffffffb0000000a0049006d006100670065000000017b000000b20000001600fffffffb0000000a0049006d00610067006500000001c80000021c0000001600ffffff00000495000003a700000001000000020000000100000002fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
   Views:
     collapsed: false
   Width: 1853
