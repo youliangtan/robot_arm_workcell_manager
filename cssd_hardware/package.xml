@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>cssd_hardware</name>
+  <version>1.0.0</version>
+  <description>
+    Simplifying launch file for hardware 
+  </description>
+  <maintainer email="malcom_neo@hopetechnik.com">Malcom</maintainer>
+  <license>BSD</license>
+
+  <depend>robot_arm_workcell_manager</depend>
+  <depend>ur_modern_driver</depend>
+  <depend>realsense2_camera</depend>
+
+  <buildtool_depend>catkin</buildtool_depend>
+</package>

@@ -14,6 +14,7 @@
   <include file="$(find cssdbot_description)/launch/ur10e_upload.launch">
     <arg name="limited" value="$(arg limited)"/>
     <arg name="transmission_hw_interface" value="hardware_interface/VelocityJointInterface"/>
+    <arg name="camera_ns" value="$(arg robot_name)"/>
   </include>
 
   <!-- push robot_description to factory and spawn robot in gazebo -->

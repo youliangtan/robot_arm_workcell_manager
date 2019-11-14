@@ -7,15 +7,15 @@
       <pose> 0 0 0 0 0 3.14 </pose>
        <inertial>
          <!-- tentative mass -->
-        <mass>5.5</mass>
-        <pose>0 0 0 0 0 0</pose>
+        <mass>5.0</mass>
+        <pose>0 0 -0.01 0 0 0</pose>
         <inertia>
-          <ixx>0.1026</ixx>
+          <ixx>0.2026</ixx>
           <ixy>0</ixy>
           <ixz>0</ixz>
           <iyy>0.206</iyy>
           <iyz>0</iyz>
-          <izz>0.155</izz>
+          <izz>0.255</izz>
         </inertia>
       </inertial>
 
@@ -27,6 +27,18 @@
             <size>0.30 0.35 0.004</size>
           </box>
         </geometry>
+        <surface>
+          <contact>
+            <ode>
+              <kp>1000000.0</kp>
+              <kd>1.0</kd>
+              <mu1>0.8</mu1>
+              <mu2>0.8</mu2>
+              <maxVel>0.0</maxVel>
+              <minDepth>0.001</minDepth>
+            </ode>
+          </contact>
+        </surface>
       </collision>
       <collision name="tray pegs">
         <geometry>
