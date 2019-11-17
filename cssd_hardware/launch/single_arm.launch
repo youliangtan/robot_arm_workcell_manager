@@ -39,6 +39,6 @@
   </include>
 	
   <node pkg="tf" type="static_transform_publisher" name="eef_to_camera_optical" 
-    args="0.032 0.037 0.095 0 0 0 ee_link camera_link_optical 10" />
+    args="0.022 0.035 0.09 0 0 0 ee_link camera_link_optical 10" />
 
 </launch>
