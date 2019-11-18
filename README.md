@@ -18,7 +18,9 @@ _Note that this package work together with ros2: `cssd_workcell_manger`, refer t
 
 *Full Video Link* (with two arms), [here](https://drive.google.com/open?id=1dT9zQ5bbWr0oMqf9hO2wWMH2uiiHR1AT)
 
-*Full Video Link* (with two arms in room, almost success), [here](https://drive.google.com/file/d/1IOWEiMg8CTTilpSejEei760nLFyPn-po/view?usp=sharing)
+*Full Video Link* (with two arms in room, almost success), [here](https://drive.google.com/file/d/1I7fnKHWII3_Oqg1UsoMj7hg-b29AKzg7/view?usp=sharing)
+
+*Full Video Link* (with one actual arm running in room), [here](https://drive.google.com/open?id=16Je8IETPBIXmjM2i7AdTnaaq4RSJGaal)
 
 ---
 
@@ -94,17 +96,17 @@ Open another terminal, then use rostopic to publish a `DispenserRequest.msg` to 
 *Request Task to UR10 arm!* 🤖
 
 ```bash
-rostopic pub /cssd_workcell/dispenser_request rmf_msgs/DispenserRequest '{request_id: 0xx01, dispenser_name: ur10_001, items:[{item_type: marker_1, quantity: 1, compartment_name: 'marker_101'}] }' --once
+rostopic pub /cssd_workcell/dispenser_request rmf_msgs/DispenserRequest '{request_guid: 0xx01, target_guid: ur10_001, items:[{item_type: marker_1, quantity: 1, compartment_name: 'marker_101'}] }' --once
 ## second request
-rostopic pub /cssd_workcell/dispenser_request rmf_msgs/DispenserRequest '{request_id: 0xx02, dispenser_name: ur10_001, items:[{item_type: marker_2, quantity: 1, compartment_name: 'marker_100'}] }' --once
+rostopic pub /cssd_workcell/dispenser_request rmf_msgs/DispenserRequest '{request_guid: 0xx02, target_guid: ur10_001, items:[{item_type: marker_2, quantity: 1, compartment_name: 'marker_100'}] }' --once
 ```
 
 *Request Task to UR10e arm!* 🤖
 
 ```bash
-rostopic pub /cssd_workcell/dispenser_request rmf_msgs/DispenserRequest '{request_id: 0xx03, dispenser_name: ur10e_001, items:[{item_type: marker_0, quantity: 1, compartment_name: 'marker_102'}] }' --once
+rostopic pub /cssd_workcell/dispenser_request rmf_msgs/DispenserRequest '{request_guid: 0xx03, target_guid: ur10e_001, items:[{item_type: marker_0, quantity: 1, compartment_name: 'marker_102'}] }' --once
 ## second request (IK Flip issue TOBEFIX)
-rostopic pub /cssd_workcell/dispenser_request rmf_msgs/DispenserRequest '{request_id: 0xx04, dispenser_name: ur10e_001, items:[{item_type: marker_4, quantity: 1, compartment_name: 'marker_103'}] }' --once
+rostopic pub /cssd_workcell/dispenser_request rmf_msgs/DispenserRequest '{request_guid: 0xx04, target_guid: ur10e_001, items:[{item_type: marker_4, quantity: 1, compartment_name: 'marker_103'}] }' --once
 ```
 
 By now, the robot dispenser will execute the task according to the `DispenserRequest`. GoodLuck!!
