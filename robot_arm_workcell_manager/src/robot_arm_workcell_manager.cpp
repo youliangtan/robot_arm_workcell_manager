@@ -85,11 +85,11 @@ void RobotArmWorkcellManager::dispenserTaskExecutionThread(){
 
             if (mission_success){
                 ROS_INFO("\n *************** [Robot: %s] Done with Task with Request ID: %s *************** \n", 
-                    dispenser_name_.c_str(), dispenser_curr_task_.request_id.c_str());
+                    dispenser_name_.c_str(), dispenser_curr_task_.request_guid.c_str());
             }
             else{
                 ROS_ERROR("\n *************** [Robot: %s] Task Failed for Request ID: %s *************** \n", 
-                    dispenser_name_.c_str(), dispenser_curr_task_.request_id.c_str());
+                    dispenser_name_.c_str(), dispenser_curr_task_.request_guid.c_str());
             }
             workcell_adapter_.setCurrTaskResult(mission_success);
         }
@@ -159,7 +159,7 @@ void RobotArmWorkcellManager::fixPitchRoll(tf::Transform& pose, double pitch, do
 
 // Mission sequences, TODO: Make it to a config file @_@
 bool RobotArmWorkcellManager::executeRobotArmMission(){
-    ROS_INFO("\n ***** Starting To Execute task, request_id: %s *****", dispenser_curr_task_.request_id.c_str());
+    ROS_INFO("\n ***** Starting To Execute task, request_guid: %s *****", dispenser_curr_task_.request_guid.c_str());
     
     bool motion_is_success;
     std::vector<tf::Transform *> tf_array;
@@ -221,7 +221,7 @@ bool RobotArmWorkcellManager::executeRobotArmMission(){
     // Back to rack level 0
     if (! arm_controller_.moveToNamedTarget(dispenser_name_ + "_rack_level_0") ) return false;
 
-    ROS_INFO("\n ***** Done with Task with request_id: %s *****", dispenser_curr_task_.request_id.c_str());
+    ROS_INFO("\n ***** Done with Task with request_guid: %s *****", dispenser_curr_task_.request_guid.c_str());
     return true;
 }
 

@@ -51,7 +51,7 @@ class DispenserWorkcellAdapter{
 
         void dispenserStateThread();
 
-        void publishDispenserResult(std::string request_id, bool success);
+        void publishDispenserResult(std::string request_guid, bool success);
 
     private:
         std::string dispenser_name_;
@@ -67,7 +67,7 @@ class DispenserWorkcellAdapter{
         rmf_msgs::DispenserRequest dispenser_curr_task_;
         rmf_msgs::DispenserResult dispenser_result_msg_;
         rmf_msgs::DispenserState dispenser_state_msg_;
-        std::unordered_map<std::string, bool> dispenser_completed_request_ids_;
+        std::unordered_map<std::string, bool> dispenser_completed_request_guids_;
 
         // ros stuffs
         ros::NodeHandle nh_;
