@@ -6,7 +6,7 @@ The task sequence starts with the action of picking up a custom design instrumen
 
 Now with namespace support! Enabling two (or more!) arms to perform a choreographed dance!! 🤖🤖
 
-_Note that this package work together with ros2: `cssd_workcell_manger`, refer to [here](https://github.com/sharp-rmf/rmf-workcell)_
+_Note that this package works together with ros2: `cssd_workcell_manger`, refer to [here](https://github.com/sharp-rmf/rmf-workcell)_
 
 **Active in Development!!!**
 
@@ -34,14 +34,14 @@ _Note that this package work together with ros2: `cssd_workcell_manger`, refer t
 ### Dependencies
 
 - Universal Robot: [here](https://github.com/ros-industrial/universal_robot), **Remember to switch branch
-- Fiducial Marker Detector: [here](https://github.com/UbiquityRobotics/fiducials)
+- Fiducial Marker Detector and ROS Controller
 ```bash
-sudo apt-get install ros-melodic-aruco-detect ros-melodic-fiducial-msgs
+sudo apt-get install ros-melodic-aruco-detect ros-melodic-fiducial-msgs ros-melodic-ros-control ros-melodic-ros-controllers
 ```
 - realsense_gazebo_plugin
 - realsense-ros (for hardware)  
-- rmf_msgs: [here](https://github.com/RMFHOPE/rmf_msgs_ros1), **Phasing Out Soon
-- CSSD_workcell_manager (ROS2): [Here](https://github.com/sharp-rmf/rmf-workcell/tree/cssd_workcell/cssd_workcell_manager) Not Necessary
+- rmf_msgs: [here](https://github.com/RMFHOPE/rmf_msgs_ros1), **Phasing Out Soon (shifting to `rmf_dispenser_msgs`)
+- cssd_workcell_manager (ROS2): [Here](https://github.com/sharp-rmf/rmf-workcell/tree/cssd_workcell/cssd_workcell_manager) Not Necessary
 
 ### Make and Build
 ```bash
