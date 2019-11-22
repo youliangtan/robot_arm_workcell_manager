@@ -64,7 +64,7 @@ bool HanWhaArmWorkcellManager::loadParameters(){
 }
 
 
-// ---------------------------------- Hanwha_ARM_MISSION_CONTROL ----------------------------------
+// ---------------------------------- HANWHA_ARM_MISSION_CONTROL ----------------------------------
 
 void HanWhaArmWorkcellManager::dispenserTaskExecutionThread(){
 
@@ -120,17 +120,25 @@ bool HanWhaArmWorkcellManager::executeRobotArmMission(){
     ROS_INFO("\n ***** Starting To Execute task, request_guid: %s *****", 
         dispenser_curr_task_.request_guid.c_str());
     
-    std::string requested_item_type = dispenser_curr_task_.items[0].item_type ;
+    rmf_msgs::DispenserRequestItem requested_item = dispenser_curr_task_.items[0] ;
+    std::string requested_item_type = requested_item.item_type ;
     std::vector<double> _curr_pose;
+    tf::Transform *target_tf (new tf::Transform);
 
     // picking, e.g: requested_item.item_type = "marker_X" 
     if (! arm_controller_.executePickItem( map_req_hanwha_itemid_[requested_item_type]) ) return false;
-    
-    // get current eef pose
-    _curr_pose = arm_controller_.get_tf_update();
 
-    // Placing the tray
-    if (! arm_controller_.executePlacePose(_curr_pose) ) return false;
+    // Find marker then execute Placing the tray
+    if (! markers_detector_.getTransformPose( "camera", requested_item.compartment_name, target_tf ) ){    
+        // get current eef pose
+        _curr_pose = arm_controller_.get_tf_update();
+    
+        if (! arm_controller_.executePlacePose(_curr_pose) ) return false;
+    }
+    else{
+        ROS_ERROR(" [HANWHA] Unable to find marker! ");
+        return false;
+    }
 
     ROS_INFO("\n ***** Done with Task with request_guid: %s *****", 
         dispenser_curr_task_.request_guid.c_str());

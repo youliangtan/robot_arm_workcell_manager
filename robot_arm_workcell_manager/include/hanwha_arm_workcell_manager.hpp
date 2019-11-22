@@ -72,7 +72,7 @@ class HanWhaArmWorkcellManager{
         std::map<std::string, std::string> map_req_hanwha_itemid_;
 
         // local lib stuffs
-        // HanWhaArmController arm_controller_;
+        HanWhaArmController arm_controller_;
         FiducialMarkersHandler markers_detector_;
         rmf_adapter::DispenserWorkcellAdapter workcell_adapter_;
         

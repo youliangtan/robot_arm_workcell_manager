@@ -171,3 +171,22 @@ void DispenserWorkcellAdapter::publishDispenserResult(std::string request_guid, 
 }
 
 } // end namespace
+
+
+// --------------------------------------------------------
+// -- Simple Test for Dispenser workcell adapter lib
+// --------------------------------------------------------
+
+
+int main(int argc, char** argv){
+    std::cout<<" YoYoYo!, Test DispenserWorkcellAdapter is running!!!"<< std::endl;
+    
+    ros::init(argc, argv, "test_workcell", ros::init_options::NoSigintHandler);
+    rmf_adapter::DispenserWorkcellAdapter workcell_adapter_;
+
+    std::cout<<" All Ready!!!"<< std::endl;
+
+    ros::AsyncSpinner ros_async_spinner(1);
+    ros_async_spinner.start();
+    ros::waitForShutdown();    
+}

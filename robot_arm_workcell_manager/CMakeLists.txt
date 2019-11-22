@@ -76,6 +76,9 @@ target_link_libraries( fiducial_markers_handler_node  ${catkin_LIBRARIES}  ${YAM
 add_library( dispenser_workcell_adapter src/dispenser_workcell_adapter.cpp )
 target_link_libraries(  dispenser_workcell_adapter  ${catkin_LIBRARIES} )
 
+add_executable( dispenser_workcell_test src/dispenser_workcell_adapter.cpp )
+target_link_libraries(  dispenser_workcell_test  ${catkin_LIBRARIES} )
+
 ## -------------------------------- Main Exec for RAWM Package -----------------------------------
 
 add_executable( robot_arm_workcell_manager src/robot_arm_workcell_manager.cpp )

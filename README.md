@@ -142,13 +142,21 @@ Test code to try out aruco marker detection. Camera and aruco markers are used f
 vlc v4l2:///dev/video{$NUM}
 ```
 
+### 3. Run Dispenser Workcell Test
+```bash
+rosrun robot_arm_workcell_manager dispenser_workcell_test
+# Check the spawned topics by:
+rostopic list
+```
+
+
 **Calibration**: Refer to OpenCV Camera Calibration code, [here](https://docs.opencv.org/2.4/doc/tutorials/calib3d/camera_calibration/camera_calibration.html#results). Once done, then copy the camera & distortion matrix from a .xml file to `/robot_arm_workcell_manager/config/usb_cam.yaml`.
 
 ```bash
 roslaunch robot_arm_workcell_manager fiducial_markers_handler.launch
 ```
 
-### 3. Overall Test with Robot Arm Workcell Manager (RAWM)
+### 4. Overall Test with Robot Arm Workcell Manager (RAWM)
 Single arm test just with Rviz and moveit
 ```bash
 ## Terminal A: Run Rviz and Moveit

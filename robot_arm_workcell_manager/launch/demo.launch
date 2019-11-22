@@ -1,4 +1,4 @@
-l<aunch>
+<launch>
    
   <arg name="arm_ns"                        default="/"/>
   <arg name="arm_type"                      default="ur10"/>
