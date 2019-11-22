@@ -34,6 +34,7 @@
   <depend>aruco_detect</depend>
   <depend>fiducial_msgs</depend>
   <depend>rmf_msgs</depend>
+  <depend>hanwha_controller</depend>
   
   <buildtool_depend>catkin</buildtool_depend>
   <buildtool_depend>rmf_msgs</buildtool_depend>

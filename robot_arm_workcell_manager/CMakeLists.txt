@@ -26,12 +26,14 @@ find_package(catkin REQUIRED COMPONENTS
   fiducial_msgs
   aruco_detect
   rmf_msgs
+  hanwha_controller
 )
 
 find_package(YAML-CPP REQUIRED yaml-cpp)
 find_package(Eigen3 REQUIRED)
 find_package(Boost REQUIRED system filesystem date_time thread)
 find_package(gazebo 9 REQUIRED)
+find_package(hanwha_controller REQUIRED)
 
 catkin_package(
   LIBRARIES
@@ -53,7 +55,7 @@ catkin_package(
 #---------------------------------- Exec Stuffs--------------------------------------------------
 
 include_directories(
-  include
+  include  
   ${catkin_INCLUDE_DIRS}
   ${EIGEN3_INCLUDE_DIR}
   ${YAML_CPP_INCLUDE_DIRS}
@@ -78,11 +80,21 @@ target_link_libraries(  dispenser_workcell_adapter  ${catkin_LIBRARIES} )
 
 add_executable( robot_arm_workcell_manager src/robot_arm_workcell_manager.cpp )
 target_link_libraries(  robot_arm_workcell_manager
-                        ${catkin_LIBRARIES}
-                        robot_arm_controller
-                        fiducial_markers_handler
-                        dispenser_workcell_adapter
-                      ) #${GAZEBO_INCLUDE_DIRS}  ${catkin_INCLUDE_DIRS} )
+  ${catkin_LIBRARIES}
+  robot_arm_controller
+  fiducial_markers_handler
+  dispenser_workcell_adapter
+)
+
+## ------------------------------- Hanwha Arm -----------------------------
+
+add_executable( hanwha_arm_workcell_manager src/hanwha_arm_workcell_manager.cpp )
+target_link_libraries(  hanwha_arm_workcell_manager
+  ${catkin_LIBRARIES}
+  hanwha_arm_controller
+  fiducial_markers_handler
+  dispenser_workcell_adapter
+)
 
 install(
   DIRECTORY scripts/
