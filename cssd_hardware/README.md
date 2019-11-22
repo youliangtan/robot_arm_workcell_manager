@@ -36,6 +36,19 @@ Again, PLEASE KEEP YOUR HANDS ON THE BIG RED BUTTON! :fire:
 roslaunch cssd_hardware two_arm.launch
 ```
 
+## Launching single HanWha arm
+
+Connect to the right IP and the copy the `hanwha_script` to the hanwha pendant. To run HanWha Arm workcell with RMF:
+```
+roslaunch robot_arm_workcell_manager hanwha_arm_workcell_manager.launch
+```
+
+Publish sample `DispenserRequest`s...
+```bash
+rostopic pub /cssd_workcell/dispenser_request rmf_msgs/DispenserRequest '{request_guid: 0xx01, target_guid: hanwha_001, items:[{item_type: marker_1, quantity: 1, compartment_name: 'marker_101'}] }' --once
+## second request
+rostopic pub /cssd_workcell/dispenser_request rmf_msgs/DispenserRequest '{request_guid: 0xx02, target_guid: hanwha_001, items:[{item_type: marker_2, quantity: 1, compartment_name: 'marker_100'}] }' --once
+```
 
 ## Notes
 
@@ -51,6 +64,6 @@ roslaunch cssdbot_ur10e_moveit_config realistic_minimal.launch
 ```
 
 To purely tryout using moveit on rviz, remember:
-- !!!PLAN BEFORE EXECUTING. SCALE YORU VELOCITY!!!!
+- !!!PLAN BEFORE EXECUTING. SCALE YOUR VELOCITY!!!!
 - Remember `CURRENT STATE` should always be :`<current_state>`, `GROUP` should be: `MANIPULATOR`
 - Joint states can be altered in `cssdbot_urxx_moveit_config/config/urxx.srdf`

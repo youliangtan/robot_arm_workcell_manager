@@ -115,9 +115,10 @@ _p/s: You can play with the gazebo model by manually move the position of the tr
 
 ---
 
-## Run on Hardware
+## Run on Hardware (UR and HanWha)
 
 Please refer to the readme [here](/cssd_hardware)
+ - Also with Hanwha Arm Support
 
 ---
 
@@ -130,7 +131,7 @@ Run motion executor test code.
 roslaunch robot_arm_workcell_manager demo.launch
 
 # Terminal B: Run arm_controller Node 
-roslaunch robot_arm_workcell_manager arm_controller.launch
+roslaunch robot_arm_workcell_manahger arm_controller.launch
 ```
 
 ### 2. Run Fiducial Markers Handler Test Code (ToBeTested)
@@ -187,6 +188,7 @@ Information is pulled from the depth camera and added to the planning scene. The
 - To add more arms: expand `cssd_gazebo two_arms.launch`, `two_arms_rviz.launch`, `two_arms_rawm.launch`
 - master branch for `ur_modern_driver` currently doesn't support UR-E series
 - When using realsense, the `camera_info` which consists of the camera-matrix is locaated auto generated when launching `realsense2_ros`
+- Create lib pkgfor other pkgs: [here](https://answers.ros.org/question/150306/how-to-put-headers-into-develinclude-folder-with-catkin_make/)
 
 ## Debuging process
 - Jittering Problem during picking up of tray with Eef:  use `velocity_controllers` instead of `position_controller`
