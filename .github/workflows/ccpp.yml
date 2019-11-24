@@ -28,15 +28,18 @@ jobs:
             sudo apt-get install -y python-catkin-tools python-catkin-pkg python-rosdep python-wstool ros-$ROS_DISTRO-cv-bridge ros-$ROS_DISTRO-image-transport ros-$ROS_DISTRO-roslint
             sudo apt-get install -y ros-$ROS_DISTRO-nodelet-core ros-$ROS_DISTRO-ddynamic-reconfigure
             source /opt/ros/$ROS_DISTRO/setup.bash
+      - name: Setup Deps
+        run: |
             # Prepare rosdep to install dependencies.
             sudo apt-get install gazebo9* ros-$ROS_DISTRO-moveit* 
             sudo apt-get install ros-$ROS_DISTRO-aruco-detect ros-$ROS_DISTRO-fiducial-msgs
             sudo rosdep init
             rosdep update --include-eol-distros  # Support EOL distros.
+            source /opt/ros/$ROS_DISTRO/setup.bash
+            mkdir -p ~/catkin_ws/src
+            git clone git@github.com:tanyouliang95/rmf_msgs_ros1.git
       - name: build
         run: |
-          source /opt/ros/$ROS_DISTRO/setup.bash
-          mkdir -p ~/catkin_ws/src
           cd ~/catkin_ws
           catkin_make --pkg rmf_msgs
           source devel/setup.bash
