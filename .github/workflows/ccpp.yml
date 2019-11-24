@@ -1,3 +1,5 @@
+# Refered to here: https://github.com/lucasw/frei0r_image/blob/master/.github/workflows/catkin_build.yml
+
 name: ROS CI
 
 on: [push]
@@ -25,9 +27,10 @@ jobs:
             sudo apt-get install dpkg
             sudo apt-get install -y python-catkin-tools python-catkin-pkg python-rosdep python-wstool ros-$ROS_DISTRO-cv-bridge ros-$ROS_DISTRO-image-transport ros-$ROS_DISTRO-roslint
             sudo apt-get install -y ros-$ROS_DISTRO-nodelet-core ros-$ROS_DISTRO-ddynamic-reconfigure
-            sudo apt-get gazebo9* ros-$ROS_DISTRO-moveit*
             source /opt/ros/$ROS_DISTRO/setup.bash
             # Prepare rosdep to install dependencies.
+            sudo apt-get install gazebo9* ros-$ROS_DISTRO-moveit* 
+            sudo apt-get install ros-$ROS_DISTRO-aruco-detect ros-$ROS_DISTRO-fiducial-msgs
             sudo rosdep init
             rosdep update --include-eol-distros  # Support EOL distros.
       - name: build
