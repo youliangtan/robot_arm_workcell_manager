@@ -19,6 +19,9 @@ jobs:
       ROS_DISTRO: melodic
     steps:
       - uses: actions/checkout@v1
+        with: 
+          repository: tanyouliang95/rmf_msgs_ros1
+          token: 02ffa7d759eb77d5ad9779c57c1cc3d3e95cd138
       - name: Install ROS
         run: |
             sudo sh -c "echo \"deb http://packages.ros.org/ros/ubuntu $ROS_CI_DESKTOP main\" > /etc/apt/sources.list.d/ros-latest.list"
