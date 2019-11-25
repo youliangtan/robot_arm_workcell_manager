@@ -50,9 +50,9 @@ jobs:
             ln -s $CI_SOURCE_PATH .
             echo " list down repo in src: "
             ls
-            cd ~/catkin_ws/
+            cd ~/catkin_ws
             echo " Start Building 'robot_arm_workcell_manager!!' "
-            catkin_make --pkg robot_arm_workcell_manager
+            catkin_make # --pkg robot_arm_workcell_manager
       - name: lint
         run: |
             cd ~/catkin_ws
