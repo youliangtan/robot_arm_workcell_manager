@@ -48,11 +48,14 @@ jobs:
             cd ~/catkin_ws/src
             echo " Linking $CI_SOURCE_PATH to catkin_ws/src"
             ln -s $CI_SOURCE_PATH .
-            echo " list down repo in src: "
+            echo " ~list down repo in src: "
+            ls
+            echo " ~list down repo in RAWM "
+            cd robot_arm_workcell_manager/
             ls
             cd ~/catkin_ws
             echo " Start Building 'robot_arm_workcell_manager!!' "
-            catkin_make # --pkg robot_arm_workcell_manager
+            catkin_make #  --pkg robot_arm_workcell_manager
       - name: lint
         run: |
             cd ~/catkin_ws
