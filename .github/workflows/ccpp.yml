@@ -46,6 +46,7 @@ jobs:
             # catkin_make --pkg rmf_msgs
             # source devel/setup.bash
             # cd ~/catkin_ws/src
+            pwd
             mkdir -p ~/catkin_ws/src
             echo " Linking $GITHUB_WORKSPACE to catkin_ws/src"
             ln -s $CI_SOURCE_PATH .
