@@ -48,7 +48,9 @@ jobs:
             # cd ~/catkin_ws/src
             mkdir -p ~/catkin_ws/src
             echo " Linking $GITHUB_WORKSPACE to catkin_ws/src"
-            # mv $CI_SOURCE_PATH .
+            ln -s $CI_SOURCE_PATH .
+            cd robot_arm_workcell_manager
+            ls
             #echo " ~list down repo in src: "
             # ls
             # echo " ~list down repo in RAWM "
