@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-18.04
     env:
       ROS_CI_DESKTOP: "`lsb_release -cs`"  # e.g. [trusty|xenial|...]
-      CI_SOURCE_PATH: $(pwd)
+      CI_SOURCE_PATH: $HOME/work
       ROSINSTALL_FILE: $CI_SOURCE_PATH/dependencies.rosinstall
       CATKIN_OPTIONS: $CI_SOURCE_PATH/catkin.options
       ROS_PARALLEL_JOBS: '-j8 -l6'
