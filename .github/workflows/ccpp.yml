@@ -30,7 +30,7 @@ jobs:
           echo "checkout whether is it working...  src:"
           cd ~/catkin_ws/src
           ls
-          "echo checkout whether is it working...  rawm:"
+          echo "checkout whether is it working...  rawm:"
           cd ~/catkin_ws/src/robot_arm_workcell_manager
           ls
 
