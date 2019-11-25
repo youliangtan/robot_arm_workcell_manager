@@ -26,7 +26,8 @@ jobs:
           echo " Linking $GITHUB_WORKSPACE to catkin_ws/src"
           ln -s $CI_SOURCE_PATH .
     - name: printout
-      run:
+      run: |
+          echo "checkout whether is it working..."
           cd ~/catkin_ws/src/robot_arm_workcell_manager
           ls
 
