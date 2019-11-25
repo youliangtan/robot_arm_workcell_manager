@@ -19,7 +19,7 @@ jobs:
       ROS_DISTRO: melodic
     steps:
     - name: test
-      run:
+      run: |
         pwd
         mkdir -p ~/catkin_ws/src
         echo " Linking $GITHUB_WORKSPACE to catkin_ws/src"
