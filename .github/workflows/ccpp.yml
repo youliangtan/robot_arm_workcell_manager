@@ -51,6 +51,11 @@ jobs:
             pwd
             ls
             cd ~/catkin_ws/
+            echo " --- test ls:"
+            ls
+            cd ~/work
+            echo " ---- in work"
+            ls
             echo " Start Building 'robot_arm_workcell_manager!!' "
             catkin_make --pkg robot_arm_workcell_manager
       - name: lint
