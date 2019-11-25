@@ -40,17 +40,18 @@ jobs:
             git clone "https://02ffa7d759eb77d5ad9779c57c1cc3d3e95cd138@github.com/tanyouliang95/rmf_msgs_ros1.git"
       - name: build
         run: |
-          cd ~/catkin_ws
-          catkin_make --pkg rmf_msgs
-          source devel/setup.bash
-          cd ~/catkin_ws/src
-          ln -s ~/work  # $CI_SOURCE_PATH
-          # echo "::warning $CI_SOURCE_PATH"
-          echo " Start Building 'robot_arm_workcell_manager!!' "
-          cd ..
-          catkin_make --pkg robot_arm_workcell_manager
+            source /opt/ros/$ROS_DISTRO/setup.bash
+            cd ~/catkin_ws
+            catkin_make --pkg rmf_msgs
+            source devel/setup.bash
+            cd ~/catkin_ws/src
+            ln -s ~/work  # $CI_SOURCE_PATH
+            # echo "::warning $CI_SOURCE_PATH"
+            echo " Start Building 'robot_arm_workcell_manager!!' "
+            cd ..
+            catkin_make --pkg robot_arm_workcell_manager
       - name: lint
         run: |
-          cd ~/catkin_ws
-          catkin_make --pkg robot_arm_workcell_manager
+            cd ~/catkin_ws
+            catkin_make --pkg robot_arm_workcell_manager
 
