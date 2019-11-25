@@ -42,13 +42,13 @@ jobs:
         run: |
             source /opt/ros/$ROS_DISTRO/setup.bash
             cd ~/catkin_ws
-            catkin_make --pkg rmf_msgs
-            source devel/setup.bash
-            cd ~/catkin_ws/src
-            ln -s ~/work  # $CI_SOURCE_PATH
+            # catkin_make --pkg rmf_msgs
+            # source devel/setup.bash
+            # cd ~/catkin_ws/src
+            # ln -s ~/work  # $CI_SOURCE_PATH
             # echo "::warning $CI_SOURCE_PATH"
+            # cd ..
             echo " Start Building 'robot_arm_workcell_manager!!' "
-            cd ..
             catkin_make --pkg robot_arm_workcell_manager
       - name: lint
         run: |
