@@ -27,7 +27,9 @@ jobs:
           ln -s $CI_SOURCE_PATH .
     - name: printout
       run: |
-          echo "checkout whether is it working..."
+          echo "checkout whether is it working...  src:"
+          cd ~/catkin_ws/src/
+          "echo "checkout whether is it working...  rawm:"
           cd ~/catkin_ws/src/robot_arm_workcell_manager
           ls
 
