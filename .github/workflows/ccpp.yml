@@ -41,12 +41,12 @@ jobs:
       #       git clone "https://02ffa7d759eb77d5ad9779c57c1cc3d3e95cd138@github.com/tanyouliang95/rmf_msgs_ros1.git"
       - name: build
         run: |
+            pwd
             # source /opt/ros/$ROS_DISTRO/setup.bash
             # cd ~/catkin_ws
             # catkin_make --pkg rmf_msgs
             # source devel/setup.bash
             # cd ~/catkin_ws/src
-            pwd
             mkdir -p ~/catkin_ws/src
             echo " Linking $GITHUB_WORKSPACE to catkin_ws/src"
             ln -s $CI_SOURCE_PATH .
