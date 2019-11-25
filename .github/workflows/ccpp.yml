@@ -24,12 +24,13 @@ jobs:
           mkdir -p ~/catkin_ws/src
           cd ~/catkin_ws/src
           echo " Linking $GITHUB_WORKSPACE to catkin_ws/src"
-          ln -s $CI_SOURCE_PATH .
+          ln -s $GITHUB_WORKSPACE .
     - name: printout
       run: |
           echo "checkout whether is it working...  src:"
           cd ~/catkin_ws/src
           ls
+          ls $GITHUB_WORKSPACE
           echo "checkout whether is it working...  rawm:"
           cd ~/catkin_ws/src/robot_arm_workcell_manager
           ls
