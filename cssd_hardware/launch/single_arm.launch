@@ -44,6 +44,6 @@
 
 <!-- linking up the depth camera frame and the camera link -->
   <node pkg="tf" type="static_transform_publisher" name="arm_camera_to_realsense_camera" 
-    args="0 0 0 0 0 0 camera camera_link 10" />
+    args="0 0 0 0 0 0 camera camera_link 10" /> 
 
 </launch>

@@ -20,7 +20,7 @@ _Note that this package work together with ros2: `cssd_workcell_manger`, refer t
 
 *Full Video Link* (with two arms in room, almost success), [here](https://drive.google.com/file/d/1I7fnKHWII3_Oqg1UsoMj7hg-b29AKzg7/view?usp=sharing)
 
-*Full Video Link* (with one actual arm running in room), [here](https://drive.google.com/open?id=16Je8IETPBIXmjM2i7AdTnaaq4RSJGaal)
+*Full Video Link* (with one actual arm running in room), [here](https://drive.google.com/file/d/1Yw2kzTtNThzD650f3JLyPJFsCgmVH7TQ/view)
 
 ---
 
@@ -134,12 +134,16 @@ roslaunch robot_arm_workcell_manager demo.launch
 roslaunch robot_arm_workcell_manahger arm_controller.launch
 ```
 
-### 2. Run Fiducial Markers Handler Test Code (ToBeTested)
+### 2. Run Fiducial Markers Handler Test Code
 Test code to try out aruco marker detection. Camera and aruco markers are used for this application.
 
 ```bash
 # Check Camera and configure path
 vlc v4l2:///dev/video{$NUM}
+# Run test launch file
+roslaunch robot_arm_workcell_manager fiducial_markers_handler.launch
+# Rviz to show /image from usb_cam and fiducial markers
+rviz -f camera
 ```
 
 ### 3. Run Dispenser Workcell Test
@@ -203,6 +207,15 @@ Information is pulled from the depth camera and added to the planning scene. The
 - MoveIt Namespace issue: In `robot_arm_controller.cpp` there's a declaration of namespace in for the movegroup by `ros::NodeHandle moveit_nh(arm_namespace_)`
 - `GOAL_TOLERANCE_VIOLATED` error code in action server: As mentioned in [here](https://github.com/ros-planning/moveit/issues/1475#issuecomment-504364419), move group setTolerance is not working here. Will need to manually change it in `ur_velocity/position_controller.yaml`. This is the input param for `ros_control/joint_trajectory_controller` during spawn
 - Joint IK flip issue while placing to ``marker_103` : Tried switch the planner from `ompl` to `stomp` (in `planning_context.launch`), still not able to fully solve the issue.
+- Gazebo9 `Try_init` & sdf error.
+```
+sudo sh -c 'echo "deb http://packages.osrfoundation.org/gazebo/ubuntu-stable `lsb_release -cs` main" > /etc/apt/sources.list.d/gazebo-stable.list'
+wget http://packages.osrfoundation.org/gazebo.key -O - | sudo apt-key add -
+sudo apt-get update
+sudo apt-get install --only-upgrade gazebo9
+```
+remove previous build files and rebuild
+- Added Github Action CI in `.github/workflows/ccpp.yml`, currently working till catkin_make for RAWM
 
 ## TODO
 - further cleanupsssss

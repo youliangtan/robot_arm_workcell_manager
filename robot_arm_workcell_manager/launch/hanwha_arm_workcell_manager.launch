@@ -1,10 +1,10 @@
-<!--  ** Spawning robot_arm_workcell_manager node **  -->
+<!--  ** Spawning hanwha_arm_workcell_manager node **  -->
 
 <launch>
 
     <arg name="markers_config_file"  default="$(find robot_arm_workcell_manager)/config/markers_tf.yaml" />
     <arg name="arm_ns" default="/"/>
-    <arg name="dispenser_name" default="ur10_001"/>
+    <arg name="dispenser_name" default="hanwha_001"/>
 
     <group ns="$(arg arm_ns)">
 
