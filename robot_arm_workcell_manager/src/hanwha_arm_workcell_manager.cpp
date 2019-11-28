@@ -126,7 +126,7 @@ bool HanWhaArmWorkcellManager::executeRobotArmMission(){
     tf::Transform *target_tf (new tf::Transform);
 
     // picking, e.g: requested_item.item_type = "marker_X" 
-    if (! arm_controller_.executePickItem( map_req_hanwha_itemid_[requested_item_type]) ) return false;
+    if (! arm_controller_.executeScanItem( map_req_hanwha_itemid_[requested_item_type]) ) return false;
 
     // Find marker then execute Placing the tray
     if (! markers_detector_.getTransformPose( "camera", requested_item.compartment_name, target_tf ) ){    
