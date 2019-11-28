@@ -26,8 +26,8 @@ markers_extended_tf:  # orien is opencv image convention
   compartment_marker:     
     rescan_pos: [0,   -0.09,   0.37,   1.57,   -1.57,    0]
     pre_place:  [0,   -0.23,   0.33,   1.57,   -1.57,    0]
-    insert:     [0,   -0.23,   0,     1.57,   -1.57,    0]
-    drop:       [0,   -0.15,  0,     1.57,   -1.57,    0]
+    insert:     [0,   -0.23,   0.01,     1.57,   -1.57,    0]
+    drop:       [0,   -0.15,  0.01,     1.57,   -1.57,    0]
     post_place: [0,   -0.15,  0.38,   1.57,   -1.57,    0]
 
 # TODO
