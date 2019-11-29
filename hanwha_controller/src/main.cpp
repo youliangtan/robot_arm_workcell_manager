@@ -13,19 +13,34 @@ int main()
     std::vector<double> _curr_pose;
     HanWhaArmController hanwha_bot;
 
-    // Pick Item1
-    hanwha_bot.executePickItem("item_1");
-    // get current eef pose, and print out
-    _curr_pose = hanwha_bot.get_tf_update();
-    hanwha_bot.print(_curr_pose);
-    // execute place motion with pose target info
-    hanwha_bot.executePlacePose({1085, 797, -132, 90, 0, 90});
+    hanwha_bot.movetoScanPose("mir_1");
 
-    // Pick and place item 2
-    hanwha_bot.executePickItem("item_2");
     _curr_pose = hanwha_bot.get_tf_update();
     hanwha_bot.print(_curr_pose);
-    hanwha_bot.executePlacePose({1085, 290, -132, 90, 0, 90}, 100, 1000, 2);
+
+    hanwha_bot.executePickPose({-203, 866, -182.65, 90, 0, -180});
+
+    hanwha_bot.movetoScanPose("trolley_1");
+
+    _curr_pose = hanwha_bot.get_tf_update();
+    hanwha_bot.print(_curr_pose);
+
+    hanwha_bot.executePlacePose({985, 179, 270, 90, 0, 90});
+    sleep(5);
+
+    hanwha_bot.movetoScanPose("mir_2");
+
+    _curr_pose = hanwha_bot.get_tf_update();
+    hanwha_bot.print(_curr_pose);
+
+    hanwha_bot.executePickPose({130, 866, -182.65, 90, 0, -180});
+
+    hanwha_bot.movetoScanPose("trolley_2");
+
+    _curr_pose = hanwha_bot.get_tf_update();
+    hanwha_bot.print(_curr_pose);
+
+    hanwha_bot.executePlacePose({486.6, -1186.1, 233.22, 90, 0, 0});
 
     return 0;
 }

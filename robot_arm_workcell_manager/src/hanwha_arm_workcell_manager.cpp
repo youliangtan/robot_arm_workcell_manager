@@ -111,6 +111,23 @@ void HanWhaArmWorkcellManager::fixPitchRoll(tf::Transform& pose, double pitch, d
 }
 
 
+// to update hanwha bot state
+void HanWhaArmWorkcellManager::updateRobotStateTf( std::vector<double> tf_input){
+
+    tf::Transform tf_transfrom;
+    tf::Quaternion quat;
+
+    tf_transfrom.setOrigin(tf::Vector3(tf_input[0], tf_input[1], tf_input[2]));
+    quat.setRPY (tf_input[3], tf_input[4], tf_input[5]);
+    tf_transfrom.setRotation(quat);
+
+    tf::StampedTransform robot_eef_tf ( tf_transfrom,
+                                        ros::Time::now(),
+                                        "base_link",
+                                        "ee_link");
+    tf_broadcaster_.sendTransform( robot_eef_tf );
+}
+
 // ---------------------------------------------------------------------------------------
 // ----------------------- HANWHA_ARM_MISSION_CONTROL: EXECUTION --------------------------
 // ---------------------------------------------------------------------------------------
@@ -125,20 +142,72 @@ bool HanWhaArmWorkcellManager::executeRobotArmMission(){
     std::vector<double> _curr_pose;
     tf::Transform *target_tf (new tf::Transform);
 
-    // picking, e.g: requested_item.item_type = "marker_X" 
-    if (! arm_controller_.executePickItem( map_req_hanwha_itemid_[requested_item_type]) ) return false;
-
-    // Find marker then execute Placing the tray
-    if (! markers_detector_.getTransformPose( "camera", requested_item.compartment_name, target_tf ) ){    
-        // get current eef pose
-        _curr_pose = arm_controller_.get_tf_update();
+    while(1){
     
-        if (! arm_controller_.executePlacePose(_curr_pose) ) return false;
+        arm_controller_.movetoScanPose("mir_1");
+        _curr_pose = arm_controller_.get_tf_update();
+        updateRobotStateTf(_curr_pose);
+        arm_controller_.print(_curr_pose);
+
+    //     arm_controller_.movetoScanPose("trolley_2");
+    //    _curr_pose = arm_controller_.get_tf_update();
+    //     updateRobotStateTf(_curr_pose);
+    //     arm_controller_.print(_curr_pose);
+
+        arm_controller_.movetoScanPose("mir_2");
+       _curr_pose = arm_controller_.get_tf_update();
+        updateRobotStateTf(_curr_pose);
+        arm_controller_.print(_curr_pose);
+
+    //     arm_controller_.movetoScanPose("trolley_1");
+    //    _curr_pose = arm_controller_.get_tf_update();
+    //     updateRobotStateTf(_curr_pose);
+    //     arm_controller_.print(_curr_pose);
+
     }
-    else{
-        ROS_ERROR(" [HANWHA] Unable to find marker! ");
-        return false;
-    }
+
+    // arm_controller_.movetoScanPose("mir_1");
+    // // Find marker then execute Placing the tray
+    // if (! markers_detector_.getTransformPose( "camera", requested_item.compartment_name, target_tf ) ){    
+        
+    //     // get current eef pose
+    //     _curr_pose = arm_controller_.get_tf_update();
+    //     updateRobotStateTf(_curr_pose);
+
+    //     // calc from 'base' to 'marker'    
+    //     if (! arm_controller_.executePickPose(_curr_pose) ) return false;
+    // }
+    // else{
+    //     ROS_ERROR(" [HANWHA] Unable to find marker! ");
+    //     return false;
+    // }
+
+    // // arm_controller_.executePickPose({-203, 866, -182.65, 90, 0, -180});
+
+    // arm_controller_.movetoScanPose("trolley_1");
+
+    // _curr_pose = arm_controller_.get_tf_update();
+    // updateRobotStateTf(_curr_pose);
+    // arm_controller_.print(_curr_pose);
+
+    // arm_controller_.executePlacePose({985, 179, 270, 90, 0, 90});
+    // sleep(5);
+
+    // arm_controller_.movetoScanPose("mir_2");
+
+    // _curr_pose = arm_controller_.get_tf_update();
+    // updateRobotStateTf(_curr_pose);
+    // arm_controller_.print(_curr_pose);
+
+    // arm_controller_.executePickPose({130, 866, -182.65, 90, 0, -180});
+
+    // arm_controller_.movetoScanPose("trolley_2");
+
+    // _curr_pose = arm_controller_.get_tf_update();
+    // updateRobotStateTf(_curr_pose);
+    // arm_controller_.print(_curr_pose);
+
+    // arm_controller_.executePlacePose({486.6, -1186.1, 233.22, 90, 0, 0});
 
     ROS_INFO("\n ***** Done with Task with request_guid: %s *****", 
         dispenser_curr_task_.request_guid.c_str());
