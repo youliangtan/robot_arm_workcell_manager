@@ -75,6 +75,10 @@ class HanWhaArmWorkcellManager{
         HanWhaArmController arm_controller_;
         FiducialMarkersHandler markers_detector_;
         rmf_adapter::DispenserWorkcellAdapter workcell_adapter_;
+
+        // update robot state TF 
+        tf::TransformBroadcaster tf_broadcaster_;  
+        void updateRobotStateTf( std::vector<double> tf_input);
         
 };
 

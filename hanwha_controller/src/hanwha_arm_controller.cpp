@@ -24,18 +24,18 @@ bool HanWhaArmController::executePlacePose(const std::vector<double> &target_pos
 
     if (!strcmp(buffer_, "1\n"))
     {
-        std::cout << " Execute Place pose motion: Done" << std::endl;
+        std::cout << " [HW CONTROLLER] Execute Place pose motion: Done" << std::endl;
         return true;
     }
 
     else if (!strcmp(buffer_, "0\n"))
     {
-        std::cout << " Execute Place pose motion: Failed" << std::endl;
+        std::cout << " [HW CONTROLLER] Execute Place pose motion: Failed" << std::endl;
         return false;
     }
 }
 
-bool HanWhaArmController::moveToEefTarget(const std::vector<double> &target_pose, int vel, int acc, int opts)
+bool HanWhaArmController::executePickPose(const std::vector<double> &target_pose, int vel, int acc, int opts)
 {
     // Cast parameters needed for movej socket command into String
     int flag = 2;
@@ -44,54 +44,53 @@ bool HanWhaArmController::moveToEefTarget(const std::vector<double> &target_pose
 
     if (!strcmp(buffer_, "1\n"))
     {
-        std::cout << " Move to eef Target: Done" << std::endl;
+        std::cout << " [HW CONTROLLER] executePickPose: Done" << std::endl;
         return true;
     }
 
     else if (!strcmp(buffer_, "0\n"))
     {
-        std::cout << " Move to eef Target: Failed" << std::endl;
+        std::cout << " [HW CONTROLLER] executePickPose: Failed" << std::endl;
         return false;
     }
 }
 
-// send coordinates for HCR-12 to move to Joint Target
-bool HanWhaArmController::moveToJointsTarget(const std::vector<double> &target_joints, int vel, int acc, int opts)
-{
-    // Cast parameters needed for movej socket command into String
-    int flag = 3;
-    std::string str = "(" + std::to_string(flag) + "," + toString(target_joints) + "," + std::to_string(vel) + "," + std::to_string(acc) + "," + std::to_string(opts) + ")";
-    socket_SendRespond(str);
-    if (!strcmp(buffer_, "1\n"))
-    {
-        std::cout << "  Move to Joints Target: Failed" << std::endl;
-        return true;
-    }
-
-    else if (!strcmp(buffer_, "0\n"))
-    {
-        std::cout << " Move to Joints Target: Failed" << std::endl;
-        return false;
-    }
-}
-
-bool HanWhaArmController::executePickItem(std::string x)
+bool HanWhaArmController::movetoScanPose(std::string x)
 {
     //Send a Flag
-    int flag = 4;
+    int flag = 3;
 
     std::string str = "(" + std::to_string(flag) + "," + x + ")";
     socket_SendRespond(str);
 
     if (!strcmp(buffer_, "1\n"))
     {
-        std::cout << " Execute pick motion: Done" << std::endl;
+        std::cout << " [HW CONTROLLER] movetoScanPose: Done" << std::endl;
         return true;
     }
 
     else if (!strcmp(buffer_, "0\n"))
     {
-        std::cout << " Execute pick motion: Failed" << std::endl;
+        std::cout << " [HW CONTROLLER] movetoScanPose: Failed" << std::endl;
+        return false;
+    }
+}
+// send coordinates for HCR-12 to move to Joint Target
+bool HanWhaArmController::moveToJointsTarget(const std::vector<double> &target_joints, int vel, int acc, int opts)
+{
+    // Cast parameters needed for movej socket command into String
+    int flag = 4;
+    std::string str = "(" + std::to_string(flag) + "," + toString(target_joints) + "," + std::to_string(vel) + "," + std::to_string(acc) + "," + std::to_string(opts) + ")";
+    socket_SendRespond(str);
+    if (!strcmp(buffer_, "1\n"))
+    {
+        std::cout << " [HW CONTROLLER] Move to Joints Target: Failed" << std::endl;
+        return true;
+    }
+
+    else if (!strcmp(buffer_, "0\n"))
+    {
+        std::cout << " [HW CONTROLLER] Move to Joints Target: Failed" << std::endl;
         return false;
     }
 }
@@ -99,10 +98,12 @@ bool HanWhaArmController::executePickItem(std::string x)
 //Print vector contents
 void HanWhaArmController::print(std::vector<double> const &input)
 {
+    std::cout << "[HW CONTROLLER] Current pose: " << std::endl;
     for (auto const &i : input)
     {
-        std::cout << i << std::endl;
+        std::cout << i << "; ";
     }
+    std::cout << std::endl;
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
