@@ -1,4 +1,6 @@
 #this is to set the environment in moveit. Please subscribe to planning scene in rviz to see what is happening. The object must be called object_1, object_2 and so on. type 1 for box, 2 sphere, 3 clinder, 4 cone. 
 
 objects:
-  object_1: {type: 1, dimensions: [1,1,1], pose: [10,10,10,0,0,0,1]}
+  object_1: {type: 1, dimensions: [10,0.1,10], pose: [0,0.6,0,0,0,0,1]}
+
+  object_2: {type: 1, dimensions: [0.13,0.13,3], pose: [0,0,-1.5,0,0,0,1]}

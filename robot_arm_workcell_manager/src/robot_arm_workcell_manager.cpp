@@ -85,11 +85,11 @@ void RobotArmWorkcellManager::dispenserTaskExecutionThread(){
 
             if (mission_success){
                 ROS_INFO("\n *************** [Robot: %s] Done with Task with Request ID: %s *************** \n", 
-                    dispenser_name_.c_str(), dispenser_curr_task_.request_id.c_str());
+                    dispenser_name_.c_str(), dispenser_curr_task_.request_guid.c_str());
             }
             else{
                 ROS_ERROR("\n *************** [Robot: %s] Task Failed for Request ID: %s *************** \n", 
-                    dispenser_name_.c_str(), dispenser_curr_task_.request_id.c_str());
+                    dispenser_name_.c_str(), dispenser_curr_task_.request_guid.c_str());
             }
             workcell_adapter_.setCurrTaskResult(mission_success);
         }
@@ -113,15 +113,15 @@ bool RobotArmWorkcellManager::executePickPlaceMotion( std::vector<std::string> f
 
     // Reposition to 'rescan_pos' (front of marker), and reupdate  fiducial marker positon, ensures low deviation
     if (! markers_detector_.getTransformPose( "base_link", "rescan_pos", target_tf ) ) return false;
-    // removePitchRoll(*target_tf);
+    fixPitchRoll(*target_tf, -3.14, 0.0);
     tf::poseTFToMsg(*target_tf, *_eef_target_pose);
-    if (! arm_controller_.moveToEefTarget(*_eef_target_pose, 0.15) ) return false;
+    if (! arm_controller_.moveToEefTarget(*_eef_target_pose, 0.1) ) return false;
  
     // Get transform from tf detection, and store in local var
     for (std::string frame : frame_array){
         target_tf = new tf::Transform;
         if (! markers_detector_.getTransformPose( "base_link", frame,  target_tf ) ) return false;
-        // removePitchRoll(*target_tf);
+        fixPitchRoll(*target_tf, -3.14, 0.0);
         _tf_array.push_back(target_tf);
     }
     markers_detector_.removeTargetMarker();
@@ -141,13 +141,14 @@ bool RobotArmWorkcellManager::executePickPlaceMotion( std::vector<std::string> f
 }
 
 
-// util to remove pitch roll of a pose
-void RobotArmWorkcellManager::removePitchRoll(tf::Transform& pose){
-    double roll, pitch, yaw;
+// util fn to fix pitch roll of a pose
+void RobotArmWorkcellManager::fixPitchRoll(tf::Transform& pose, double pitch, double roll){
+    double _roll, _pitch, _yaw;
     tf::Quaternion quat;
 
-    tf::Matrix3x3(pose.getRotation()).getRPY(roll, pitch, yaw);
-    quat.setRPY(0, 0, yaw);
+    tf::Matrix3x3(pose.getRotation()).getRPY(_roll, _pitch, _yaw);
+    std::cout << " ### current pitch roll: " << _roll << " " << _pitch << " " << _yaw << std::endl;
+    quat.setRPY(pitch, roll, _yaw);
     pose.setRotation(quat);
 }
 
@@ -158,7 +159,7 @@ void RobotArmWorkcellManager::removePitchRoll(tf::Transform& pose){
 
 // Mission sequences, TODO: Make it to a config file @_@
 bool RobotArmWorkcellManager::executeRobotArmMission(){
-    ROS_INFO("\n ***** Starting To Execute task, request_id: %s *****", dispenser_curr_task_.request_id.c_str());
+    ROS_INFO("\n ***** Starting To Execute task, request_guid: %s *****", dispenser_curr_task_.request_guid.c_str());
     
     bool motion_is_success;
     std::vector<tf::Transform *> tf_array;
@@ -174,12 +175,12 @@ bool RobotArmWorkcellManager::executeRobotArmMission(){
     moveit_msgs::JointConstraint wrist_3_joint;
     wrist_3_joint.joint_name="wrist_3_joint";
     wrist_3_joint.position = 0.0;
-    wrist_3_joint.tolerance_above = 0.7;
-    wrist_3_joint.tolerance_below = 0.7;
+    wrist_3_joint.tolerance_above = 1.57;
+    wrist_3_joint.tolerance_below = 1.57;
     wrist_3_joint.weight = 1;
 
     planning_constraints.joint_constraints.push_back(wrist_3_joint);
-    arm_controller_.setPlanningConstraints(planning_constraints);
+    // arm_controller_.setPlanningConstraints(planning_constraints);
 
     // Lookup for target marker at different Rack Level (0, 1, 2...)
     for (int rack_level=0; !markers_detector_.getTransformPose( "base_link", requested_item.item_type) ; rack_level++ ){
@@ -198,14 +199,18 @@ bool RobotArmWorkcellManager::executeRobotArmMission(){
     if (! arm_controller_.moveToNamedTarget(dispenser_name_ + "_transporter_home") ) return false;
     
     // Lower the position
-    if (! arm_controller_.moveToNamedTarget(dispenser_name_ + "_transporter_low") ) return false;
-    // TODO: Scanning feature here... Yaw
+    if (! arm_controller_.moveToNamedTarget(dispenser_name_ + "_transporter_scan") ) return false;
     
+    // Scanning feature here... Yaw, TODO:enhancement
+    if (! markers_detector_.getTransformPose( "base_link", requested_item.compartment_name ) ){
+        if (! arm_controller_.moveToNamedTarget(dispenser_name_ + "_transporter_scan_left") ) return false;
+    }
+
     // placing, e.g: requested_item.compartment_name = "marker_X"
     if (! executePickPlaceMotion(placing_frame_array , requested_item.compartment_name) ) return false;
     
     // back lower home 
-    if (! arm_controller_.moveToNamedTarget(dispenser_name_ + "_transporter_low") ) return false;
+    if (! arm_controller_.moveToNamedTarget(dispenser_name_ + "_transporter_scan") ) return false;
     
     // turn to face trolley
     if (! arm_controller_.moveToNamedTarget(dispenser_name_ + "_transporter_home") ) return false;
@@ -213,7 +218,10 @@ bool RobotArmWorkcellManager::executeRobotArmMission(){
     // Back home position facing rack
     if (! arm_controller_.moveToNamedTarget(dispenser_name_ + "_rack_home_position") ) return false;
 
-    ROS_INFO("\n ***** Done with Task with request_id: %s *****", dispenser_curr_task_.request_id.c_str());
+    // Back to rack level 0
+    if (! arm_controller_.moveToNamedTarget(dispenser_name_ + "_rack_level_0") ) return false;
+
+    ROS_INFO("\n ***** Done with Task with request_guid: %s *****", dispenser_curr_task_.request_guid.c_str());
     return true;
 }
 

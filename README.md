@@ -6,6 +6,8 @@ The task sequence starts with the action of picking up a custom design instrumen
 
 Now with namespace support! Enabling two (or more!) arms to perform a choreographed dance!! 🤖🤖
 
+_Note that this package work together with ros2: `cssd_workcell_manger`, refer to [here](https://github.com/sharp-rmf/rmf-workcell)_
+
 **Active in Development!!!**
 
 ![alt text](/documentations/two_arms_dance.gif?)
@@ -14,7 +16,11 @@ Now with namespace support! Enabling two (or more!) arms to perform a choreograp
 
 *Full Video Link* (with one arm),  [here](https://drive.google.com/open?id=1dGKh3FVMlUwX8GUMv3mgxQFBm0OnGa8B)
 
-*Full Video Link* (with two arms), [here](https://drive.google.com/open?id=1dT9zQ5bbWr0oMqf9hO2wWMH2uiiHR1AT)	
+*Full Video Link* (with two arms), [here](https://drive.google.com/open?id=1dT9zQ5bbWr0oMqf9hO2wWMH2uiiHR1AT)
+
+*Full Video Link* (with two arms in room, almost success), [here](https://drive.google.com/file/d/1I7fnKHWII3_Oqg1UsoMj7hg-b29AKzg7/view?usp=sharing)
+
+*Full Video Link* (with one actual arm running in room), [here](https://drive.google.com/file/d/1Yw2kzTtNThzD650f3JLyPJFsCgmVH7TQ/view)
 
 ---
 
@@ -81,17 +87,7 @@ roslaunch robot_arm_workcell_manager two_arms_rawm.launch
 
 _p/s: Wait each launch terminal to be fully launched before launching the next `.launch`._
 
-------
-
-## Setting environment
-
-The config file is in rawm package called environment_object. This is to set the environment in moveit. Please subscribe to planning scene in rviz to see the objects.
-
-- The object must be called object_1, object_2 and so on. 
-- type 1 for box, 2 sphere, 3 clinder, 4 cone. 
-
-## Octomapping 
-Information is pulled from the depth camera and added to the planning scene. The params can be found at cssdbot_ur10_moveitconfig package, sensor_manager.launch.xml and sensors_kinect_pointcloud.yaml
+---
 
 ## Request a Task 
 
@@ -100,17 +96,17 @@ Open another terminal, then use rostopic to publish a `DispenserRequest.msg` to 
 *Request Task to UR10 arm!* 🤖
 
 ```bash
-rostopic pub /cssd_workcell/dispenser_request rmf_msgs/DispenserRequest '{request_id: 0xx01, dispenser_name: ur10_001, items:[{item_type: marker_1, quantity: 1, compartment_name: 'marker_101'}] }' --once
+rostopic pub /cssd_workcell/dispenser_request rmf_msgs/DispenserRequest '{request_guid: 0xx01, target_guid: ur10_001, items:[{item_type: marker_1, quantity: 1, compartment_name: 'marker_101'}] }' --once
 ## second request
-rostopic pub /cssd_workcell/dispenser_request rmf_msgs/DispenserRequest '{request_id: 0xx02, dispenser_name: ur10_001, items:[{item_type: marker_2, quantity: 1, compartment_name: 'marker_100'}] }' --once
+rostopic pub /cssd_workcell/dispenser_request rmf_msgs/DispenserRequest '{request_guid: 0xx02, target_guid: ur10_001, items:[{item_type: marker_2, quantity: 1, compartment_name: 'marker_100'}] }' --once
 ```
 
 *Request Task to UR10e arm!* 🤖
 
 ```bash
-rostopic pub /cssd_workcell/dispenser_request rmf_msgs/DispenserRequest '{request_id: 0xx03, dispenser_name: ur10e_001, items:[{item_type: marker_0, quantity: 1, compartment_name: 'marker_102'}] }' --once
+rostopic pub /cssd_workcell/dispenser_request rmf_msgs/DispenserRequest '{request_guid: 0xx03, target_guid: ur10e_001, items:[{item_type: marker_0, quantity: 1, compartment_name: 'marker_102'}] }' --once
 ## second request (IK Flip issue TOBEFIX)
-rostopic pub /cssd_workcell/dispenser_request rmf_msgs/DispenserRequest '{request_id: 0xx04, dispenser_name: ur10e_001, items:[{item_type: marker_4, quantity: 1, compartment_name: 'marker_103'}] }' --once
+rostopic pub /cssd_workcell/dispenser_request rmf_msgs/DispenserRequest '{request_guid: 0xx04, target_guid: ur10e_001, items:[{item_type: marker_4, quantity: 1, compartment_name: 'marker_103'}] }' --once
 ```
 
 By now, the robot dispenser will execute the task according to the `DispenserRequest`. GoodLuck!!
@@ -119,9 +115,10 @@ _p/s: You can play with the gazebo model by manually move the position of the tr
 
 ---
 
-## Run on Hardware
+## Run on Hardware (UR and HanWha)
 
 Please refer to the readme [here](/cssd_hardware)
+ - Also with Hanwha Arm Support
 
 ---
 
@@ -134,16 +131,28 @@ Run motion executor test code.
 roslaunch robot_arm_workcell_manager demo.launch
 
 # Terminal B: Run arm_controller Node 
-roslaunch robot_arm_workcell_manager arm_controller.launch
+roslaunch robot_arm_workcell_manahger arm_controller.launch
 ```
 
-### 2. Run Fiducial Markers Handler Test Code (ToBeTested)
+### 2. Run Fiducial Markers Handler Test Code
 Test code to try out aruco marker detection. Camera and aruco markers are used for this application.
 
 ```bash
 # Check Camera and configure path
 vlc v4l2:///dev/video{$NUM}
+# Run test launch file
+roslaunch robot_arm_workcell_manager fiducial_markers_handler.launch
+# Rviz to show /image from usb_cam and fiducial markers
+rviz -f camera
 ```
+
+### 3. Run Dispenser Workcell Test
+```bash
+rosrun robot_arm_workcell_manager dispenser_workcell_test
+# Check the spawned topics by:
+rostopic list
+```
+
 
 **Calibration**: Refer to OpenCV Camera Calibration code, [here](https://docs.opencv.org/2.4/doc/tutorials/calib3d/camera_calibration/camera_calibration.html#results). Once done, then copy the camera & distortion matrix from a .xml file to `/robot_arm_workcell_manager/config/usb_cam.yaml`.
 
@@ -151,7 +160,7 @@ vlc v4l2:///dev/video{$NUM}
 roslaunch robot_arm_workcell_manager fiducial_markers_handler.launch
 ```
 
-### 3. Overall Test with Robot Arm Workcell Manager (RAWM)
+### 4. Overall Test with Robot Arm Workcell Manager (RAWM)
 Single arm test just with Rviz and moveit
 ```bash
 ## Terminal A: Run Rviz and Moveit
@@ -164,6 +173,18 @@ roslaunch robot_arm_workcell_manager robot_arm_workcell_manager.launch
 ```
 
 ---
+
+
+## Setting of MoveIt Scene Env
+
+The config file is in rawm package called environment_object. This is to set the environment in moveit. Please subscribe to planning scene in rviz to see the objects.
+
+- The object must be called object_1, object_2 and so on. 
+- type 1 for box, 2 sphere, 3 clinder, 4 cone. 
+
+### Octomapping 
+Information is pulled from the depth camera and added to the planning scene. The params can be found at cssdbot_ur10_moveitconfig package, sensor_manager.launch.xml and sensors_kinect_pointcloud.yaml
+
 
 ## Notes
 - Custom designed "fork-lift" end effector, trays and tray placements are used in this application.
@@ -179,12 +200,33 @@ roslaunch robot_arm_workcell_manager robot_arm_workcell_manager.launch
 - To add more arms: expand `cssd_gazebo two_arms.launch`, `two_arms_rviz.launch`, `two_arms_rawm.launch`
 - master branch for `ur_modern_driver` currently doesn't support UR-E series
 - When using realsense, the `camera_info` which consists of the camera-matrix is locaated auto generated when launching `realsense2_ros`
+- Create lib pkgfor other pkgs: [here](https://answers.ros.org/question/150306/how-to-put-headers-into-develinclude-folder-with-catkin_make/)
 
 ## Debuging process
 - Jittering Problem during picking up of tray with Eef:  use `velocity_controllers` instead of `position_controller`
 - MoveIt Namespace issue: In `robot_arm_controller.cpp` there's a declaration of namespace in for the movegroup by `ros::NodeHandle moveit_nh(arm_namespace_)`
 - `GOAL_TOLERANCE_VIOLATED` error code in action server: As mentioned in [here](https://github.com/ros-planning/moveit/issues/1475#issuecomment-504364419), move group setTolerance is not working here. Will need to manually change it in `ur_velocity/position_controller.yaml`. This is the input param for `ros_control/joint_trajectory_controller` during spawn
 - Joint IK flip issue while placing to ``marker_103` : Tried switch the planner from `ompl` to `stomp` (in `planning_context.launch`), still not able to fully solve the issue.
+- Gazebo9 `Try_init` & sdf error.
+```
+sudo sh -c 'echo "deb http://packages.osrfoundation.org/gazebo/ubuntu-stable `lsb_release -cs` main" > /etc/apt/sources.list.d/gazebo-stable.list'
+wget http://packages.osrfoundation.org/gazebo.key -O - | sudo apt-key add -
+sudo apt-get update
+sudo apt-get install --only-upgrade gazebo9
+```
+remove previous build files and rebuild
+- Added Github Action CI in `.github/workflows/ccpp.yml`, currently working till catkin_make for RAWM
 
 ## TODO
-- octo mapping for ur10 and ur10e
+- further cleanupsssss
+- collision model creation on the scene in moveit (_on-going_)
+- Warm start Issue!!!! Also ability to launch gazebo with rviz (Controller issue!!!)
+- tune the PID for the arms / and physics params for physical models, seems to jitter slightly.
+- robot arm left right scanning feature when searching for the mir transporter cart
+- intergration with greater RMF environment
+- Potential prob: checkout `prob1.png`, encounter yaw prob on ur10e (instead of ur10). Quick fix on cart's aruco marker's yaw angle
+- Dynamic payload setting on Ur10e
+- some collision bouncing issue on robot eef and tray
+- `realsense_gazebo_ros` pkg intergration
+- full octo mapping for ur10 and ur10e
+- full realsense integration on gazebo

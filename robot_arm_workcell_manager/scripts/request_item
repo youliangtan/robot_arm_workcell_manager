@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 
 import sys
 import time
@@ -34,7 +34,6 @@ def main(argv):
 
     print('Sent message {}'.format(request))
     time.sleep(3.0)
-
 
 if __name__ == '__main__':
     main(sys.argv[1:])

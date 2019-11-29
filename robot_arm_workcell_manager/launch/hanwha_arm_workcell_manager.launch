@@ -1,0 +1,26 @@
+<!--  ** Spawning hanwha_arm_workcell_manager node **  -->
+
+<launch>
+
+    <arg name="markers_config_file"  default="$(find robot_arm_workcell_manager)/config/markers_tf.yaml" />
+    <arg name="arm_ns" default="/"/>
+    <arg name="dispenser_name" default="hanwha_001"/>
+
+    <group ns="$(arg arm_ns)">
+
+        <node pkg="robot_arm_workcell_manager" type="hanwha_arm_workcell_manager" name="hanwha_arm_workcell_manager_node" respawn="true" output="screen">
+            <param name="arm_namespace" value="$(arg arm_ns)" />
+            <param name="tf_prefix" value="$(arg arm_ns)" />
+            <param name="dispenser_name" value="$(arg dispenser_name)" />
+            <param name="marker_tf_path" value="$(arg markers_config_file)"/>
+            <param name="arm_mission_path" type='string' value="pending" />
+            <param name="camera_frame_id" value="camera" />
+            <param name="dispenser_state_pub_rate" type="double" value="0.5" />
+            <param name="motion_pause_time" type="int" value="1" />
+            <param name="flip_marker" type="bool" value="true" />
+
+            <remap from="/fiducial_transforms" to="$(arg arm_ns)/fiducial_transforms"/>
+        </node>>
+    </group>
+
+</launch>
