@@ -27,6 +27,10 @@ FiducialMarkersHandler::FiducialMarkersHandler(): nh_("~"){
     else
         tf_prefix_ = tf_prefix_ + "/";
 
+    // Loading window params
+    nh_.param<int>("/filter_threshold_time", threshold_time, 3);
+    nh_.param<int>("/filter_window_length", window_length, 5);
+
     ROS_INFO("FiducialMarkersHandler::FiducialMarkersHandler() completed!! \n");
 }
 
@@ -199,6 +203,36 @@ void FiducialMarkersHandler::MarkerExtendedTfTimerCallback(const ros::TimerEvent
         tf_broadcaster_.sendTransform( markers_extended_tf_array_[i] );
     }
 }
+
+//this is a window average of length taken from param. If the window is not loaded, there will not be filter. 
+tf::Quaternion FiducialMarkersHandler::moving_average_filter(tf::Quaternion after_rotation){
+
+    ros::Time data_time = ros::Time::now();
+    auto data = std::make_tuple(data_time, after_rotation);
+    if ( std::get<0>(window.front()).sec - data_time.sec > threshold_time){
+        window.clear();
+        window.push_back(data);
+    }
+
+    if (window.size() >= window_length){
+        window.pop_front();
+        window.push_back(data);
+
+    //start averaging quaternion only if the window is met
+    //advanced algo if anyone bother to improve this ''https://wiki.unity3d.com/index.php/Averaging_Quaternions_and_Vectors''  
+    double total_r = 0 ,total_p = 0, total_y = 0;    
+        for (auto data: window){
+            double roll = 0, pitch = 0, yaw = 0;
+            tf::Matrix3x3(std::get<1>(data)).getRPY(roll,pitch,yaw);
+            total_r += roll, total_p += pitch, total_y +=yaw;
+        }
+    total_r = total_r/window.size(), total_p = total_p/window.size(), total_y = total_y/window.size();
+    after_rotation.setRPY(total_r,total_p ,total_y);    
+    }
+    
+    return after_rotation;
+}
+
 
 // Update all fiducial arrays to /tf, and name markers according to their marker's id
 void FiducialMarkersHandler::updateFiducialArrayCallback(const fiducial_msgs::FiducialTransformArrayConstPtr& _msg){

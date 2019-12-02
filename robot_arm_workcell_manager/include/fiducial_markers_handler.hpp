@@ -18,6 +18,7 @@
 #include <tf/transform_broadcaster.h>
 #include <tf/transform_listener.h>
 
+
 // dependecies
 #include <fiducial_msgs/FiducialTransformArray.h>
 
@@ -70,9 +71,18 @@ class FiducialMarkersHandler{
         ros::Timer marker_extended_tf_timer_;
         std::string tf_prefix_;
 
+        // param for moving average filter
+        std::list < std::tuple <ros::Time, tf::Quaternion> > window;
+        int32_t threshold_time; // if threshold difference between newest and oldest data 
+        int window_length;
+
+        //tuple <ros::Time, tf::Quaternion>
+
         void updateFiducialArrayCallback(const fiducial_msgs::FiducialTransformArrayConstPtr& msg);        
 
         void MarkerExtendedTfTimerCallback(const ros::TimerEvent& event);
+
+        tf::Quaternion moving_average_filter(tf::Quaternion after_rotation);
 
 };
 
