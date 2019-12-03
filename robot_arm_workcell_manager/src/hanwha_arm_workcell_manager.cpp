@@ -68,7 +68,6 @@ bool HanWhaArmWorkcellManager::loadParameters(){
 
 void HanWhaArmWorkcellManager::dispenserTaskExecutionThread(){
 
-
     ROS_INFO("[Hanwha: %s] Running task execution thread",dispenser_name_.c_str());
 
     ros::Rate loop_rate(0.5); //TODO
@@ -77,23 +76,28 @@ void HanWhaArmWorkcellManager::dispenserTaskExecutionThread(){
     while (nh_.ok()){
         // getting the next task
         if (!workcell_adapter_.getCurrTaskFromQueue( dispenser_curr_task_ )){
-            ROS_INFO("[Hanwha: %s] No Pending Task",dispenser_name_.c_str());
+            ROS_INFO("[HanWha: %s] No Pending Task",dispenser_name_.c_str());
             loop_rate.sleep();
+            continue;
         }
         // If there's new task, execute it!!
-        else{
-            mission_success = executeRobotArmMission();
-            loop_rate.sleep();
+        mission_success = executeRobotArmMission();
+        workcell_adapter_.setCurrTaskResult(mission_success);
+        loop_rate.sleep();
 
-            if (mission_success){
-                ROS_INFO("\n ********** [Hanwha: %s] Done with Task with Request ID: %s ************ \n", 
-                    dispenser_name_.c_str(), dispenser_curr_task_.request_guid.c_str());
+        if (mission_success){
+            ROS_INFO("\n *************** [HanWha: %s] Done with Task with Request ID: %s *************** \n", 
+                dispenser_name_.c_str(), dispenser_curr_task_.request_guid.c_str());
+        }
+        else{
+            ROS_ERROR("\n *************** [HanWha: %s] Task Failed for Request ID: %s *************** \n", 
+                dispenser_name_.c_str(), dispenser_curr_task_.request_guid.c_str());
+            
+            // clean all current queued task
+            ROS_ERROR(" ** [HanWha: %s] Cleaning all queued tasks \n", dispenser_name_.c_str());
+            while( (workcell_adapter_.getCurrTaskFromQueue( dispenser_curr_task_ ))){
+                workcell_adapter_.setCurrTaskResult(false);
             }
-            else{
-                ROS_ERROR("\n ********** [Hanwha: %s] Task Failed for Request ID: %s ************ \n", 
-                    dispenser_name_.c_str(), dispenser_curr_task_.request_guid.c_str());
-            }
-            workcell_adapter_.setCurrTaskResult(mission_success);
         }
     }
 }
@@ -142,6 +146,39 @@ void HanWhaArmWorkcellManager::updateRobotStateTf( std::vector<double> tf_input)
 }
 
 
+// Execute pick place motion
+bool HanWhaArmWorkcellManager::executePickPlaceMotion( std::string target_frame ){
+    
+    tf::Transform *target_tf (new tf::Transform);
+    std::vector<double> _curr_pose;
+
+    // get current eef pose
+    _curr_pose = arm_controller_.get_tf_update();
+    updateRobotStateTf(_curr_pose);
+    
+    // Find marker then execute Placing the tray
+    if (markers_detector_.getTransformPose( "base_link", target_frame, target_tf ) ){    
+        double _roll, _pitch, _yaw;
+        tf::Matrix3x3(target_tf->getRotation()).getRPY(_roll, _pitch, _yaw);
+        std::cout << " # pick pose, going to: " << target_tf->getOrigin().x() << " "
+                                                << target_tf->getOrigin().y() << " "
+                                                << target_tf->getOrigin().z() << " "
+                                                << _roll << " "
+                                                << _pitch << " "
+                                                <<  _yaw << std::endl;
+        // if (! arm_controller_.executePickPose({ target_tf->getOrigin().x(),
+        //                                         target_tf->getOrigin().y(),
+        //                                         target_tf->getOrigin().z(),
+        //                                         -1.57, 0, _yaw}) ) 
+            // return false;
+    }
+    else{
+        ROS_ERROR(" [HANWHA] Unable to locate marker! ");
+        return false;
+    }
+}
+
+
 // ---------------------------------------------------------------------------------------
 // ----------------------- HANWHA_ARM_MISSION_CONTROL: EXECUTION --------------------------
 // ---------------------------------------------------------------------------------------
@@ -153,10 +190,7 @@ bool HanWhaArmWorkcellManager::executeRobotArmMission(){
     
     rmf_msgs::DispenserRequestItem requested_item = dispenser_curr_task_.items[0] ;
     std::string requested_item_type = requested_item.item_type ;
-    std::vector<double> _curr_pose;
-    tf::Transform *target_tf (new tf::Transform);
-    double _roll, _pitch, _yaw;
-
+    
     // while(1){
     
     //     arm_controller_.movetoScanPose("mir_1");
@@ -182,84 +216,12 @@ bool HanWhaArmWorkcellManager::executeRobotArmMission(){
     // }
 
     while(1){
-        arm_controller_.movetoScanPose("mir_1");
-        // get current eef pose
-        _curr_pose = arm_controller_.get_tf_update();
-        updateRobotStateTf(_curr_pose);
-        
-        // Find marker then execute Placing the tray
-        if (markers_detector_.getTransformPose( "base_link", "marker_102", target_tf ) ){    
-            tf::Matrix3x3(target_tf->getRotation()).getRPY(_roll, _pitch, _yaw);
-            std::cout << " # pick pose, going to: " << target_tf->getOrigin().x() << " "
-                                                    << target_tf->getOrigin().y() << " "
-                                                    << target_tf->getOrigin().z() << " "
-                                                    << _roll << " "
-                                                    << _pitch << " "
-                                                    <<  _yaw << std::endl;
-            // if (! arm_controller_.executePickPose({ target_tf->getOrigin().x(),
-            //                                         target_tf->getOrigin().y(),
-            //                                         target_tf->getOrigin().z(),
-            //                                         _roll, _pitch, _yaw}) ) 
-                // return false;
-        }
-        else{
-            ROS_ERROR(" [HANWHA] Unable to find marker! ");
-            return false;
-        }
+        if (!arm_controller_.movetoScanPose("mir_1")) return false;
+        if (!executePickPlaceMotion("marker_102")) return false;
 
-        arm_controller_.movetoScanPose("mir_2");
-        // get current eef pose
-        _curr_pose = arm_controller_.get_tf_update();
-        updateRobotStateTf(_curr_pose);
-        
-        // Find marker then execute Placing the tray
-        if ( markers_detector_.getTransformPose( "base_link", "marker_103", target_tf ) ){    
-            tf::Matrix3x3(target_tf->getRotation()).getRPY(_roll, _pitch, _yaw);
-            std::cout << " # pick pose, going to: " << target_tf->getOrigin().x() << " "
-                                                    << target_tf->getOrigin().y() << " "
-                                                    << target_tf->getOrigin().z() << " "
-                                                    << _roll << " "
-                                                    << _pitch << " "
-                                                    <<  _yaw << std::endl;
-            // if (! arm_controller_.executePickPose({ target_tf->getOrigin().x(),
-            //                                         target_tf->getOrigin().y(),
-            //                                         target_tf->getOrigin().z(),
-            //                                         _roll, _pitch, _yaw}) ) 
-                // return false;
-        }
-        else{
-            ROS_ERROR(" [HANWHA] Unable to find marker! ");
-            return false;
-        }
-
+        if (!arm_controller_.movetoScanPose("mir_2")) return false;
+        if (!executePickPlaceMotion("marker_103")) return false;
     }
-
-    // // arm_controller_.executePickPose({-203, 866, -182.65, 90, 0, -180});
-
-    // arm_controller_.movetoScanPose("trolley_1");
-
-    // _curr_pose = arm_controller_.get_tf_update();
-    // updateRobotStateTf(_curr_pose);
-    // arm_controller_.print(_curr_pose);
-
-    // arm_controller_.executePlacePose({985, 179, 270, 90, 0, 90});
-    // sleep(5);
-
-    // arm_controller_.movetoScanPose("mir_2");
-
-    // _curr_pose = arm_controller_.get_tf_update();
-    // updateRobotStateTf(_curr_pose);
-    // arm_controller_.print(_curr_pose);
-
-    // arm_controller_.executePickPose({130, 866, -182.65, 90, 0, -180});
-
-    // arm_controller_.movetoScanPose("trolley_2");
-
-    // _curr_pose = arm_controller_.get_tf_update();
-    // updateRobotStateTf(_curr_pose);
-    // arm_controller_.print(_curr_pose);
-
-    // arm_controller_.executePlacePose({486.6, -1186.1, 233.22, 90, 0, 0});
 
     ROS_INFO("\n ***** Done with Task with request_guid: %s *****", 
         dispenser_curr_task_.request_guid.c_str());
