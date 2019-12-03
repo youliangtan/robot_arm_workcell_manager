@@ -78,7 +78,10 @@ class HanWhaArmWorkcellManager{
 
         // update robot state TF 
         tf::TransformBroadcaster tf_broadcaster_;  
+
         void updateRobotStateTf( std::vector<double> tf_input);
+
+        // bool executePickPlaceMotion( std::vector<std::string> frame_array, std::string marker_frame_id );
         
 };
 

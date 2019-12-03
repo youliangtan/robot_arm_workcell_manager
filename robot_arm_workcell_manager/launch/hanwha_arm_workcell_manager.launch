@@ -47,6 +47,6 @@
 
     <!-- x: eef front, y: eef right, z: eef down: increase for disire direction --> 
     <node pkg="tf" type="static_transform_publisher" name="eef_to_camera_optical" 
-       args="-0.03 -0.1 -0.03 0 0 0 ee_link camera 10" />
+       args="-0.03 -0.1 -0.03 0 0 0 ee_link camera 200" />
   
 </launch>

@@ -117,18 +117,21 @@ bool FiducialMarkersHandler::getTransformPose(std::string target_frame_id, std::
 	  	tf_listener_.waitForTransform(prefix_target_frame_id, prefix_frame_id, ros::Time::now(), ros::Duration(2) );
 	  	tf_listener_.lookupTransform(prefix_target_frame_id, prefix_frame_id, ros::Time(0), stamped_transform);
     }
-    catch (tf::TransformException ex) {
+    catch (tf::TransformException& ex) {
         ROS_WARN(" Not getting any Transform!! Most likely tf is not existed between 2 input frames. error:%s",ex.what());
         return false;
     }
 
     // Check Expiry time, currently 2s 
     ros::Duration diff = ros::Time::now()-stamped_transform.stamp_;
-    if (diff.toSec() > 2 ) return false;   // TODO: ROSParam for this thresh
+    if (diff.toSec() > 2 ){
+        ROS_WARN(" Time for past detected TF is long due (> 2s), with : %f", diff.toSec());
+        return false;   // TODO: ROSParam for this thresh
+    }
 
+    ROS_INFO(" - Frame: %s and %s Detected!", prefix_target_frame_id.c_str(), prefix_frame_id.c_str());
   	target_transform->setRotation(stamped_transform.getRotation());
   	target_transform->setOrigin(stamped_transform.getOrigin());
-    ROS_INFO(" - Frame: %s and %s Detected!", prefix_target_frame_id.c_str(), prefix_frame_id.c_str());
 
     return true;
 }
