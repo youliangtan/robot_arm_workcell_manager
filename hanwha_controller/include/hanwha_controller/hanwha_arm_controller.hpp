@@ -60,7 +60,7 @@ private:
     int server_fd_, new_socket_;
     struct sockaddr_in address_;
     int addrlen_ = sizeof(address_);
-    char buffer_[1024], new_buffer_[1024] = {0};
+    char buffer_[4000], new_buffer_[4000] = {0};
     int opt_ = 1;
     std::string tcp_pose;
 

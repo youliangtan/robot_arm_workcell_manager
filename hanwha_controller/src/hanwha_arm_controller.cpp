@@ -17,7 +17,7 @@ HanWhaArmController::HanWhaArmController()
 // send coordinates for HCR-12 to move to End Effector Target
 bool HanWhaArmController::executePlacePose(const std::vector<double> &target_pose, int vel, int acc, int opts)
 {
-    // Cast parameters needed for movej socket command into String
+    // Cast parameters needed for place socket command into String
     int flag = 1;
     std::string str = "(" + std::to_string(flag) + "," + toString(target_pose) + "," + std::to_string(vel) + "," + std::to_string(acc) + "," + std::to_string(opts) + ")";
     socket_SendRespond(str);
@@ -37,7 +37,7 @@ bool HanWhaArmController::executePlacePose(const std::vector<double> &target_pos
 
 bool HanWhaArmController::executePickPose(const std::vector<double> &target_pose, int vel, int acc, int opts)
 {
-    // Cast parameters needed for movej socket command into String
+    // Cast parameters needed for pick socket command into String
     int flag = 2;
     std::string str = "(" + std::to_string(flag) + "," + toString(target_pose) + "," + std::to_string(vel) + "," + std::to_string(acc) + "," + std::to_string(opts) + ")";
     socket_SendRespond(str);
@@ -116,7 +116,7 @@ std::string HanWhaArmController::toString(const std::vector<double> &vect)
     if (!vect.empty())
     {
         // Convert all but the last element to avoid a trailing ","
-        std::copy(vect.begin(), vect.end() - 1, std::ostream_iterator<int>(vts, ", "));
+        std::copy(vect.begin(), vect.end() - 1, std::ostream_iterator<double>(vts, ", "));
         // Now add the last element with no delimiter
         vts << vect.back();
     }
