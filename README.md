@@ -194,7 +194,7 @@ Information is pulled from the depth camera and added to the planning scene. The
 - construction of extended TFs from the detected marker is configured in `extended_tf.yaml`
 - Camera should be calibrated, and intrinsic params should be written here: `/config/usb_cam.yaml`
 - Dispenser req will be received by RAWM, id: with convention of `marker_{$fiducial_id}`
-- Use Ros_bridge/SOSS to link ros1 msg to ros2, eventually communicates with a ``cssd_workcell_manager`
+- Use Ros_bridge/SOSS to link ros1 msg to ros2, eventually communicates with a ``cssd_workcell_manager`, via [ros_bridge](https://github.com/RMFHOPE/rmf_msgs)
 - Tune all relevant param for RAWM in `robot_arm_workcell_manager.launch`, including `robot_id` and `transporter_placement`
 - To check out `tf_tree` and `rqt_graph`, go to `documentations` folder
 - To add more arms: expand `cssd_gazebo two_arms.launch`, `two_arms_rviz.launch`, `two_arms_rawm.launch`

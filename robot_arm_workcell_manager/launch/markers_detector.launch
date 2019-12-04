@@ -21,6 +21,7 @@
     <param name="do_pose_estimation" value="$(arg do_pose_estimation)"/>
     <param name="ignore_fiducials" value="$(arg ignore_fiducials)"/>
     <param name="fiducial_len_override" value="$(arg fiducial_len_override)"/>
+    <param name="adaptiveThreshConstant" value="6"/>
     
     <remap from="/camera/compressed" to="$(arg ns)/image/$(arg transport)"/> 
     <remap from="/camera_info" to="$(arg ns)/camera_info"/> 

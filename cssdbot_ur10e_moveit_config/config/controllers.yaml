@@ -1,6 +1,6 @@
 controller_list:
   - name: ""
-    action_ns: follow_joint_trajectory
+    action_ns: follow_joint_trajectory #scaled_pos_traj_controller/follow_joint_trajectory
     type: FollowJointTrajectory
     joints:
       - shoulder_pan_joint

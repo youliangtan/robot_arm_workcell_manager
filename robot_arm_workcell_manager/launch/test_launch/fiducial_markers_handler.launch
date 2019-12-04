@@ -12,7 +12,7 @@
     <arg name="markers_config_file"  default="$(find robot_arm_workcell_manager)/config/markers_tf.yaml" />
 
     <arg name="camera_frame_id" value="camera" />
-    <arg name="marker_tf_path" value="$(arg markers_config_file)"/>
+    <arg name="marker_tf_path"  value="$(arg markers_config_file)"/>
     <arg name="camSelect"       default="/dev/video0"/>
     <arg name="pixelFormat"     default="yuyv"/>    <!-- refer to usb_cam ros documentation -->
     <arg name="cameraConfig"    default="file://$(find robot_arm_workcell_manager)/config/usb_cam.yaml"/>
@@ -20,6 +20,7 @@
     
     <group if="$(arg run_fiducial_markers_handler_node)">
         <node pkg="robot_arm_workcell_manager" name="fiducial_markers_handler_node" type="fiducial_markers_handler_node" output="screen" respawn="false">
+          <param name="camera_frame_id"     value="$(arg camera_frame_id)"/>
         </node>
     </group>
 

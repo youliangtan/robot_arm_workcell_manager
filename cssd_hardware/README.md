@@ -12,7 +12,9 @@ This package is to bring up all dependent codes/packages to spawn up the hardwar
 catkin_make --pkg cssd_hardware -j4
 ```
 
-## Launching of single arm
+---
+
+## Launching single UR10e arm
 The Current UR10e robor IP is: `172.16.17.2`. Remember to switch the UR10e pendant to "remote" in order to control the arm via ROS. 
 
 Then launch 'single_arm launch'. This bringup will spawn all required nodes: driver, RAWM, MoveIt, RVIZ, realsense cam:
@@ -21,8 +23,10 @@ roslaunch cssd_hardware single_arm.launch
 ```
 
 After bringup, send a `dispenserRequest` to move the arm
-```
-rostopic pub /cssd_workcell/dispenser_request rmf_msgs/DispenserRequest '{request_id: 0xx03, dispenser_name: ur10e_001, items:[{item_type: marker_1, quantity: 1, compartment_name: 'marker_100'}] }' --once
+```bash
+rostopic pub /cssd_workcell/dispenser_request rmf_msgs/DispenserRequest '{request_guid: 0xx03, target_guid: ur10e_001, items:[{item_type: marker_1, quantity: 1, compartment_name: 'marker_102'}] }' --once
+# second request
+rostopic pub /cssd_workcell/dispenser_request rmf_msgs/DispenserRequest '{request_guid: 0xx03, target_guid: ur10e_001, items:[{item_type: marker_3, quantity: 1, compartment_name: 'marker_103'}] }' --once
 ```
 
 Again, PLEASE KEEP YOUR HANDS ON THE BIG RED BUTTON! :fire:
@@ -36,11 +40,15 @@ Again, PLEASE KEEP YOUR HANDS ON THE BIG RED BUTTON! :fire:
 roslaunch cssd_hardware two_arm.launch
 ```
 
+---
+
 ## Launching single HanWha arm
 
 Connect to the right IP and the copy the `hanwha_script` to the hanwha pendant. To run HanWha Arm workcell with RMF:
-```
+```bash
 roslaunch robot_arm_workcell_manager hanwha_arm_workcell_manager.launch
+# run rviz on a seperate terminal 
+rviz -f base_link
 ```
 
 Publish sample `DispenserRequest`s...
@@ -49,6 +57,8 @@ rostopic pub /cssd_workcell/dispenser_request rmf_msgs/DispenserRequest '{reques
 ## second request
 rostopic pub /cssd_workcell/dispenser_request rmf_msgs/DispenserRequest '{request_guid: 0xx02, target_guid: hanwha_001, items:[{item_type: marker_2, quantity: 1, compartment_name: 'marker_100'}] }' --once
 ```
+
+---
 
 ## Notes
 
