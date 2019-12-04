@@ -28,9 +28,10 @@ _Note that this package work together with ros2: `cssd_workcell_manger`, refer t
 
 ### Basic Installation
 
-```
+```bash
 # ROS, Moveit stuffs
 # Gazebo Stuffs
+sudo apt-get ros-melodic-moveit-* ros-melodic-gazebo-*
 ```
 
 ### Dependencies
