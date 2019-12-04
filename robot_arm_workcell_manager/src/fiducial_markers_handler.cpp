@@ -29,7 +29,7 @@ FiducialMarkersHandler::FiducialMarkersHandler(): nh_("~"){
 
     // Loading window params
     nh_.param<int>("/filter_threshold_time", threshold_time, 3);
-    nh_.param<int>("/filter_window_length", window_length, 5);
+    nh_.param<int>("/filter_window_length", window_length, 10);
 
     ROS_INFO("FiducialMarkersHandler::FiducialMarkersHandler() completed!! \n");
 }
@@ -121,21 +121,18 @@ bool FiducialMarkersHandler::getTransformPose(std::string target_frame_id, std::
 	  	tf_listener_.waitForTransform(prefix_target_frame_id, prefix_frame_id, ros::Time::now(), ros::Duration(2) );
 	  	tf_listener_.lookupTransform(prefix_target_frame_id, prefix_frame_id, ros::Time(0), stamped_transform);
     }
-    catch (tf::TransformException& ex) {
+    catch (tf::TransformException ex) {
         ROS_WARN(" Not getting any Transform!! Most likely tf is not existed between 2 input frames. error:%s",ex.what());
         return false;
     }
 
     // Check Expiry time, currently 2s 
     ros::Duration diff = ros::Time::now()-stamped_transform.stamp_;
-    if (diff.toSec() > 2 ){
-        ROS_WARN(" Time for past detected TF is long due (> 2s), with : %f", diff.toSec());
-        return false;   // TODO: ROSParam for this thresh
-    }
+    if (diff.toSec() > 2 ) return false;   // TODO: ROSParam for this thresh
 
-    ROS_INFO(" - Frame: %s and %s Detected!", prefix_target_frame_id.c_str(), prefix_frame_id.c_str());
   	target_transform->setRotation(stamped_transform.getRotation());
   	target_transform->setOrigin(stamped_transform.getOrigin());
+    ROS_INFO(" - Frame: %s and %s Detected!", prefix_target_frame_id.c_str(), prefix_frame_id.c_str());
 
     return true;
 }
@@ -207,32 +204,39 @@ void FiducialMarkersHandler::MarkerExtendedTfTimerCallback(const ros::TimerEvent
     }
 }
 
-//this is a window average of length taken from param. If the window is not loaded, there will not be filter. 
-tf::Quaternion FiducialMarkersHandler::moving_average_filter(tf::Quaternion after_rotation){
-
-    ros::Time data_time = ros::Time::now();
+//this is a window average of length taken from param. If the window is not loaded, there will no be filter. 
+tf::Quaternion FiducialMarkersHandler::movingAverageFilter(tf::Quaternion after_rotation){
+    uint32_t data_time = ros::Time::now().sec;
     auto data = std::make_tuple(data_time, after_rotation);
-    if ( std::get<0>(window.front()).sec - data_time.sec > threshold_time){
-        window.clear();
-        window.push_back(data);
+
+    //case if difference in time of earliest data and current data in window > threshold
+    if ( std::get<0>(window_.front()) - data_time > threshold_time){
+        window_.clear();
+        window_.push_back(data);
+        ROS_INFO("Emptying window_");
     }
 
-    if (window.size() >= window_length){
-        window.pop_front();
-        window.push_back(data);
+    //case if window_ is filled
+    if (window_.size() >= window_length){
+        window_.pop_front();
+        window_.push_back(data);
 
-    //start averaging quaternion only if the window is met
+    //start averaging quaternion only if the window_ is met
     //advanced algo if anyone bother to improve this ''https://wiki.unity3d.com/index.php/Averaging_Quaternions_and_Vectors''  
     double total_r = 0 ,total_p = 0, total_y = 0;    
-        for (auto data: window){
+    for (auto data: window_){
             double roll = 0, pitch = 0, yaw = 0;
             tf::Matrix3x3(std::get<1>(data)).getRPY(roll,pitch,yaw);
             total_r += roll, total_p += pitch, total_y +=yaw;
         }
-    total_r = total_r/window.size(), total_p = total_p/window.size(), total_y = total_y/window.size();
-    after_rotation.setRPY(total_r,total_p ,total_y);    
+        total_r = total_r/window_.size(), total_p = total_p/window_.size(), total_y = total_y/window_.size();
+        after_rotation.setRPY(total_r,total_p ,total_y);    
+        ROS_INFO("Filtering vision");
     }
-    
+
+    else{
+        window_.push_back(data);
+    }
     return after_rotation;
 }
 
@@ -241,9 +245,7 @@ tf::Quaternion FiducialMarkersHandler::moving_average_filter(tf::Quaternion afte
 void FiducialMarkersHandler::updateFiducialArrayCallback(const fiducial_msgs::FiducialTransformArrayConstPtr& _msg){
     
     int size_of_array = (_msg->transforms).size();
-    if (size_of_array < 1)
-        return;
-
+    if (size_of_array < 1) 
     ROS_DEBUG(" [Callback]::Markers Being detected! ");
     geometry_msgs::Transform pose;
     tf::Transform transform;
@@ -257,7 +259,7 @@ void FiducialMarkersHandler::updateFiducialArrayCallback(const fiducial_msgs::Fi
         tf::Quaternion after_rotation;
         // TODO: to fix this pitching up thing
         after_rotation = reorientateMarker(before_rotation);
-
+        after_rotation = movingAverageFilter(after_rotation);
         transform.setOrigin(tf::Vector3(pose.translation.x,pose.translation.y,pose.translation.z));
         transform.setRotation(after_rotation);
 
