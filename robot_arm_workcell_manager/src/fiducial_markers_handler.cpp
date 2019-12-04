@@ -222,14 +222,16 @@ tf::Quaternion FiducialMarkersHandler::movingAverageFilter(tf::Quaternion after_
 
     //start averaging quaternion only if the window_ is met
     //advanced algo if anyone bother to improve this ''https://wiki.unity3d.com/index.php/Averaging_Quaternions_and_Vectors''  
-    double total_r = 0 ,total_p = 0, total_y = 0;    
-    for (auto data: window_){
-            double roll = 0, pitch = 0, yaw = 0;
-            tf::Matrix3x3(std::get<1>(data)).getRPY(roll,pitch,yaw);
-            total_r += roll, total_p += pitch, total_y +=yaw;
-        }
-        total_r = total_r/window_.size(), total_p = total_p/window_.size(), total_y = total_y/window_.size();
-        after_rotation.setRPY(total_r,total_p ,total_y);    
+        double total_r = 0 ,total_p = 0, total_y = 0;    
+        for (auto data: window_){
+                double roll = 0, pitch = 0, yaw = 0;
+                tf::Matrix3x3(std::get<1>(data)).getRPY(roll,pitch,yaw);
+                total_r += roll, total_p += pitch, total_y +=yaw;
+            }
+            total_r = total_r/window_.size(), total_p = total_p/window_.size(), total_y = total_y/window_.size();
+            after_rotation.setRPY(total_r,total_p ,total_y);    
+    }
+    
     else{
         window_.push_back(data);
     }
