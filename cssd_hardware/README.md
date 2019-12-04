@@ -26,7 +26,7 @@ After bringup, send a `dispenserRequest` to move the arm
 ```bash
 rostopic pub /cssd_workcell/dispenser_request rmf_msgs/DispenserRequest '{request_guid: 0xx03, target_guid: ur10e_001, items:[{item_type: marker_1, quantity: 1, compartment_name: 'marker_102'}] }' --once
 # second request
-rostopic pub /cssd_workcell/dispenser_request rmf_msgs/DispenserRequest '{request_guid: 0xx03, target_guid: ur10e_001, items:[{item_type: marker_3, quantity: 1, compartment_name: 'marker_103'}] }' --once
+rostopic pub /cssd_workcell/dispenser_request rmf_msgs/DispenserRequest '{request_guid: 0xx04, target_guid: ur10e_001, items:[{item_type: marker_3, quantity: 1, compartment_name: 'marker_103'}] }' --once
 ```
 
 Again, PLEASE KEEP YOUR HANDS ON THE BIG RED BUTTON! :fire:
