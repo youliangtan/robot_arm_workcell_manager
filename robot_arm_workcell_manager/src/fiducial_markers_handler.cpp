@@ -213,7 +213,6 @@ tf::Quaternion FiducialMarkersHandler::movingAverageFilter(tf::Quaternion after_
     if ( std::get<0>(window_.front()) - data_time > threshold_time){
         window_.clear();
         window_.push_back(data);
-        ROS_INFO("Emptying window_");
     }
 
     //case if window_ is filled
@@ -231,8 +230,6 @@ tf::Quaternion FiducialMarkersHandler::movingAverageFilter(tf::Quaternion after_
         }
         total_r = total_r/window_.size(), total_p = total_p/window_.size(), total_y = total_y/window_.size();
         after_rotation.setRPY(total_r,total_p ,total_y);    
-        ROS_INFO("Filtering vision");
-    }
     else{
         window_.push_back(data);
     }
