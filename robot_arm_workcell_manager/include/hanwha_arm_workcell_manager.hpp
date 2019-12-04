@@ -57,7 +57,7 @@ class HanWhaArmWorkcellManager{
 
         void fixPitchRoll( tf::Transform& pose, double pitch, double roll );
 
-        bool executePickPlaceMotion( std::string target_frame );
+        bool executePickPlaceMotion( std::string target_frame, bool is_pick );
 
         void updateRobotStateTf( std::vector<double> tf_input);
 
@@ -72,6 +72,7 @@ class HanWhaArmWorkcellManager{
 
         // Task Stuffs
         std::thread dispenser_task_execution_thread_;
+        std::thread robot_state_pub_thread_;
         rmf_msgs::DispenserRequest dispenser_curr_task_;
         std::map<std::string, std::string> map_req_hanwha_itemid_;
 

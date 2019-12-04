@@ -233,7 +233,6 @@ tf::Quaternion FiducialMarkersHandler::movingAverageFilter(tf::Quaternion after_
         after_rotation.setRPY(total_r,total_p ,total_y);    
         ROS_INFO("Filtering vision");
     }
-
     else{
         window_.push_back(data);
     }
