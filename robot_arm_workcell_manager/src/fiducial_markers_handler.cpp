@@ -28,7 +28,7 @@ FiducialMarkersHandler::FiducialMarkersHandler(): nh_("~"){
         tf_prefix_ = tf_prefix_ + "/";
 
     // Loading window params
-    nh_.param<int>("/filter_threshold_time", threshold_time, 3);
+    nh_.param<int>("/filter_threshold_time", threshold_time, 1);
     nh_.param<int>("/filter_window_length", window_length, 10);
 
     ROS_INFO("FiducialMarkersHandler::FiducialMarkersHandler() completed!! \n");
