@@ -117,37 +117,36 @@ void HanWhaArmWorkcellManager::fixPitchRoll(tf::Transform& pose, double pitch, d
 
 // to update hanwha bot state by seperate theread
 // FORNOW: 15 times publishing e_link to /eef_link
-void HanWhaArmWorkcellManager::updateRobotStateTf( std::vector<double> tf_input){
+void HanWhaArmWorkcellManager::updateRobotStateTf( std::vector<double> _tf_input){
 
-    std::function<void ()> tf_publisher_ = [&, this](){
-        tf::Transform tf_transfrom;
-        tf::Quaternion quat;
+    std::function<void ()> tf_publisher_ = [_tf_input, this](){
+        std::vector<double> tf_input = _tf_input;
+        tf::Transform _tf_transfrom;
+        tf::Quaternion _quat;
         int pub_count = 0;
 
-        tf_transfrom.setOrigin(tf::Vector3(tf_input[0], tf_input[1], tf_input[2]));
-        quat.setRPY (tf_input[3], tf_input[4], tf_input[5]);
-        tf_transfrom.setRotation(quat);
-
-        tf::StampedTransform robot_eef_tf ( tf_transfrom,
-                                            ros::Time::now(),
-                                            "base_link",
-                                            "ee_link");
+        _tf_transfrom.setOrigin(tf::Vector3(tf_input[0], tf_input[1], tf_input[2]));
+        _quat.setRPY (tf_input[3], tf_input[4], tf_input[5]);
+        _tf_transfrom.setRotation(_quat);
         
         while(pub_count < 15){
+            tf::StampedTransform robot_eef_tf ( _tf_transfrom,
+                                                ros::Time::now(),
+                                                "base_link",
+                                                "ee_link");
             tf_broadcaster_.sendTransform( robot_eef_tf );
-            std::this_thread::sleep_for (std::chrono::milliseconds(150));
+            std::this_thread::sleep_for (std::chrono::milliseconds(200));
             pub_count++;
         }
-
-        tf_broadcaster_.sendTransform( robot_eef_tf );
     };
     
+    ROS_INFO(" Creating base_link to marker publisher... ");
     std::thread(tf_publisher_).detach();
 }
 
 
 // Execute pick place motion
-bool HanWhaArmWorkcellManager::executePickPlaceMotion( std::string target_frame ){
+bool HanWhaArmWorkcellManager::executePickPlaceMotion( std::string target_frame, bool is_pick ){
     
     tf::Transform *target_tf (new tf::Transform);
     std::vector<double> _curr_pose;
@@ -160,22 +159,35 @@ bool HanWhaArmWorkcellManager::executePickPlaceMotion( std::string target_frame 
     if (markers_detector_.getTransformPose( "base_link", target_frame, target_tf ) ){    
         double _roll, _pitch, _yaw;
         tf::Matrix3x3(target_tf->getRotation()).getRPY(_roll, _pitch, _yaw);
-        std::cout << " # pick pose, going to: " << target_tf->getOrigin().x() << " "
-                                                << target_tf->getOrigin().y() << " "
-                                                << target_tf->getOrigin().z() << " "
-                                                << _roll << " "
-                                                << _pitch << " "
-                                                <<  _yaw << std::endl;
-        // if (! arm_controller_.executePickPose({ target_tf->getOrigin().x(),
-        //                                         target_tf->getOrigin().y(),
-        //                                         target_tf->getOrigin().z(),
-        //                                         -1.57, 0, _yaw}) ) 
-            // return false;
+
+        if ( is_pick ){
+            std::cout << " # Execute Pick pose, going to: " << target_tf->getOrigin().x() << " "
+                                                            << target_tf->getOrigin().y() << " "
+                                                            << target_tf->getOrigin().z() << " "
+                                                            << "1.57 0 " <<  _yaw  << std::endl;
+            if (! arm_controller_.executePickPose({ target_tf->getOrigin().x(),
+                                                    target_tf->getOrigin().y(),
+                                                    target_tf->getOrigin().z(),
+                                                    1.57, 0, _yaw}) )
+                return false;
+        }
+        else{
+            std::cout << " # Execute Place pose, going to: " << target_tf->getOrigin().x() << " "
+                                                    << target_tf->getOrigin().y() << " "
+                                                    << target_tf->getOrigin().z() << " "
+                                                    << "1.57 0 " <<  _yaw << std::endl;
+            if (! arm_controller_.executePlacePose({ target_tf->getOrigin().x(),
+                                                    target_tf->getOrigin().y(),
+                                                    target_tf->getOrigin().z(),
+                                                    1.57, 0, _yaw}) )
+                return false;
+        }
     }
     else{
         ROS_ERROR(" [HANWHA] Unable to locate marker! ");
         return false;
     }
+    return true;
 }
 
 
@@ -187,41 +199,22 @@ bool HanWhaArmWorkcellManager::executePickPlaceMotion( std::string target_frame 
 bool HanWhaArmWorkcellManager::executeRobotArmMission(){
     ROS_INFO("\n ***** Starting To Execute task, request_guid: %s *****", 
         dispenser_curr_task_.request_guid.c_str());
-    
-    rmf_msgs::DispenserRequestItem requested_item = dispenser_curr_task_.items[0] ;
-    std::string requested_item_type = requested_item.item_type ;
-    
-    // while(1){
-    
-    //     arm_controller_.movetoScanPose("mir_1");
-    //     _curr_pose = arm_controller_.get_tf_update();
-    //     updateRobotStateTf(_curr_pose);
-    //     arm_controller_.print(_curr_pose);
+   
+    ROS_INFO(" => Picking 1st tray");
+    if (!arm_controller_.movetoScanPose("mir_1")) return false;
+    if (!executePickPlaceMotion("marker_102", true)) return false;
 
-    //     arm_controller_.movetoScanPose("trolley_2");
-    //    _curr_pose = arm_controller_.get_tf_update();
-    //     updateRobotStateTf(_curr_pose);
-    //     arm_controller_.print(_curr_pose);
+    ROS_INFO(" => Placing 1st tray");
+    if (!arm_controller_.movetoScanPose("trolley_1")) return false;
+    if (!executePickPlaceMotion("marker_202", false)) return false;
 
-    //     arm_controller_.movetoScanPose("mir_2");
-    //    _curr_pose = arm_controller_.get_tf_update();
-    //     updateRobotStateTf(_curr_pose);
-    //     arm_controller_.print(_curr_pose);
+    ROS_INFO(" => Picking 2nd tray");
+    if (!arm_controller_.movetoScanPose("mir_2")) return false;
+    if (!executePickPlaceMotion("marker_103", true)) return false;
 
-    //     arm_controller_.movetoScanPose("trolley_1");
-    //    _curr_pose = arm_controller_.get_tf_update();
-    //     updateRobotStateTf(_curr_pose);
-    //     arm_controller_.print(_curr_pose);
-
-    // }
-
-    while(1){
-        if (!arm_controller_.movetoScanPose("mir_1")) return false;
-        if (!executePickPlaceMotion("marker_102")) return false;
-
-        if (!arm_controller_.movetoScanPose("mir_2")) return false;
-        if (!executePickPlaceMotion("marker_103")) return false;
-    }
+    ROS_INFO(" => Placing 2nd tray");
+    if (!arm_controller_.movetoScanPose("trolley_2")) return false;
+    if (!executePickPlaceMotion("marker_203", false)) return false;
 
     ROS_INFO("\n ***** Done with Task with request_guid: %s *****", 
         dispenser_curr_task_.request_guid.c_str());

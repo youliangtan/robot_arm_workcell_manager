@@ -257,7 +257,7 @@ void FiducialMarkersHandler::updateFiducialArrayCallback(const fiducial_msgs::Fi
         tf::Quaternion after_rotation;
         // TODO: to fix this pitching up thing
         after_rotation = reorientateMarker(before_rotation);
-        after_rotation = movingAverageFilter(after_rotation);
+        // after_rotation = movingAverageFilter(after_rotation);
         transform.setOrigin(tf::Vector3(pose.translation.x,pose.translation.y,pose.translation.z));
         transform.setRotation(after_rotation);
 
