@@ -1,6 +1,7 @@
 
 # Cssd_Hardware (RAWM)
-This package is to bring up all dependent codes/packages to spawn up the hardware. (RAWM, robot arm, camera....). The test here is mainly on UR10e.  PLEASE KEEP YOUR HANDS ON THE BIG RED BUTTON!
+This package is to bring up all dependent codes/packages to spawn up the hardware. (RAWM, robot arm, camera....). The test here is mainly on UR10e.  
+PLEASE KEEP YOUR HANDS ON THE BIG RED BUTTON!
 
 **For now, to test on hardware, user will need to switch the topic in `` **
 
@@ -24,9 +25,11 @@ roslaunch cssd_hardware single_arm.launch
 
 After bringup, send a `dispenserRequest` to move the arm
 ```bash
-rostopic pub /cssd_workcell/dispenser_request rmf_msgs/DispenserRequest '{request_guid: 0xx03, target_guid: ur10e_001, items:[{item_type: marker_1, quantity: 1, compartment_name: 'marker_102'}] }' --once
+rostopic pub /cssd_workcell/dispenser_request rmf_msgs/DispenserRequest \
+'{request_guid: 0xx03, target_guid: ur10e_001, items:[{item_type: marker_1, quantity: 1, compartment_name: 'marker_102'}] }' --once
 # second request
-rostopic pub /cssd_workcell/dispenser_request rmf_msgs/DispenserRequest '{request_guid: 0xx03, target_guid: ur10e_001, items:[{item_type: marker_3, quantity: 1, compartment_name: 'marker_103'}] }' --once
+rostopic pub /cssd_workcell/dispenser_request rmf_msgs/DispenserRequest \
+'{request_guid: 0xx03, target_guid: ur10e_001, items:[{item_type: marker_3, quantity: 1, compartment_name: 'marker_103'}] }' --once
 ```
 
 Again, PLEASE KEEP YOUR HANDS ON THE BIG RED BUTTON! :fire:
@@ -51,11 +54,9 @@ roslaunch robot_arm_workcell_manager hanwha_arm_workcell_manager.launch
 rviz -f base_link
 ```
 
-Publish sample `DispenserRequest`s...
+Publish sample `DispenserRequest`...
 ```bash
-rostopic pub /cssd_workcell/dispenser_request rmf_msgs/DispenserRequest '{request_guid: 0xx01, target_guid: hanwha_001, items:[{item_type: marker_1, quantity: 1, compartment_name: 'marker_101'}] }' --once
-## second request
-rostopic pub /cssd_workcell/dispenser_request rmf_msgs/DispenserRequest '{request_guid: 0xx02, target_guid: hanwha_001, items:[{item_type: marker_2, quantity: 1, compartment_name: 'marker_100'}] }' --once
+rostopic pub /cssd_workcell/dispenser_request rmf_msgs/DispenserRequest '{request_guid: 0xx01, target_guid: hanwha_001 }' --once
 ```
 
 ---

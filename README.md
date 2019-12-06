@@ -1,8 +1,16 @@
 
 # robot_arm_workcell_manager (RAWM)
-Robot arm manipulation manager package is one of the module for the Central Sterile Services Department (CSSD) workcell application. This package will act as a standalone workcell (aka: Dispenser Robot), which handles the robotics aspect of cssd_workcell. When a `DispenserRequest` is being sent out by a user to RAWM, a "RAWM" workcell will begin execute the pick and place task. `ur10` and `ur10e` are used in this application. Current package is developed and tested on `ros-melodic` and `gazebo 9.1`. 
 
-The task sequence starts with the action of picking up a custom design instrument tray from a medical rack, then eventually place the target tray on the transporter cart (follow-up delivery task by a AGV). Fiducial visual markers (aruco) will function as locating markers for pose estimation and id matching. Aruco markers are attached to the trays and AGV cart.
+Robot arm manipulation manager package is one of the module for the Central Sterile Services Department 
+(CSSD) workcell application. This package will act as a standalone workcell (aka: Dispenser Robot), which 
+handles the robotics aspect of cssd_workcell. When a `DispenserRequest` is being sent out by a user to RAWM, 
+a "RAWM" workcell will begin execute the pick and place task. `ur10` and `ur10e` are used in this application. 
+Current package is developed and tested on `ros-melodic` and `gazebo 9.1`. 
+
+The task sequence starts with the action of picking up a custom design instrument tray from a medical rack, 
+then eventually place the target tray on the transporter cart (follow-up delivery task by a AGV). Fiducial 
+visual markers (aruco) will function as locating markers for pose estimation and id matching. Aruco markers 
+are attached to the trays and AGV cart.
 
 Now with namespace support! Enabling two (or more!) arms to perform a choreographed dance!! 🤖🤖
 
@@ -24,6 +32,16 @@ _Note that this package work together with ros2: `cssd_workcell_manger`, refer t
 
 ---
 
+## Table of Contents
+
+ * [Getting Started](##Getting-Started)
+ * [Run RAWM with Gazebo](##Run-RAWM-with-Gazebo)
+ * [Run on Hardware (UR10e and HanWha)](##Run-on-Hardware-(UR10e-and-HanWha))
+ * [Testing on submodules and lib](##Testing-on-submodules-and-lib)
+ * [Notes](##Notes)
+
+---
+
 ## Getting Started
 
 ### Basic Installation
@@ -31,7 +49,9 @@ _Note that this package work together with ros2: `cssd_workcell_manger`, refer t
 ```bash
 # ROS, Moveit stuffs
 # Gazebo Stuffs
+sudo apt-get update
 sudo apt-get ros-melodic-moveit-* ros-melodic-gazebo-*
+sudo apt-get upgrade gazebo9*
 ```
 
 ### Dependencies
@@ -88,26 +108,30 @@ roslaunch robot_arm_workcell_manager two_arms_rawm.launch
 
 _p/s: Wait each launch terminal to be fully launched before launching the next `.launch`._
 
----
 
-## Request a Task 
+### Request a Task 
 
-Open another terminal, then use rostopic to publish a `DispenserRequest.msg` to start the pick and place motion. Each request will execute one pick and place task. Intotal, 4 requests will be sent out to fill up the Transporter!!
+Open another terminal, then use rostopic to publish a `DispenserRequest.msg` to start the pick and place motion. 
+Each request will execute one pick and place task. Intotal, 4 requests will be sent out to fill up the Transporter!!
 
 *Request Task to UR10 arm!* 🤖
 
 ```bash
-rostopic pub /cssd_workcell/dispenser_request rmf_msgs/DispenserRequest '{request_guid: 0xx01, target_guid: ur10_001, items:[{item_type: marker_1, quantity: 1, compartment_name: 'marker_101'}] }' --once
+rostopic pub /cssd_workcell/dispenser_request rmf_msgs/DispenserRequest \
+'{request_guid: 0xx01, target_guid: ur10_001, items:[{item_type: marker_1, quantity: 1, compartment_name: 'marker_101'}] }' --once
 ## second request
-rostopic pub /cssd_workcell/dispenser_request rmf_msgs/DispenserRequest '{request_guid: 0xx02, target_guid: ur10_001, items:[{item_type: marker_2, quantity: 1, compartment_name: 'marker_100'}] }' --once
+rostopic pub /cssd_workcell/dispenser_request rmf_msgs/DispenserRequest \
+'{request_guid: 0xx02, target_guid: ur10_001, items:[{item_type: marker_2, quantity: 1, compartment_name: 'marker_100'}] }' --once
 ```
 
 *Request Task to UR10e arm!* 🤖
 
 ```bash
-rostopic pub /cssd_workcell/dispenser_request rmf_msgs/DispenserRequest '{request_guid: 0xx03, target_guid: ur10e_001, items:[{item_type: marker_0, quantity: 1, compartment_name: 'marker_102'}] }' --once
+rostopic pub /cssd_workcell/dispenser_request rmf_msgs/DispenserRequest \
+'{request_guid: 0xx03, target_guid: ur10e_001, items:[{item_type: marker_0, quantity: 1, compartment_name: 'marker_102'}] }' --once
 ## second request (IK Flip issue TOBEFIX)
-rostopic pub /cssd_workcell/dispenser_request rmf_msgs/DispenserRequest '{request_guid: 0xx04, target_guid: ur10e_001, items:[{item_type: marker_4, quantity: 1, compartment_name: 'marker_103'}] }' --once
+rostopic pub /cssd_workcell/dispenser_request rmf_msgs/DispenserRequest \
+'{request_guid: 0xx04, target_guid: ur10e_001, items:[{item_type: marker_4, quantity: 1, compartment_name: 'marker_103'}] }' --once
 ```
 
 By now, the robot dispenser will execute the task according to the `DispenserRequest`. GoodLuck!!
@@ -116,7 +140,7 @@ _p/s: You can play with the gazebo model by manually move the position of the tr
 
 ---
 
-## Run on Hardware (UR and HanWha)
+## Run on Hardware (UR10e and HanWha)
 
 Please refer to the readme [here](/cssd_hardware)
  - Also with Hanwha Arm Support
@@ -155,7 +179,8 @@ rostopic list
 ```
 
 
-**Calibration**: Refer to OpenCV Camera Calibration code, [here](https://docs.opencv.org/2.4/doc/tutorials/calib3d/camera_calibration/camera_calibration.html#results). Once done, then copy the camera & distortion matrix from a .xml file to `/robot_arm_workcell_manager/config/usb_cam.yaml`.
+**Calibration**: Refer to OpenCV Camera Calibration code, [here](https://docs.opencv.org/2.4/doc/tutorials/calib3d/camera_calibration/camera_calibration.html#results). 
+Once done, then copy the camera & distortion matrix from a .xml file to `/robot_arm_workcell_manager/config/usb_cam.yaml`.
 
 ```bash
 roslaunch robot_arm_workcell_manager fiducial_markers_handler.launch
@@ -175,19 +200,8 @@ roslaunch robot_arm_workcell_manager robot_arm_workcell_manager.launch
 
 ---
 
-
-## Setting of MoveIt Scene Env
-
-The config file is in rawm package called environment_object. This is to set the environment in moveit. Please subscribe to planning scene in rviz to see the objects.
-
-- The object must be called object_1, object_2 and so on. 
-- type 1 for box, 2 sphere, 3 clinder, 4 cone. 
-
-### Octomapping 
-Information is pulled from the depth camera and added to the planning scene. The params can be found at cssdbot_ur10_moveitconfig package, sensor_manager.launch.xml and sensors_kinect_pointcloud.yaml
-
-
 ## Notes
+
 - Custom designed "fork-lift" end effector, trays and tray placements are used in this application.
 - 3 executables are used in this application, namely: `robot_arm_workcell_manager` (MAIN), `robot_arm_controller`, `fiducial_markers_handler`.
 - `robot_arm_workcell_manager` executable depends on above `robot_arm_controller` and `fiducial_markers_handler` libs. 
@@ -203,7 +217,7 @@ Information is pulled from the depth camera and added to the planning scene. The
 - When using realsense, the `camera_info` which consists of the camera-matrix is locaated auto generated when launching `realsense2_ros`
 - Create lib pkgfor other pkgs: [here](https://answers.ros.org/question/150306/how-to-put-headers-into-develinclude-folder-with-catkin_make/)
 
-## Debuging process
+### Debuging process
 - Jittering Problem during picking up of tray with Eef:  use `velocity_controllers` instead of `position_controller`
 - MoveIt Namespace issue: In `robot_arm_controller.cpp` there's a declaration of namespace in for the movegroup by `ros::NodeHandle moveit_nh(arm_namespace_)`
 - `GOAL_TOLERANCE_VIOLATED` error code in action server: As mentioned in [here](https://github.com/ros-planning/moveit/issues/1475#issuecomment-504364419), move group setTolerance is not working here. Will need to manually change it in `ur_velocity/position_controller.yaml`. This is the input param for `ros_control/joint_trajectory_controller` during spawn
@@ -217,8 +231,20 @@ sudo apt-get install --only-upgrade gazebo9
 ```
 remove previous build files and rebuild
 - Added Github Action CI in `.github/workflows/ccpp.yml`, currently working till catkin_make for RAWM
+- If the current arm fix positions are incorrect, please configure it in `config/extended_tf.yaml`.
 
-## TODO
+
+### Setting of MoveIt Scene Env
+
+The config file is in rawm package called environment_object. This is to set the environment in moveit. Please subscribe to planning scene in rviz to see the objects.
+
+- The object must be called object_1, object_2 and so on. 
+- type 1 for box, 2 sphere, 3 clinder, 4 cone. 
+
+### Octomapping 
+Information is pulled from the depth camera and added to the planning scene. The params can be found at cssdbot_ur10_moveitconfig package, sensor_manager.launch.xml and sensors_kinect_pointcloud.yaml
+
+### TODO
 - further cleanupsssss
 - collision model creation on the scene in moveit (_on-going_)
 - Warm start Issue!!!! Also ability to launch gazebo with rviz (Controller issue!!!)

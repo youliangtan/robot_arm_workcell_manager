@@ -164,7 +164,7 @@ bool HanWhaArmWorkcellManager::executePickPlaceMotion( std::string target_frame,
             std::cout << " # Execute Pick pose, going to: " << target_tf->getOrigin().x() << " "
                                                             << target_tf->getOrigin().y() << " "
                                                             << target_tf->getOrigin().z() << " "
-                                                            << "1.57 0 " <<  _yaw << std::endl;
+                                                            << "1.57 0 " <<  _yaw  << std::endl;
             if (! arm_controller_.executePickPose({ target_tf->getOrigin().x(),
                                                     target_tf->getOrigin().y(),
                                                     target_tf->getOrigin().z(),
@@ -199,22 +199,22 @@ bool HanWhaArmWorkcellManager::executePickPlaceMotion( std::string target_frame,
 bool HanWhaArmWorkcellManager::executeRobotArmMission(){
     ROS_INFO("\n ***** Starting To Execute task, request_guid: %s *****", 
         dispenser_curr_task_.request_guid.c_str());
-    
-    rmf_msgs::DispenserRequestItem requested_item = dispenser_curr_task_.items[0] ;
-    std::string requested_item_type = requested_item.item_type ;
-    
-    while(1){
-        // if (!arm_controller_.movetoScanPose("mir_1")) return false;
-        // if (!executePickPlaceMotion("marker_102", true)) return false;
+   
+    ROS_INFO(" => Picking 1st tray");
+    if (!arm_controller_.movetoScanPose("mir_1")) return false;
+    if (!executePickPlaceMotion("marker_102", true)) return false;
 
-        // ROS_INFO("placing 1st tray");
-        // if (!arm_controller_.movetoScanPose("trolley_1")) return false;
-        // if (!executePickPlaceMotion("marker_202", false)) return false;
+    ROS_INFO(" => Placing 1st tray");
+    if (!arm_controller_.movetoScanPose("trolley_1")) return false;
+    if (!executePickPlaceMotion("marker_202", false)) return false;
 
-        ROS_INFO("placing 2nd tray");
-        if (!arm_controller_.movetoScanPose("trolley_2")) return false;
-        if (!executePickPlaceMotion("marker_203", false)) return false;
-    }
+    ROS_INFO(" => Picking 2nd tray");
+    if (!arm_controller_.movetoScanPose("mir_2")) return false;
+    if (!executePickPlaceMotion("marker_103", true)) return false;
+
+    ROS_INFO(" => Placing 2nd tray");
+    if (!arm_controller_.movetoScanPose("trolley_2")) return false;
+    if (!executePickPlaceMotion("marker_203", false)) return false;
 
     ROS_INFO("\n ***** Done with Task with request_guid: %s *****", 
         dispenser_curr_task_.request_guid.c_str());

@@ -8,7 +8,8 @@
 
     <group ns="$(arg arm_ns)">
 
-        <node pkg="robot_arm_workcell_manager" type="hanwha_arm_workcell_manager" name="hanwha_arm_workcell_manager_node" respawn="true" output="screen">
+        <node pkg="robot_arm_workcell_manager" type="hanwha_arm_workcell_manager" 
+                name="hanwha_arm_workcell_manager_node" respawn="true" output="screen">
             <param name="arm_namespace" value="$(arg arm_ns)" />
             <param name="tf_prefix" value="$(arg arm_ns)" />
             <param name="dispenser_name" value="$(arg dispenser_name)" />
@@ -24,7 +25,7 @@
     </group>
 
 
-    <!-- CAmera stuffs -->
+    <!-- Camera stuffs -->
     <remap from="$(arg arm_ns)/color/camera_info" to="$(arg arm_ns)/camera_info"/>
     <remap from="$(arg arm_ns)/color/image_raw/compressed" to="$(arg arm_ns)/image/compressed"/>
   

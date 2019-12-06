@@ -11,6 +11,7 @@
 int main()
 {
     std::vector<double> _curr_pose;
+    std::cout<<" connecting to robot..." <<std::endl;
     HanWhaArmController hanwha_bot;
 
     // while (1)
