@@ -17,7 +17,6 @@ RobotArmController::RobotArmController(): nh_("~"),    // init new action client
     // Load yaml path via ros param
     loadParameters();
     
-    
     std::cout << "ControlGroup::ControlGroup(" << group_name_ << ") enter" << std::endl;
 
     ros::NodeHandle moveit_nh(arm_namespace_);
@@ -180,7 +179,8 @@ bool RobotArmController::moveToNamedTarget(const std::string& _target_name){
         vel_factor = NAMED_TARGET_CONFIG_["named_target"][_target_name]["velFactor"].as<double>();
     } 
     catch (std::exception& err){
-        ROS_ERROR("Exception in YAML LOADER while trying to find target name: %s .\n Error: %s", _target_name.c_str(), err.what());
+        ROS_ERROR("Exception in YAML LOADER while trying to find target name: %s .\n Error: %s", 
+            _target_name.c_str(), err.what());
         return false;
     }
     
@@ -191,7 +191,9 @@ bool RobotArmController::moveToNamedTarget(const std::string& _target_name){
 
     // Joint Space Goal Mode
     if (goal_type.compare("joint_space_goal") == 0){
-        std::vector<double> joints_target = {goal_values[0], goal_values[1], goal_values[2], goal_values[3], goal_values[4], goal_values[5]};
+        std::vector<double> joints_target = {
+            goal_values[0], goal_values[1], goal_values[2], goal_values[3], goal_values[4], goal_values[5]
+        };
         return moveToJointsTarget(joints_target, vel_factor );
     }
 
@@ -267,13 +269,15 @@ bool RobotArmController::moveToEefTarget(const geometry_msgs::Pose _eef_target_p
         waypoints.push_back(_eef_target_pose);
         moveit_msgs::RobotTrajectory trajectory;
 
-        double fraction = move_group_->computeCartesianPath(waypoints, eef_step, jump_threshold, trajectory, planning_constraints_);
+        double fraction = move_group_->computeCartesianPath(
+            waypoints, eef_step, jump_threshold, trajectory, planning_constraints_);
         int attempt = 0;
         
         while (fraction != 1.0  ){
             if (attempt < attempts_thresh){
                 ROS_WARN("Planning failed with factor: %f, replanning...", fraction);
-                fraction = move_group_->computeCartesianPath(waypoints, eef_step, jump_threshold, trajectory, planning_constraints_);
+                fraction = move_group_->computeCartesianPath(
+                    waypoints, eef_step, jump_threshold, trajectory, planning_constraints_);
                 attempt++;
             }
             else{

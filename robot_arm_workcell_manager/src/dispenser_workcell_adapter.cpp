@@ -41,39 +41,40 @@ void DispenserWorkcellAdapter::setDispenserParams(std::string dispenser_name, do
 void DispenserWorkcellAdapter::dispenserRequestCallback(const rmf_msgs::DispenserRequestConstPtr& _msg){
     
     ROS_INFO(" \n ------- [Robot: %s] Received 1 Job request with id: %s ---------\n", 
-            dispenser_name_.c_str(), _msg->request_id.c_str() );
+            dispenser_name_.c_str(), _msg->request_guid.c_str() );
 
-    if (_msg->dispenser_name != dispenser_name_){
-        ROS_WARN(" [Robot: %s] Invalid Dispenser Name...", dispenser_name_.c_str());
+    if (_msg->target_guid != dispenser_name_){
+        ROS_WARN(" [Robot: %s] Invalid Dispenser Name (target_guid)...", dispenser_name_.c_str());
         return;
     }
 
     // already performing this request
-    if (_msg->request_id == dispenser_curr_task_.request_id){
+    if (_msg->request_guid == dispenser_curr_task_.request_guid){
         ROS_WARN(" [Robot: %s] Task Request has been performed previously", dispenser_name_.c_str());
         return;
     }
 
     // Already made a request, publish results,
-    if (dispenser_completed_request_ids_.find(_msg->request_id) != dispenser_completed_request_ids_.end()) {
+    if (dispenser_completed_request_guids_.find(_msg->request_guid) != dispenser_completed_request_guids_.end()) {
         ROS_WARN(" Task Request has been requested previously, with success result of: %d ", 
-                    dispenser_completed_request_ids_[_msg->request_id] );
-        publishDispenserResult(_msg->request_id, dispenser_completed_request_ids_[_msg->request_id]);
+                    dispenser_completed_request_guids_[_msg->request_guid] );
+        publishDispenserResult(_msg->request_guid, dispenser_completed_request_guids_[_msg->request_guid]);
         return;
     }
 
     // Check if quantity and item size number
-    // TODO, Check Compartment_ID
-    if (_msg->items.size() != 1 || _msg->items[0].quantity != 1 )  {
-        ROS_ERROR("  [Robot: %s] Currently only supports 1 item request of quantity 1 ", dispenser_name_.c_str());
-        publishDispenserResult(_msg->request_id, false);
-        return;
+    if (_msg->items.size() > 0 )  {
+        if (_msg->items.size() > 1 || _msg->items[0].quantity > 1 )  {
+            ROS_ERROR("  [Robot: %s] Currently only supports max 1 item request of quantity 1 ", dispenser_name_.c_str());
+            publishDispenserResult(_msg->request_guid, false);
+            return;
+        }
     }
     
-    // Check dispenser_req queue, if request_id existed (dulplication)
+    // Check dispenser_req queue, if request_guid existed (dulplication)
     std::unique_lock<std::mutex> queue_lock(dispenser_task_queue_mutex_); 
     for (rmf_msgs::DispenserRequest& task_in_queue : dispenser_task_queue_){
-        if (_msg->request_id == task_in_queue.request_id){
+        if (_msg->request_guid == task_in_queue.request_guid){
             ROS_ERROR("  [Robot: %s] found duplicate task in queue, updating task.", dispenser_name_.c_str());
             dispenser_task_queue_.erase(dispenser_task_queue_.begin());
             dispenser_task_queue_.push_back(*_msg);
@@ -82,7 +83,7 @@ void DispenserWorkcellAdapter::dispenserRequestCallback(const rmf_msgs::Dispense
     }  
 
     for (auto task_in_queue = dispenser_task_queue_.begin(); task_in_queue != dispenser_task_queue_.end(); ) {
-        if (_msg->request_id == task_in_queue->request_id) {
+        if (_msg->request_guid == task_in_queue->request_guid) {
             std::cout << "    found duplicate task in queue, updating task."  << std::endl;
             task_in_queue = dispenser_task_queue_.erase(task_in_queue);
         }
@@ -94,7 +95,7 @@ void DispenserWorkcellAdapter::dispenserRequestCallback(const rmf_msgs::Dispense
     // All Valid!! Expand request queue
     dispenser_task_queue_.push_back(*_msg);
     ROS_INFO(" \n  --------- [Robot: %s] Successfully added request task: %s  to queue -----------\n", 
-            dispenser_name_.c_str(), _msg->request_id.c_str() );
+            dispenser_name_.c_str(), _msg->request_guid.c_str() );
     
     return;
 }
@@ -109,7 +110,7 @@ bool DispenserWorkcellAdapter::getCurrTaskFromQueue(rmf_msgs::DispenserRequest& 
     
     // If no more queuing task
     if (dispenser_task_queue_.empty()) {
-        dispenser_state_msg_.dispenser_mode = dispenser_state_msg_.DISPENSER_MODE_IDLE;
+        dispenser_state_msg_.mode = dispenser_state_msg_.IDLE;
         rmf_msgs::DispenserRequest empty_request;  // TODO, use a properway
         dispenser_curr_task_ = empty_request;
         curr_task = empty_request;
@@ -117,7 +118,7 @@ bool DispenserWorkcellAdapter::getCurrTaskFromQueue(rmf_msgs::DispenserRequest& 
     }
     // If there's queuing task
     else {
-        dispenser_state_msg_.dispenser_mode = dispenser_state_msg_.DISPENSER_MODE_BUSY;
+        dispenser_state_msg_.mode = dispenser_state_msg_.BUSY;
         dispenser_curr_task_ = dispenser_task_queue_.front();
         curr_task = dispenser_task_queue_.front();
         return true;
@@ -128,8 +129,8 @@ bool DispenserWorkcellAdapter::getCurrTaskFromQueue(rmf_msgs::DispenserRequest& 
 // Set current task result and remove the task from queue
 bool DispenserWorkcellAdapter::setCurrTaskResult(bool mission_success){
     dispenser_task_queue_.pop_front();
-    dispenser_completed_request_ids_[dispenser_curr_task_.request_id] =  mission_success;
-    publishDispenserResult(dispenser_curr_task_.request_id, mission_success);
+    dispenser_completed_request_guids_[dispenser_curr_task_.request_guid] =  mission_success;
+    publishDispenserResult(dispenser_curr_task_.request_guid, mission_success);
 }
 
 
@@ -141,15 +142,15 @@ void DispenserWorkcellAdapter::dispenserStateThread(){
 
     // Pub dispenser state
     while(nh_.ok()){
-        dispenser_state_msg_.dispenser_time = ros::Time::now();
-        dispenser_state_msg_.dispenser_name = dispenser_name_;
+        dispenser_state_msg_.time = ros::Time::now();
+        dispenser_state_msg_.guid = dispenser_name_;
         dispenser_state_msg_.seconds_remaining = 10.0; // TODO: arbitrary value for now
-        dispenser_state_msg_.request_ids.clear();
+        dispenser_state_msg_.request_guid_queue.clear();
         
-        if (dispenser_curr_task_.request_id != "")
-            dispenser_state_msg_.request_ids.push_back(dispenser_curr_task_.request_id);
+        if (dispenser_curr_task_.request_guid != "")
+            dispenser_state_msg_.request_guid_queue.push_back(dispenser_curr_task_.request_guid);
         for (const auto& task : dispenser_task_queue_){
-            dispenser_state_msg_.request_ids.push_back(task.request_id);
+            dispenser_state_msg_.request_guid_queue.push_back(task.request_guid);
         }
         dispenser_state_pub_.publish(dispenser_state_msg_);
         ROS_DEBUG("- Publishing Dispenser State");
@@ -159,12 +160,34 @@ void DispenserWorkcellAdapter::dispenserStateThread(){
 }
 
 
-void DispenserWorkcellAdapter::publishDispenserResult(std::string request_id, bool success){
-    dispenser_result_msg_.dispenser_time = ros::Time::now();
-    dispenser_result_msg_.dispenser_name = dispenser_name_;
-    dispenser_result_msg_.request_id = request_id;
-    dispenser_result_msg_.success = success;
+void DispenserWorkcellAdapter::publishDispenserResult(std::string request_guid, bool success){
+    dispenser_result_msg_.time = ros::Time::now();
+    dispenser_result_msg_.source_guid = dispenser_name_;
+    dispenser_result_msg_.request_guid = request_guid;
+    if (success == true)
+        dispenser_result_msg_.status = dispenser_result_msg_.SUCCESS;
+    else 
+        dispenser_result_msg_.status = dispenser_result_msg_.FAILED;
     dispenser_result_pub_.publish(dispenser_result_msg_);
 }
 
 } // end namespace
+
+
+// --------------------------------------------------------
+// -- Simple Test for Dispenser workcell adapter lib
+// --------------------------------------------------------
+
+
+int main(int argc, char** argv){
+    std::cout<<" YoYoYo!, Test DispenserWorkcellAdapter is running!!!"<< std::endl;
+    
+    ros::init(argc, argv, "test_workcell", ros::init_options::NoSigintHandler);
+    rmf_adapter::DispenserWorkcellAdapter workcell_adapter_;
+
+    std::cout<<" All Ready!!!"<< std::endl;
+
+    ros::AsyncSpinner ros_async_spinner(1);
+    ros_async_spinner.start();
+    ros::waitForShutdown();    
+}

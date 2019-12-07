@@ -3,7 +3,7 @@
   <name>robot_arm_workcell_manager</name>
   <version>1.0.0</version>
   <description>
-    Drivers, description, and utilities for Robot Arm Workcell Manipulation Workcell, Using moveit 
+    Drivers, description, and utilities for Robot Arm Workcell Manipulation Workcell, Using moveit and aruco markers detector
   </description>
   <maintainer email="tan_you_liang@hotmail.com">Tan You Liang</maintainer>
   <license>BSD</license>
@@ -33,9 +33,9 @@
   
   <depend>aruco_detect</depend>
   <depend>fiducial_msgs</depend>
-  
   <depend>rmf_msgs</depend>
-
+  <depend>hanwha_controller</depend>
+  
   <buildtool_depend>catkin</buildtool_depend>
   <buildtool_depend>rmf_msgs</buildtool_depend>
 

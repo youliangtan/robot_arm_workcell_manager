@@ -1,0 +1,53 @@
+<!--  ** Spawning hanwha_arm_workcell_manager node **  -->
+
+<launch>
+
+    <arg name="markers_config_file"  default="$(find robot_arm_workcell_manager)/config/markers_tf.yaml" />
+    <arg name="arm_ns" default="/"/>
+    <arg name="dispenser_name" default="hanwha_001"/>
+
+    <group ns="$(arg arm_ns)">
+
+        <node pkg="robot_arm_workcell_manager" type="hanwha_arm_workcell_manager" 
+                name="hanwha_arm_workcell_manager_node" respawn="true" output="screen">
+            <param name="arm_namespace" value="$(arg arm_ns)" />
+            <param name="tf_prefix" value="$(arg arm_ns)" />
+            <param name="dispenser_name" value="$(arg dispenser_name)" />
+            <param name="marker_tf_path" value="$(arg markers_config_file)"/>
+            <param name="arm_mission_path" type='string' value="pending" />
+            <param name="camera_frame_id" value="camera" />
+            <param name="dispenser_state_pub_rate" type="double" value="0.5" />
+            <param name="motion_pause_time" type="int" value="1" />
+            <param name="flip_marker" type="bool" value="true" />
+
+            <remap from="/fiducial_transforms" to="$(arg arm_ns)/fiducial_transforms"/>
+        </node>>
+    </group>
+
+
+    <!-- Camera stuffs -->
+    <remap from="$(arg arm_ns)/color/camera_info" to="$(arg arm_ns)/camera_info"/>
+    <remap from="$(arg arm_ns)/color/image_raw/compressed" to="$(arg arm_ns)/image/compressed"/>
+  
+    <include file="$(find realsense2_camera)/launch/rs_camera.launch">
+        <!-- <arg name="filters"             value="pointcloud"/>
+            <arg name="color_width"         value="1280"/>
+            <arg name="color_height"        value="720"/>   -->  
+        <arg name="camera"              value="/"/>
+        <arg name="enable_infra1"       value="false"/>
+        <arg name="enable_infra2"       value="false"/>
+        <arg name="enable_gyro"         value="false"/>
+        <arg name="enable_accel"        value="false"/>
+        <arg name="enable_depth"        value="false"/>
+        <arg name="publish_tf"          value="false"/>
+    </include>
+
+    <include file="$(find robot_arm_workcell_manager )/launch/markers_detector.launch">
+        <arg name="ns"             value="$(arg arm_ns)"/>
+    </include>
+
+    <!-- x: eef front, y: eef right, z: eef down: increase for disire direction --> 
+    <node pkg="tf" type="static_transform_publisher" name="eef_to_camera_optical" 
+       args="-0.03 -0.1 -0.03 0 0 0 ee_link camera 200" />
+  
+</launch>
