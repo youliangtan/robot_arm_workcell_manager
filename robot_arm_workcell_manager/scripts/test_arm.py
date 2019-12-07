@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """
 ============================================================
 Creator: Tan You Liang
@@ -81,8 +81,8 @@ def changeInOrientation( wpose_quaternion, delta_roll, delta_pitch, delta_yaw):
 # control arm velocity of cartesian by adding travel time betwwen each way points
 def controlArmVelocity(plan, numberOfWayPoints = 1, timeFactor=1): 
 
-  print "Number of Planned Waypoints ", numberOfWayPoints
-  print "Time change factor as ", timeFactor
+  print("Number of Planned Waypoints "), numberOfWayPoints
+  print("Time change factor as "), timeFactor
 
   for i in range(1, numberOfWayPoints):
 
@@ -439,17 +439,17 @@ class ArmManipulation(object):
 if __name__ == '__main__':
   rospy.init_node('robot_manipulator_control_testing_node', anonymous=True)
 
-  ur10 = ArmManipulation( arm_ns_ = "/arm2/" )
-  print "==================== testing ============ "
+  ur10 = ArmManipulation( arm_ns_ = "/" )
+  print("==================== testing ============ ")
 
   # joints_goal = [0,-2.55,2.6,-0.062,1.614,  0]
   # joints_goal = [0,-2.45,2.5,-0.062,1.614,  0]
 
   # Scanning
   # joints_goal = [-3.1, -0.71, 2.42, -1.62, 0.5352, -0.05]
-  joints_goal = [-3.0, -0.51, 2.42, -1.8, 0.2, -0.09]
+  # joints_goal = [-3.0, -0.51, 2.42, -1.8, 0.2, -0.09]
 
-  joints_goal = [0,-2.45, 2.35, 0.08,1.614, 0]
+  joints_goal = [0, -2.107, 2.22, -0.13, 1.871,0]
 
-  print ur10.get_arm_joints()
+  print(ur10.get_arm_joints())
   ur10.go_to_joint_state(joints_goal, 1)

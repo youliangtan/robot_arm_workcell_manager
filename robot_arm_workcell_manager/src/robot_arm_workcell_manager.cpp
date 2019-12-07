@@ -15,7 +15,8 @@ RobotArmWorkcellManager::RobotArmWorkcellManager(): nh_("~"){
     loadParameters();
     workcell_adapter_.setDispenserParams(dispenser_name_, dispenser_pub_rate_);
 
-    dispenser_task_execution_thread_ = std::thread( std::bind(&cssd_workcell::RobotArmWorkcellManager::dispenserTaskExecutionThread, this));
+    dispenser_task_execution_thread_ = std::thread( 
+            std::bind(&cssd_workcell::RobotArmWorkcellManager::dispenserTaskExecutionThread, this));
 
     ROS_INFO("RobotArmWorkcellManager::RobotArmWorkcellManager() completed!! \n");
 }
@@ -77,21 +78,26 @@ void RobotArmWorkcellManager::dispenserTaskExecutionThread(){
         if (!workcell_adapter_.getCurrTaskFromQueue( dispenser_curr_task_ )){
             ROS_INFO("[Robot: %s] No Pending Task",dispenser_name_.c_str());
             loop_rate.sleep();
+            continue;
         }
         // If there's new task, execute it!!
-        else{
-            mission_success = executeRobotArmMission();
-            loop_rate.sleep();
+        mission_success = executeRobotArmMission();
+        workcell_adapter_.setCurrTaskResult(mission_success);
+        loop_rate.sleep();
 
-            if (mission_success){
-                ROS_INFO("\n *************** [Robot: %s] Done with Task with Request ID: %s *************** \n", 
-                    dispenser_name_.c_str(), dispenser_curr_task_.request_id.c_str());
+        if (mission_success){
+            ROS_INFO("\n *************** [Robot: %s] Done with Task with Request ID: %s *************** \n", 
+                dispenser_name_.c_str(), dispenser_curr_task_.request_guid.c_str());
+        }
+        else{
+            ROS_ERROR("\n *************** [Robot: %s] Task Failed for Request ID: %s *************** \n", 
+                dispenser_name_.c_str(), dispenser_curr_task_.request_guid.c_str());
+            
+            // clean all current queued task
+            ROS_ERROR(" ** [Robot: %s] Cleaning all queued tasks \n", dispenser_name_.c_str());
+            while( (workcell_adapter_.getCurrTaskFromQueue( dispenser_curr_task_ ))){
+                workcell_adapter_.setCurrTaskResult(false);
             }
-            else{
-                ROS_ERROR("\n *************** [Robot: %s] Task Failed for Request ID: %s *************** \n", 
-                    dispenser_name_.c_str(), dispenser_curr_task_.request_id.c_str());
-            }
-            workcell_adapter_.setCurrTaskResult(mission_success);
         }
     }
 }
@@ -115,7 +121,7 @@ bool RobotArmWorkcellManager::executePickPlaceMotion( std::vector<std::string> f
     if (! markers_detector_.getTransformPose( "base_link", "rescan_pos", target_tf ) ) return false;
     fixPitchRoll(*target_tf, -3.14, 0.0);
     tf::poseTFToMsg(*target_tf, *_eef_target_pose);
-    if (! arm_controller_.moveToEefTarget(*_eef_target_pose, 0.1) ) return false;
+    if (! arm_controller_.moveToEefTarget(*_eef_target_pose, 0.2) ) return false;
  
     // Get transform from tf detection, and store in local var
     for (std::string frame : frame_array){
@@ -132,7 +138,7 @@ bool RobotArmWorkcellManager::executePickPlaceMotion( std::vector<std::string> f
         _eef_target_pose = new geometry_msgs::Pose;
         tf::poseTFToMsg(*tf, *_eef_target_pose);
         ROS_INFO(" **Executing Pick Place Motion**  tf_frame: %s ", frame_array.at(idx).c_str());
-        if (! arm_controller_.moveToEefTarget(*_eef_target_pose, 0.2) ) return false;  //TODO: all vel factor is in config file, or rosparam
+        if (! arm_controller_.moveToEefTarget(*_eef_target_pose, 0.1) ) return false;  //TODO: all vel factor is in config file, or rosparam
         std::this_thread::sleep_for (std::chrono::seconds(motion_pause_time_));
         idx++;
     }
@@ -159,7 +165,7 @@ void RobotArmWorkcellManager::fixPitchRoll(tf::Transform& pose, double pitch, do
 
 // Mission sequences, TODO: Make it to a config file @_@
 bool RobotArmWorkcellManager::executeRobotArmMission(){
-    ROS_INFO("\n ***** Starting To Execute task, request_id: %s *****", dispenser_curr_task_.request_id.c_str());
+    ROS_INFO("\n ***** Starting To Execute task, request_guid: %s *****", dispenser_curr_task_.request_guid.c_str());
     
     bool motion_is_success;
     std::vector<tf::Transform *> tf_array;
@@ -221,7 +227,7 @@ bool RobotArmWorkcellManager::executeRobotArmMission(){
     // Back to rack level 0
     if (! arm_controller_.moveToNamedTarget(dispenser_name_ + "_rack_level_0") ) return false;
 
-    ROS_INFO("\n ***** Done with Task with request_id: %s *****", dispenser_curr_task_.request_id.c_str());
+    ROS_INFO("\n ***** Done with Task with request_guid: %s *****", dispenser_curr_task_.request_guid.c_str());
     return true;
 }
 
