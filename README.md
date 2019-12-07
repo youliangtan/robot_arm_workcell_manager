@@ -16,13 +16,11 @@ Now with namespace support! Enabling two (or more!) arms to perform a choreograp
 
 _Note that this package work together with ros2: `cssd_workcell_manger`, refer to [here](https://github.com/sharp-rmf/rmf-workcell)_
 
----
-
 ## Table of Contents
 
  * [Getting Started](#Getting-Started)
  * [Run RAWM with Gazebo](#Run-RAWM-with-Gazebo)
- * [Run on Hardware (UR10e and HanWha)](#Run-on-Hardware-(UR10e-and-HanWha))
+ * [Run on Hardware (UR10e and HanWha)](#run-on-hardware-ur10e-and-hanwha)
  * [Testing on submodules and lib](#Testing-on-submodules-and-lib)
  * [Notes](#Notes)
 
