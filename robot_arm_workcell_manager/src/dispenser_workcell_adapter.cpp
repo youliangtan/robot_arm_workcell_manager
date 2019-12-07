@@ -63,11 +63,12 @@ void DispenserWorkcellAdapter::dispenserRequestCallback(const rmf_msgs::Dispense
     }
 
     // Check if quantity and item size number
-    // TODO, Check Compartment_ID
-    if (_msg->items.size() != 1 || _msg->items[0].quantity != 1 )  {
-        ROS_ERROR("  [Robot: %s] Currently only supports 1 item request of quantity 1 ", dispenser_name_.c_str());
-        publishDispenserResult(_msg->request_guid, false);
-        return;
+    if (_msg->items.size() > 0 )  {
+        if (_msg->items.size() > 1 || _msg->items[0].quantity > 1 )  {
+            ROS_ERROR("  [Robot: %s] Currently only supports max 1 item request of quantity 1 ", dispenser_name_.c_str());
+            publishDispenserResult(_msg->request_guid, false);
+            return;
+        }
     }
     
     // Check dispenser_req queue, if request_guid existed (dulplication)

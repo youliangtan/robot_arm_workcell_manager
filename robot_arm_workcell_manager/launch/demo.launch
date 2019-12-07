@@ -54,12 +54,14 @@
     <!-- Currently handle the 'static tf publisher' in a dirty way, due to '/' issue -->
     <node if="$(eval arg('arm_ns') == '/')"
           pkg="tf" type="static_transform_publisher" name="eef_to_camera_tf" 
-          args="$(eval arg('eef2cam_tf') + ' camera_link_optical camera_link 10' )" />   
+
+          args="$(eval arg('eef2cam_tf') + ' camera_link_optical camera 100' )" />   
+
     
     <node unless="$(eval arg('arm_ns') == '/')"
           pkg="tf" type="static_transform_publisher" name="eef_to_camera_tf" 
           args="$(eval arg('eef2cam_tf') 
-                + ' ' + arg('arm_ns') + '/camera_link_optical ' + arg('arm_ns') + '/camera 10' )" />   
+                + ' ' + arg('arm_ns') + '/camera_link_optical ' + arg('arm_ns') + '/camera 100' )" />   
                 <!-- 0 0 0 -1.57 0 -1.57 $(arg arm_ns)/camera_link_optical $(arg arm_ns)/camera 10"     -->
 
     <!-- TODO : Realsense Gazebo enhancement!!!!! -->

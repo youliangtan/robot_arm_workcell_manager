@@ -55,7 +55,11 @@ class HanWhaArmWorkcellManager{
 
         bool executePickPlaceMotion( std::vector<std::string> frame_array, std::string marker_frame_id );
 
-        void fixPitchRoll(tf::Transform& pose, double pitch, double roll);
+        void fixPitchRoll( tf::Transform& pose, double pitch, double roll );
+
+        bool executePickPlaceMotion( std::string target_frame, bool is_pick );
+
+        void updateRobotStateTf( std::vector<double> tf_input);
 
     private:
         // ros stuffs
@@ -68,6 +72,7 @@ class HanWhaArmWorkcellManager{
 
         // Task Stuffs
         std::thread dispenser_task_execution_thread_;
+        std::thread robot_state_pub_thread_;
         rmf_msgs::DispenserRequest dispenser_curr_task_;
         std::map<std::string, std::string> map_req_hanwha_itemid_;
 
@@ -75,7 +80,9 @@ class HanWhaArmWorkcellManager{
         HanWhaArmController arm_controller_;
         FiducialMarkersHandler markers_detector_;
         rmf_adapter::DispenserWorkcellAdapter workcell_adapter_;
-        
+
+        // update robot state TF 
+        tf::TransformBroadcaster tf_broadcaster_;  
 };
 
 } //end namespace

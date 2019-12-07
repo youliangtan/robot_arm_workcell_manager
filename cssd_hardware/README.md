@@ -1,31 +1,47 @@
 
 # Cssd_Hardware (RAWM)
-This package is to bring up all dependent codes/packages to spawn up the hardware. (RAWM, robot arm, camera....). The test here is mainly on UR10e.  PLEASE KEEP YOUR HANDS ON THE BIG RED BUTTON!
+This package is to bring up all dependent codes/packages to spawn up the hardware. (RAWM, robot arm, camera....). The test here is mainly on UR10e.  
+PLEASE KEEP YOUR HANDS ON THE BIG RED BUTTON!
 
 **For now, to test on hardware, user will need to switch the topic in `` **
 
 ## Prerequisites
- - Intel Realsense, install from [here](https://github.com/IntelRealSense/realsense-ros)
- - UR_modern_driver: [ur_modern_driver with e series](https://github.com/AdmiralWall/ur_modern_driver/tree/kinetic_ur_5_4), `kinectic_ur_5_4` branch
+ * Intel Realsense, install from [here](https://github.com/IntelRealSense/realsense-ros)
+ * UR Robot Driver
+  * UR_modern_driver: [ur_modern_driver with e series](https://github.com/AdmiralWall/ur_modern_driver/tree/kinetic_ur_5_4), `kinectic_ur_5_4` branch
+  * or, [`ur_robot_driver`](https://github.com/UniversalRobots/Universal_Robots_ROS_Driver)
+    * Please refer to the README for setup, also the debug process [here](https://github.com/UniversalRobots/Universal_Robots_ROS_Driver/issues/55)
+
 
 ```
 catkin_make --pkg cssd_hardware -j4
 ```
 
-## Launching of single arm
+---
+
+## Launching single UR10e arm
 The Current UR10e robor IP is: `172.16.17.2`. Remember to switch the UR10e pendant to "remote" in order to control the arm via ROS. 
 
 Then launch 'single_arm launch'. This bringup will spawn all required nodes: driver, RAWM, MoveIt, RVIZ, realsense cam:
 ```
 roslaunch cssd_hardware single_arm.launch
 ```
+or.... with the new `ur_robot_driver`
+```
+roslaunch cssd_hardware single_arm_new.launch
+```
 
 After bringup, send a `dispenserRequest` to move the arm
-```
-rostopic pub /cssd_workcell/dispenser_request rmf_msgs/DispenserRequest '{request_id: 0xx03, dispenser_name: ur10e_001, items:[{item_type: marker_1, quantity: 1, compartment_name: 'marker_100'}] }' --once
+```bash
+rostopic pub /cssd_workcell/dispenser_request rmf_msgs/DispenserRequest \
+'{request_guid: 0xx03, target_guid: ur10e_001, items:[{item_type: marker_1, quantity: 1, compartment_name: 'marker_102'}] }' --once
+# second request
+rostopic pub /cssd_workcell/dispenser_request rmf_msgs/DispenserRequest \
+'{request_guid: 0xx03, target_guid: ur10e_001, items:[{item_type: marker_3, quantity: 1, compartment_name: 'marker_103'}] }' --once
 ```
 
 Again, PLEASE KEEP YOUR HANDS ON THE BIG RED BUTTON! :fire:
+
 
 ## Launching of two arms
 **Not Yet Ready :frowning_man:**
@@ -36,19 +52,23 @@ Again, PLEASE KEEP YOUR HANDS ON THE BIG RED BUTTON! :fire:
 roslaunch cssd_hardware two_arm.launch
 ```
 
+---
+
 ## Launching single HanWha arm
 
 Connect to the right IP and the copy the `hanwha_script` to the hanwha pendant. To run HanWha Arm workcell with RMF:
-```
+```bash
 roslaunch robot_arm_workcell_manager hanwha_arm_workcell_manager.launch
+# run rviz on a seperate terminal 
+rviz -f base_link
 ```
 
-Publish sample `DispenserRequest`s...
+Publish sample `DispenserRequest`...
 ```bash
-rostopic pub /cssd_workcell/dispenser_request rmf_msgs/DispenserRequest '{request_guid: 0xx01, target_guid: hanwha_001, items:[{item_type: marker_1, quantity: 1, compartment_name: 'marker_101'}] }' --once
-## second request
-rostopic pub /cssd_workcell/dispenser_request rmf_msgs/DispenserRequest '{request_guid: 0xx02, target_guid: hanwha_001, items:[{item_type: marker_2, quantity: 1, compartment_name: 'marker_100'}] }' --once
+rostopic pub /cssd_workcell/dispenser_request rmf_msgs/DispenserRequest '{request_guid: 0xx01, target_guid: hanwha_001 }' --once
 ```
+
+---
 
 ## Notes
 

@@ -26,5 +26,10 @@ named_target:
   ur10e_001_transporter_low:    {type: "joint_space_goal", values: [-3.1, -0.755, 2.322, -1.518, 0.5352, -0.01522],   velFactor: 0.2}
   # ur10e_001_transporter_low:    {type: "joint_space_goal", values: [-3.3, -0.6,1.9,-1.25,-0.3, -0.05],   velFactor: 0.2}
 
-  ur10e_001_transporter_scan:    {type: "joint_space_goal", values: [-3.1, -0.72, 2.42, -1.62, 0.5352, -0.05],   velFactor: 0.2}
-  ur10e_001_transporter_scan_left:  {type: "joint_space_goal", values: [-3.0, -0.51, 2.42, -1.8, 0.2, -0.09],   velFactor: 0.2}
+  # used in hardware new setup
+  ur10e_001_transporter_scan:    {type: "joint_space_goal", values: [-1.980757, -0.65237, 2.45850, -1.81377, 1.41991, 0.0427],   velFactor: 0.2}
+  ur10e_001_transporter_scan_left:  {type: "joint_space_goal", values: [-1.98, -0.65237, 2.4585, -1.81377, 0.837, 0.04274],   velFactor: 0.2}
+  
+  # used in gazebo
+  # ur10e_001_transporter_scan:    {type: "joint_space_goal", values: [-3.1, -0.72, 2.42, -1.62, 0.5352, -0.05],   velFactor: 0.2}
+  # ur10e_001_transporter_scan_left:  {type: "joint_space_goal", values: [-3.0, -0.51, 2.42, -1.8, 0.2, -0.09],   velFactor: 0.2}
