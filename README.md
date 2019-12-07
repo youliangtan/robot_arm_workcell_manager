@@ -16,7 +16,13 @@ Now with namespace support! Enabling two (or more!) arms to perform a choreograp
 
 _Note that this package work together with ros2: `cssd_workcell_manger`, refer to [here](https://github.com/sharp-rmf/rmf-workcell)_
 
-**Active in Development!!!**
+## Table of Contents
+
+ * [Getting Started](#Getting-Started)
+ * [Run RAWM with Gazebo](#Run-RAWM-with-Gazebo)
+ * [Run on Hardware (UR10e and HanWha)](#run-on-hardware-ur10e-and-hanwha)
+ * [Testing on submodules and lib](#Testing-on-submodules-and-lib)
+ * [Notes](#Notes)
 
 ![alt text](/documentations/two_arms_dance.gif?)
 
@@ -29,16 +35,6 @@ _Note that this package work together with ros2: `cssd_workcell_manger`, refer t
 *Full Video Link* (with two arms in room, almost success), [here](https://drive.google.com/file/d/1I7fnKHWII3_Oqg1UsoMj7hg-b29AKzg7/view?usp=sharing)
 
 *Full Video Link* (with one actual arm running in room), [here](https://drive.google.com/file/d/1Yw2kzTtNThzD650f3JLyPJFsCgmVH7TQ/view)
-
----
-
-## Table of Contents
-
- * [Getting Started](##Getting-Started)
- * [Run RAWM with Gazebo](##Run-RAWM-with-Gazebo)
- * [Run on Hardware (UR10e and HanWha)](##Run-on-Hardware-(UR10e-and-HanWha))
- * [Testing on submodules and lib](##Testing-on-submodules-and-lib)
- * [Notes](##Notes)
 
 ---
 
