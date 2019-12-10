@@ -14,8 +14,8 @@ namespace rmf_adapter
 DispenserWorkcellAdapter::DispenserWorkcellAdapter(): nh_("~"){
 
     dispenser_request_sub_ = nh_.subscribe ("/cssd_workcell/dispenser_request", 10 ,&DispenserWorkcellAdapter::dispenserRequestCallback,this);
-    dispenser_state_pub_   = nh_.advertise<rmf_msgs::DispenserState>("/cssd_workcell/dispenser_state", 10);
-    dispenser_result_pub_  = nh_.advertise<rmf_msgs::DispenserResult>("/cssd_workcell/dispenser_result", 10);
+    dispenser_state_pub_   = nh_.advertise<rmf_dispenser_msgs::DispenserState>("/cssd_workcell/dispenser_state", 10);
+    dispenser_result_pub_  = nh_.advertise<rmf_dispenser_msgs::DispenserResult>("/cssd_workcell/dispenser_result", 10);
 
     dispenser_pub_rate_ = 0.5; // default
     dispenser_name_ = "ur10_001"; // default
@@ -38,7 +38,7 @@ void DispenserWorkcellAdapter::setDispenserParams(std::string dispenser_name, do
 }
 
 
-void DispenserWorkcellAdapter::dispenserRequestCallback(const rmf_msgs::DispenserRequestConstPtr& _msg){
+void DispenserWorkcellAdapter::dispenserRequestCallback(const rmf_dispenser_msgs::DispenserRequestConstPtr& _msg){
     
     ROS_INFO(" \n ------- [Robot: %s] Received 1 Job request with id: %s ---------\n", 
             dispenser_name_.c_str(), _msg->request_guid.c_str() );
@@ -73,7 +73,7 @@ void DispenserWorkcellAdapter::dispenserRequestCallback(const rmf_msgs::Dispense
     
     // Check dispenser_req queue, if request_guid existed (dulplication)
     std::unique_lock<std::mutex> queue_lock(dispenser_task_queue_mutex_); 
-    for (rmf_msgs::DispenserRequest& task_in_queue : dispenser_task_queue_){
+    for (rmf_dispenser_msgs::DispenserRequest& task_in_queue : dispenser_task_queue_){
         if (_msg->request_guid == task_in_queue.request_guid){
             ROS_ERROR("  [Robot: %s] found duplicate task in queue, updating task.", dispenser_name_.c_str());
             dispenser_task_queue_.erase(dispenser_task_queue_.begin());
@@ -102,7 +102,7 @@ void DispenserWorkcellAdapter::dispenserRequestCallback(const rmf_msgs::Dispense
 
 
 // get curr task from queue
-bool DispenserWorkcellAdapter::getCurrTaskFromQueue(rmf_msgs::DispenserRequest& curr_task){
+bool DispenserWorkcellAdapter::getCurrTaskFromQueue(rmf_dispenser_msgs::DispenserRequest& curr_task){
 
     std::unique_lock<std::mutex> queue_lock(dispenser_task_queue_mutex_, std::defer_lock);
     if (!queue_lock.try_lock())
@@ -111,7 +111,7 @@ bool DispenserWorkcellAdapter::getCurrTaskFromQueue(rmf_msgs::DispenserRequest& 
     // If no more queuing task
     if (dispenser_task_queue_.empty()) {
         dispenser_state_msg_.mode = dispenser_state_msg_.IDLE;
-        rmf_msgs::DispenserRequest empty_request;  // TODO, use a properway
+        rmf_dispenser_msgs::DispenserRequest empty_request;  // TODO, use a properway
         dispenser_curr_task_ = empty_request;
         curr_task = empty_request;
         return false;

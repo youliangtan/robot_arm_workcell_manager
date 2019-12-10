@@ -33,10 +33,11 @@
   
   <depend>aruco_detect</depend>
   <depend>fiducial_msgs</depend>
-  <depend>rmf_msgs</depend>
-  <depend>hanwha_controller</depend>
+
+  <build_depend>hanwha_controller</build_depend>
+  <build_depend>rmf_dispenser_msgs</build_depend>
   
   <buildtool_depend>catkin</buildtool_depend>
-  <buildtool_depend>rmf_msgs</buildtool_depend>
+  <buildtool_depend>rmf_dispenser_msgs</buildtool_depend>
 
 </package>

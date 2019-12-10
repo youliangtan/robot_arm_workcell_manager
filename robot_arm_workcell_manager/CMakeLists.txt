@@ -25,7 +25,7 @@ find_package(catkin REQUIRED COMPONENTS
   moveit_ros_move_group
   fiducial_msgs
   aruco_detect
-  rmf_msgs
+  rmf_dispenser_msgs
   hanwha_controller
 )
 

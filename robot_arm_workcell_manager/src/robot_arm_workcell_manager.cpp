@@ -169,7 +169,7 @@ bool RobotArmWorkcellManager::executeRobotArmMission(){
     
     bool motion_is_success;
     std::vector<tf::Transform *> tf_array;
-    rmf_msgs::DispenserRequestItem requested_item = dispenser_curr_task_.items[0] ;
+    rmf_dispenser_msgs::DispenserRequestItem requested_item = dispenser_curr_task_.items[0] ;
     tf::Transform *marker_transform (new tf::Transform);
 
     // FOR NOW, TODO: No hard coding
@@ -189,13 +189,13 @@ bool RobotArmWorkcellManager::executeRobotArmMission(){
     // arm_controller_.setPlanningConstraints(planning_constraints);
 
     // Lookup for target marker at different Rack Level (0, 1, 2...)
-    for (int rack_level=0; !markers_detector_.getTransformPose( "base_link", requested_item.item_type) ; rack_level++ ){
+    for (int rack_level=0; !markers_detector_.getTransformPose( "base_link", requested_item.type_guid) ; rack_level++ ){
         ROS_WARN("Going to rack level: %s ", std::to_string(rack_level).c_str() );
         if (! arm_controller_.moveToNamedTarget( dispenser_name_ + "_rack_level_" + std::to_string(rack_level)) ) return false;
     }
 
-    // picking, e.g: requested_item.item_type = "marker_X" 
-    if (! executePickPlaceMotion(picking_frame_array , requested_item.item_type ) ) return false;
+    // picking, e.g: requested_item.type_guid = "marker_X" 
+    if (! executePickPlaceMotion(picking_frame_array , requested_item.type_guid ) ) return false;
     
     // home position facing rack
     if (! arm_controller_.moveToNamedTarget(dispenser_name_ + "_rack_home_position") ) return false;
