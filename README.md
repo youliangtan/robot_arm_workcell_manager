@@ -63,7 +63,7 @@ sudo apt-get install ros-melodic-aruco-detect ros-melodic-fiducial-msgs
 ```
 - realsense_gazebo_plugin
 - realsense-ros (for hardware)
-- rmf_msgs_ros1: [here](https://github.com/RMFHOPE/rmf_msgs_ros1)
+- rmf_msgs_ros1: [here](https://github.com/sharp-rmf/rmf_msgs_ros1)
 - CSSD_workcell_manager (ROS2): [Here](https://github.com/sharp-rmf/rmf-workcell) please check if there's a new branch
 
 ### Make and Build
