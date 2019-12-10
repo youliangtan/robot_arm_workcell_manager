@@ -36,7 +36,7 @@ _Note that this package work together with ros2: `cssd_workcell_manger`, refer t
 
  * [Getting Started](##Getting-Started)
  * [Run RAWM with Gazebo](##Run-RAWM-with-Gazebo)
- * [Run on Hardware (UR10e and HanWha)](##Run-on-Hardware-(UR10e-and-HanWha))
+ * [Run on Hardware (UR10e and HanWha)](##Run-on-Hardware-UR10e-and-HanWha)
  * [Testing on submodules and lib](##Testing-on-submodules-and-lib)
  * [Notes](##Notes)
 
@@ -62,9 +62,9 @@ sudo apt-get upgrade gazebo9*
 sudo apt-get install ros-melodic-aruco-detect ros-melodic-fiducial-msgs
 ```
 - realsense_gazebo_plugin
-- realsense-ros (for hardware)  
+- realsense-ros (for hardware)
 - rmf_msgs_ros1: [here](https://github.com/RMFHOPE/rmf_msgs_ros1)
-- CSSD_workcell_manager (ROS2): [Here](https://github.com/sharp-rmf/rmf-workcell/tree/cssd_workcell/cssd_workcell_manager) Not Necessary
+- CSSD_workcell_manager (ROS2): [Here](https://github.com/sharp-rmf/rmf-workcell) please check if there's a new branch
 
 ### Make and Build
 ```bash
@@ -220,7 +220,8 @@ roslaunch robot_arm_workcell_manager robot_arm_workcell_manager.launch
 ### Debuging process
 - Jittering Problem during picking up of tray with Eef:  use `velocity_controllers` instead of `position_controller`
 - MoveIt Namespace issue: In `robot_arm_controller.cpp` there's a declaration of namespace in for the movegroup by `ros::NodeHandle moveit_nh(arm_namespace_)`
-- `GOAL_TOLERANCE_VIOLATED` error code in action server: As mentioned in [here](https://github.com/ros-planning/moveit/issues/1475#issuecomment-504364419), move group setTolerance is not working here. Will need to manually change it in `ur_velocity/position_controller.yaml`. This is the input param for `ros_control/joint_trajectory_controller` during spawn
+- `GOAL_TOLERANCE_VIOLATED` error code in action server: As mentioned in [here](https://github.com/ros-planning/moveit/issues/1475#issuecomment-504364419), 
+move group setTolerance is not working here. Will need to manually change it in `ur_velocity/position_controller.yaml`. This is the input param for `ros_control/joint_trajectory_controller` during spawn
 - Joint IK flip issue while placing to ``marker_103` : Tried switch the planner from `ompl` to `stomp` (in `planning_context.launch`), still not able to fully solve the issue.
 - Gazebo9 `Try_init` & sdf error.
 ```
