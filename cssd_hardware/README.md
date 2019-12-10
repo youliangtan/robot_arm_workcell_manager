@@ -6,8 +6,12 @@ PLEASE KEEP YOUR HANDS ON THE BIG RED BUTTON!
 **For now, to test on hardware, user will need to switch the topic in `` **
 
 ## Prerequisites
- - Intel Realsense, install from [here](https://github.com/IntelRealSense/realsense-ros)
- - UR_modern_driver: [ur_modern_driver with e series](https://github.com/AdmiralWall/ur_modern_driver/tree/kinetic_ur_5_4), `kinectic_ur_5_4` branch
+ * Intel Realsense, install from [here](https://github.com/IntelRealSense/realsense-ros)
+ * UR Robot Driver
+  * UR_modern_driver: [ur_modern_driver with e series](https://github.com/AdmiralWall/ur_modern_driver/tree/kinetic_ur_5_4), `kinectic_ur_5_4` branch
+  * or, [`ur_robot_driver`](https://github.com/UniversalRobots/Universal_Robots_ROS_Driver)
+    * Please refer to the README for setup, also the debug process [here](https://github.com/UniversalRobots/Universal_Robots_ROS_Driver/issues/55)
+
 
 ```
 catkin_make --pkg cssd_hardware -j4
@@ -22,6 +26,10 @@ Then launch 'single_arm launch'. This bringup will spawn all required nodes: dri
 ```
 roslaunch cssd_hardware single_arm.launch
 ```
+or.... with the new `ur_robot_driver`
+```
+roslaunch cssd_hardware single_arm_new.launch
+```
 
 After bringup, send a `dispenserRequest` to move the arm
 ```bash
@@ -33,6 +41,7 @@ rostopic pub /cssd_workcell/dispenser_request rmf_msgs/DispenserRequest \
 ```
 
 Again, PLEASE KEEP YOUR HANDS ON THE BIG RED BUTTON! :fire:
+
 
 ## Launching of two arms
 **Not Yet Ready :frowning_man:**
