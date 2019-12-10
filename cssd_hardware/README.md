@@ -65,7 +65,7 @@ rviz -f base_link
 
 Publish sample `DispenserRequest`...
 ```bash
-rostopic pub /cssd_workcell/dispenser_request rmf_dispenser_msgs/DispenserRequest '{request_guid: 0xx01, target_guid: hanwha_001 }' --once
+rostopic pub /cssd_workcell/dispenser_requests rmf_dispenser_msgs/DispenserRequest '{request_guid: 0xx01, target_guid: hanwha_001 }' --once
 ```
 
 ---
