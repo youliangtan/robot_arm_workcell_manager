@@ -13,9 +13,9 @@ namespace rmf_adapter
 
 DispenserWorkcellAdapter::DispenserWorkcellAdapter(): nh_("~"){
 
-    dispenser_request_sub_ = nh_.subscribe ("/cssd_workcell/dispenser_request", 10 ,&DispenserWorkcellAdapter::dispenserRequestCallback,this);
-    dispenser_state_pub_   = nh_.advertise<rmf_dispenser_msgs::DispenserState>("/cssd_workcell/dispenser_state", 10);
-    dispenser_result_pub_  = nh_.advertise<rmf_dispenser_msgs::DispenserResult>("/cssd_workcell/dispenser_result", 10);
+    dispenser_request_sub_ = nh_.subscribe ("/cssd_workcell/dispenser_requests", 10 ,&DispenserWorkcellAdapter::dispenserRequestCallback,this);
+    dispenser_state_pub_   = nh_.advertise<rmf_dispenser_msgs::DispenserState>("/cssd_workcell/dispenser_states", 10);
+    dispenser_result_pub_  = nh_.advertise<rmf_dispenser_msgs::DispenserResult>("/cssd_workcell/dispenser_results", 10);
 
     dispenser_pub_rate_ = 0.5; // default
     dispenser_name_ = "ur10_001"; // default

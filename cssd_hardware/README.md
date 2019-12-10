@@ -33,11 +33,11 @@ roslaunch cssd_hardware single_arm_new.launch
 
 After bringup, send a `dispenserRequest` to move the arm
 ```bash
-rostopic pub /cssd_workcell/dispenser_request rmf_msgs/DispenserRequest \
-'{request_guid: 0xx03, target_guid: ur10e_001, items:[{item_type: marker_1, quantity: 1, compartment_name: 'marker_102'}] }' --once
+rostopic pub /cssd_workcell/dispenser_requests rmf_dispenser_msgs/DispenserRequest \
+'{request_guid: 0xx03, target_guid: ur10e_001, items:[{type_guid: marker_1, quantity: 1, compartment_name: 'marker_102'}] }' --once
 # second request
-rostopic pub /cssd_workcell/dispenser_request rmf_msgs/DispenserRequest \
-'{request_guid: 0xx03, target_guid: ur10e_001, items:[{item_type: marker_3, quantity: 1, compartment_name: 'marker_103'}] }' --once
+rostopic pub /cssd_workcell/dispenser_requests rmf_dispenser_msgs/DispenserRequest \
+'{request_guid: 0xx03, target_guid: ur10e_001, items:[{type_guid: marker_3, quantity: 1, compartment_name: 'marker_103'}] }' --once
 ```
 
 Again, PLEASE KEEP YOUR HANDS ON THE BIG RED BUTTON! :fire:
@@ -65,7 +65,7 @@ rviz -f base_link
 
 Publish sample `DispenserRequest`...
 ```bash
-rostopic pub /cssd_workcell/dispenser_request rmf_msgs/DispenserRequest '{request_guid: 0xx01, target_guid: hanwha_001 }' --once
+rostopic pub /cssd_workcell/dispenser_request rmf_dispenser_msgs/DispenserRequest '{request_guid: 0xx01, target_guid: hanwha_001 }' --once
 ```
 
 ---
