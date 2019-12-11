@@ -47,6 +47,7 @@ catkin_package(
     tf2_geometry_msgs
     gazebo_ros
     geometry_msgs
+    rmf_dispenser_msgs
   DEPENDS
     EIGEN3
     gazebo

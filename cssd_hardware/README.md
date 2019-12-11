@@ -3,8 +3,6 @@
 This package is to bring up all dependent codes/packages to spawn up the hardware. (RAWM, robot arm, camera....). The test here is mainly on UR10e.  
 PLEASE KEEP YOUR HANDS ON THE BIG RED BUTTON!
 
-**For now, to test on hardware, user will need to switch the topic in `` **
-
 ## Prerequisites
  * Intel Realsense, install from [here](https://github.com/IntelRealSense/realsense-ros)
  * UR Robot Driver
