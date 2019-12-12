@@ -58,9 +58,9 @@ sudo apt-get upgrade gazebo9*
 sudo apt-get install ros-melodic-aruco-detect ros-melodic-fiducial-msgs
 ```
 - realsense_gazebo_plugin
-- realsense-ros (for hardware)  
-- rmf_msgs: [here](https://github.com/RMFHOPE/rmf_msgs_ros1), **Phasing Out Soon
-- CSSD_workcell_manager (ROS2): [Here](https://github.com/sharp-rmf/rmf-workcell/tree/cssd_workcell/cssd_workcell_manager) Not Necessary
+- realsense-ros (for hardware)
+- rmf_msgs_ros1: [here](https://github.com/sharp-rmf/rmf_msgs_ros1)
+- CSSD_workcell_manager (ROS2): [Here](https://github.com/sharp-rmf/rmf-workcell) please check if there's a new branch
 
 ### Make and Build
 ```bash
@@ -113,21 +113,21 @@ Each request will execute one pick and place task. Intotal, 4 requests will be s
 *Request Task to UR10 arm!* 🤖
 
 ```bash
-rostopic pub /cssd_workcell/dispenser_request rmf_msgs/DispenserRequest \
-'{request_guid: 0xx01, target_guid: ur10_001, items:[{item_type: marker_1, quantity: 1, compartment_name: 'marker_101'}] }' --once
+rostopic pub /cssd_workcell/dispenser_requests rmf_dispenser_msgs/DispenserRequest \
+'{request_guid: 0xx01, target_guid: ur10_001, items:[{type_guid: marker_1, quantity: 1, compartment_name: 'marker_101'}] }' --once
 ## second request
-rostopic pub /cssd_workcell/dispenser_request rmf_msgs/DispenserRequest \
-'{request_guid: 0xx02, target_guid: ur10_001, items:[{item_type: marker_2, quantity: 1, compartment_name: 'marker_100'}] }' --once
+rostopic pub /cssd_workcell/dispenser_requests rmf_dispenser_msgs/DispenserRequest \
+'{request_guid: 0xx02, target_guid: ur10_001, items:[{type_guid: marker_2, quantity: 1, compartment_name: 'marker_100'}] }' --once
 ```
 
 *Request Task to UR10e arm!* 🤖
 
 ```bash
-rostopic pub /cssd_workcell/dispenser_request rmf_msgs/DispenserRequest \
-'{request_guid: 0xx03, target_guid: ur10e_001, items:[{item_type: marker_0, quantity: 1, compartment_name: 'marker_102'}] }' --once
-## second request (IK Flip issue TOBEFIX)
-rostopic pub /cssd_workcell/dispenser_request rmf_msgs/DispenserRequest \
-'{request_guid: 0xx04, target_guid: ur10e_001, items:[{item_type: marker_4, quantity: 1, compartment_name: 'marker_103'}] }' --once
+rostopic pub /cssd_workcell/dispenser_requests rmf_dispenser_msgs/DispenserRequest \
+'{request_guid: 0xx03, target_guid: ur10e_001, items:[{type_guid: marker_0, quantity: 1, compartment_name: 'marker_102'}] }' --once
+## second request
+rostopic pub /cssd_workcell/dispenser_requests rmf_dispenser_msgs/DispenserRequest \
+'{request_guid: 0xx04, target_guid: ur10e_001, items:[{type_guid: marker_4, quantity: 1, compartment_name: 'marker_103'}] }' --once
 ```
 
 By now, the robot dispenser will execute the task according to the `DispenserRequest`. GoodLuck!!
@@ -205,7 +205,7 @@ roslaunch robot_arm_workcell_manager robot_arm_workcell_manager.launch
 - construction of extended TFs from the detected marker is configured in `extended_tf.yaml`
 - Camera should be calibrated, and intrinsic params should be written here: `/config/usb_cam.yaml`
 - Dispenser req will be received by RAWM, id: with convention of `marker_{$fiducial_id}`
-- Use Ros_bridge/SOSS to link ros1 msg to ros2, eventually communicates with a ``cssd_workcell_manager`, via [ros_bridge](https://github.com/RMFHOPE/rmf_msgs)
+- Use Ros_bridge/SOSS to link ros1 msg to ros2, eventually communicates with a ``cssd_workcell_manager`, via [ros_bridge](https://github.com/RMFHOPE/rmf_dispenser_msgs)
 - Tune all relevant param for RAWM in `robot_arm_workcell_manager.launch`, including `robot_id` and `transporter_placement`
 - To check out `tf_tree` and `rqt_graph`, go to `documentations` folder
 - To add more arms: expand `cssd_gazebo two_arms.launch`, `two_arms_rviz.launch`, `two_arms_rawm.launch`
@@ -216,7 +216,8 @@ roslaunch robot_arm_workcell_manager robot_arm_workcell_manager.launch
 ### Debuging process
 - Jittering Problem during picking up of tray with Eef:  use `velocity_controllers` instead of `position_controller`
 - MoveIt Namespace issue: In `robot_arm_controller.cpp` there's a declaration of namespace in for the movegroup by `ros::NodeHandle moveit_nh(arm_namespace_)`
-- `GOAL_TOLERANCE_VIOLATED` error code in action server: As mentioned in [here](https://github.com/ros-planning/moveit/issues/1475#issuecomment-504364419), move group setTolerance is not working here. Will need to manually change it in `ur_velocity/position_controller.yaml`. This is the input param for `ros_control/joint_trajectory_controller` during spawn
+- `GOAL_TOLERANCE_VIOLATED` error code in action server: As mentioned in [here](https://github.com/ros-planning/moveit/issues/1475#issuecomment-504364419), 
+move group setTolerance is not working here. Will need to manually change it in `ur_velocity/position_controller.yaml`. This is the input param for `ros_control/joint_trajectory_controller` during spawn
 - Joint IK flip issue while placing to ``marker_103` : Tried switch the planner from `ompl` to `stomp` (in `planning_context.launch`), still not able to fully solve the issue.
 - Gazebo9 `Try_init` & sdf error.
 ```

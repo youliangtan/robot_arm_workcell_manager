@@ -23,9 +23,9 @@
 #include <ros/console.h>
 
 // rmf dependencies
-#include <rmf_msgs/DispenserRequest.h>
-#include <rmf_msgs/DispenserState.h>
-#include <rmf_msgs/DispenserResult.h>
+#include <rmf_dispenser_msgs/DispenserRequest.h>
+#include <rmf_dispenser_msgs/DispenserState.h>
+#include <rmf_dispenser_msgs/DispenserResult.h>
 
 namespace rmf_adapter
 {
@@ -41,13 +41,13 @@ class DispenserWorkcellAdapter{
         void setDispenserParams(std::string dispenser_name, double state_pub_rate );
 
         // Get the latest task from queue
-        bool getCurrTaskFromQueue(rmf_msgs::DispenserRequest& curr_task);
+        bool getCurrTaskFromQueue(rmf_dispenser_msgs::DispenserRequest& curr_task);
 
         // Set result of the requested task after the end
         bool setCurrTaskResult(bool mission_success);
 
     protected:
-        void dispenserRequestCallback(const rmf_msgs::DispenserRequestConstPtr& msg);
+        void dispenserRequestCallback(const rmf_dispenser_msgs::DispenserRequestConstPtr& msg);
 
         void dispenserStateThread();
 
@@ -63,10 +63,10 @@ class DispenserWorkcellAdapter{
         std::mutex dispenser_task_queue_mutex_;
 
         // Task Stuffs
-        std::deque<rmf_msgs::DispenserRequest> dispenser_task_queue_;
-        rmf_msgs::DispenserRequest dispenser_curr_task_;
-        rmf_msgs::DispenserResult dispenser_result_msg_;
-        rmf_msgs::DispenserState dispenser_state_msg_;
+        std::deque<rmf_dispenser_msgs::DispenserRequest> dispenser_task_queue_;
+        rmf_dispenser_msgs::DispenserRequest dispenser_curr_task_;
+        rmf_dispenser_msgs::DispenserResult dispenser_result_msg_;
+        rmf_dispenser_msgs::DispenserState dispenser_state_msg_;
         std::unordered_map<std::string, bool> dispenser_completed_request_guids_;
 
         // ros stuffs
