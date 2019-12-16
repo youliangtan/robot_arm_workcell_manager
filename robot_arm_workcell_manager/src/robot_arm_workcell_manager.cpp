@@ -138,7 +138,8 @@ bool RobotArmWorkcellManager::executePickPlaceMotion( std::vector<std::string> f
         _eef_target_pose = new geometry_msgs::Pose;
         tf::poseTFToMsg(*tf, *_eef_target_pose);
         ROS_INFO(" **Executing Pick Place Motion**  tf_frame: %s ", frame_array.at(idx).c_str());
-        if (! arm_controller_.moveToEefTarget(*_eef_target_pose, 0.1) ) return false;  //TODO: all vel factor is in config file, or rosparam
+        if (! arm_controller_.moveToEefTarget(*_eef_target_pose, 0.05) ) 
+            return false;
         std::this_thread::sleep_for (std::chrono::seconds(motion_pause_time_));
         idx++;
     }
