@@ -43,6 +43,7 @@ do {
     var scanPosename, bufferString, currentPosename = "";
     var theta, m_v, m_a, opts = 0;
     var initRepeatFlag = true;
+    var idleFlag = true;
 
     function beforeStart() {
       initRepeatFlag = false;
@@ -132,6 +133,7 @@ do {
 					current_POSE=getCurrentPose('tcp');
 				}	while(!poses_Same(current_POSE,target_POSE));
 				message("Done Moving");
+				idleFlag=true;
 			}
 		}
 		//Function to feedback over socket communication			
@@ -280,6 +282,25 @@ do {
 					message(tf_flange);
 					socketSendString(SERVER_INFO.NAME, tf_flange);
 					break;
+					
+				default://When robot is idle(i.e. receieves no command aftewr 15 loops), move to OT_Home
+					if(idleFlag==true)
+					{
+						var loopCount=1;
+						idleFlag=false;
+					}
+					
+					if (loopCount>0)
+					{
+						loopCount++;
+					}
+					
+					if (loopCount>15)
+					{
+						moveTo("OT_Home");
+						loopCount=0;
+					}
+					
 			}
 			
     }
