@@ -18,7 +18,7 @@ catkin_make --pkg cssd_hardware -j4
 ---
 
 ## Launching single UR10e arm
-The Current UR10e robor IP is: `172.16.17.2`. Remember to switch the UR10e pendant to "remote" in order to control the arm via ROS. 
+The Current UR10e robor IP is: `169.254.130.33`. Remember to switch the UR10e pendant to "remote" in order to control the arm via ROS. 
 
 Then launch 'single_arm launch'. This bringup will spawn all required nodes: driver, RAWM, MoveIt, RVIZ, realsense cam:
 ```
