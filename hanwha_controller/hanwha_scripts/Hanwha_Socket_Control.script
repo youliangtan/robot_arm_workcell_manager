@@ -1,0 +1,336 @@
+
+/* io setting */
+/* Coordinate setting */
+/* Default TCP Setting */
+setToolCenterPoint({ "x": 0, "y": 0, "z": 0, "rx": 0, "ry": 0, "rz": 0 });
+setPayload(0);
+
+([0]);
+var initLoop = true;
+do {
+  ([0, 0]);
+
+  ([0, 1]);
+  (function SCRIPT996716() {
+
+    /* Global Variables */
+    var SERVER_INFO =
+    {
+      NAME: 'server',
+      IP: '172.16.17.34',
+      PORT: 50000
+    };
+
+    /* io setting */
+    __GLOBAL__.p1 = 0;
+    __GLOBAL__.p2 = 0;
+    /* Coordinate setting */
+
+    //Object containing poses
+
+    var poses = {
+      mir_1: { "x": -135, "y": 880, "z": -220, "rx": 90, "ry": 0, "rz": 180 },
+      mir_2: { "x": 360, "y": 880, "z": -220, "rx": 90, "ry": 0, "rz": 180 },
+      trolley_1: { "x": 900, "y": 96.5, "z": 196.79, "rx": 90, "ry": 0, "rz": 90 },
+      trolley_2: { "x": 455, "y": -825, "z": 179.6, "rx": 90, "ry": 0, "rz": 0 },
+      OT_Home: { "x": 0, "y": 900, "z": 347.98, "rx": 90, "ry": 0, "rz": 180 },
+      x_equals_y: { "x": 670, "y": 670, "z": 347.98, "rx": 90, "ry": 0, "rz": 135 },
+      y_equals_zero: { "x": 900, "y": 0, "z": 347.98, "rx": 90, "ry": 0, "rz": 90 },
+      x_equals_minusy: { "x": 670, "y": -670, "z": 347.98, "rx": 90, "ry": 0, "rz": 135 }
+    };
+
+    var pick_POSE, place_POSE, return_POSE = {};
+    var scanPosename, bufferString, currentPosename = "";
+    var theta, m_v, m_a, opts = 0;
+    var initRepeatFlag = true;
+    var idleFlag = true;
+
+    function beforeStart() {
+      initRepeatFlag = false;
+      /* _CMD[SET321868] _KEY[ae958d77-7] */
+      ([0, 0, 0]);
+      setToolCenterPoint({ "x": 0, "y": -44.5, "z": 272, "rx": 0, "ry": 0, "rz": 0 });
+      setPayload(1.5, { "x": 0, "y": -43.41, "z": 70 });
+
+      /* _CMD[SCRIPT138717] _KEY[42e90404-1] */
+      // $([0, 0, 1]);
+      (function SCRIPT138717() {
+      })();
+      /* $(BEFORE_END) */
+
+      /* Socket Init Functions */
+			//Create Socket
+      socketCreate(SERVER_INFO.NAME, SERVER_INFO.IP, SERVER_INFO.PORT);
+
+      // 	Socket Connect callback
+      socketAddListener(SERVER_INFO.NAME, "connection", function () {
+        message("Connected");
+			});
+
+      // Socket Close callback
+			socketAddListener(SERVER_INFO.NAME, "close", function () {
+				message("Connection Closed");
+				moveTo("OT_Home");
+      });
+			
+			socketOpen(SERVER_INFO.NAME);//Open the socket
+			message("Waiting for connection...");
+		}
+
+    /* Default TCP Setting */
+    setToolCenterPoint({ "x": 0, "y": -44.5, "z": 272, "rx": 0, "ry": 0, "rz": 0 });
+    setPayload(1.5, { "x": 0, "y": -43.41, "z": 70 }); 
+
+    /* -----------------------------------------
+    * Main Program Section
+    ----------------------------------------- */
+    ////Global Functions
+		//Function to compare current and target pose coordinates
+		function poses_Same(current,target){
+			var round_current=createPose(Math.round(current.x),Math.round(current.y),Math.round(current.z),Math.round(current.rx),Math.round(current.ry),Math.round(current.rz));
+						var round_target=createPose(Math.round(target.x),Math.round(target.y),Math.round(target.z),Math.round(target.rx),Math.round(target.ry),Math.round(target.rz));
+			return JSON.stringify(round_current)===JSON.stringify(round_target);
+		}
+		
+		//Function to move to pre-defined poses
+    function moveTo(a) {
+			m_v=200;
+			m_a=1000;
+      if (poses.hasOwnProperty(a)) {
+        var target_poseName = a;
+				message("Target Pose: " + a);
+				var target_POSE=poses[a];
+				var current_POSE= getCurrentPose('tcp');
+				
+				do{ 
+					//Move from current Sector 1 to target Sector 2 or 3
+					if (current_POSE.x<current_POSE.y && target_POSE.x>target_POSE.y  )
+					{
+						message("Moving: Sector 1 to Sector 2/3");
+						moveLinear('tcp', poses.OT_Home, m_v, m_a, 2);
+						moveLinear('tcp', poses.x_equals_y, m_v, m_a, 2);
+						moveLinear('tcp', poses.y_equals_zero, m_v, m_a, 2);
+						current_POSE=getCurrentPose('tcp');
+					}
+					//Move from current Sector 2 to target Sector 1
+					else if (current_POSE.y>0 && current_POSE.x>current_POSE.y && target_POSE.x<target_POSE.y  )
+					{
+						message("Moving: Sector 2 to Sector 1");
+						moveLinear('tcp', poses.x_equals_y, m_v, m_a, 2);
+						moveLinear('tcp', poses.OT_Home, m_v, m_a, 2);
+						current_POSE=getCurrentPose('tcp');
+					}
+					//Move from current Sector 3 to target Sector 1
+					else if (current_POSE.y<0 && Math.abs(current_POSE.y)>current_POSE.x && target_POSE.x<target_POSE.y  )
+					{
+						message("Moving: Sector 3 to Sector 1");
+						moveLinear('tcp', poses.y_equals_zero, m_v, m_a, 2);
+						moveLinear('tcp', poses.x_equals_y, m_v, m_a, 2);
+						current_POSE=getCurrentPose('tcp');
+					}
+					//message("Move within same Sector"); //Move from current to target pose within the same sector
+					moveLinear('tcp', target_POSE, m_v, m_a, 1);
+					current_POSE=getCurrentPose('tcp');
+				}	while(!poses_Same(current_POSE,target_POSE));
+				message("Done Moving");
+				idleFlag=true;
+			}
+		}
+		//Function to feedback over socket communication			
+    function socket_Feedback(a) {
+      var buffer = "";//Clear buffer
+      buffer += a + "\n";
+      socketSendString(SERVER_INFO.NAME, buffer);//Send Response		
+    }
+		//Function to listen to commands over socket communication			
+    function socket_Listen() {
+			var offsets = { 'vert': 150, 'horizon': 35.5 };
+      bufferString = socketReadString(SERVER_INFO.NAME, "(", ")");
+			var buffer = Convert.stringToNumberArray(bufferString, ",", 10);
+			
+			switch (buffer[0]) {
+					case 1://executePlacePose command
+					message(" executePlacePose command received");
+					place_POSE  = createPose((buffer[1]) * 1000, (buffer[2]) * 1000, (buffer[3]) * 1000, Math.r2d(buffer[4]), Math.r2d(buffer[5]), Math.r2d(buffer[6]));
+					message(place_POSE);
+					m_v = buffer[buffer.length - 3];
+					m_a = buffer[buffer.length - 2];
+					opts = buffer[buffer.length - 1];
+					var pre_raise_POSE=getCurrentPose('tcp');
+					
+					//Align rx, ry,rz
+					pre_raise_POSE.rx=place_POSE.rx;
+					pre_raise_POSE.ry=place_POSE.ry;
+					pre_raise_POSE.rz=place_POSE.rz;
+					moveJoint(convertPoseToJoint('tcp',pre_raise_POSE), m_v*0.7, m_a*0.5, opts);
+			
+					//Align height
+					pre_raise_POSE.z=place_POSE.z + offsets.vert+48;
+					moveLinear('tcp', pre_raise_POSE, m_v, m_a, opts);
+					
+					var raise_POSE=getCurrentPose('tcp');
+					theta=Math.d2r(180-raise_POSE.rz);//change from degrees to radians for calculations
+					
+					//Align along x axis					
+					var x_offset=(-offsets.horizon) * Math.sin(-theta); 
+					place_POSE.x += (x_offset); 
+					raise_POSE.x=place_POSE.x;
+
+					//Insert along y axis
+					var y_offset=(offsets.horizon) * Math.cos(-theta); 
+					place_POSE.y +=y_offset; 
+					raise_POSE.y=place_POSE.y;
+					moveLinear('flange', raise_POSE, m_v, m_a, opts);//Move to above placing target
+
+					var above_POSE=getCurrentPose('flange');
+					above_POSE.z-=35;	//Vetical Offset	
+					moveLinear('flange', above_POSE, m_v*0.7, m_a*0.7, opts);	//Lower
+					waitForMoveEnd();
+					setPayload(1.5, { "x": 0, "y": -43.41, "z": 70 });
+
+					var lowered_POSE=getCurrentPose('tcp');
+					lowered_POSE.x=pre_raise_POSE.x;
+					lowered_POSE.y=pre_raise_POSE.y;
+					moveLinear('tcp', lowered_POSE, m_v, m_a, opts);//Retract
+
+					//Return to OT Home
+					moveTo("OT_Home");
+
+					//Feedback to server
+					socket_Feedback(1);
+					
+					break;
+
+					case 2: //executePickPose command
+					message("executePickPose command received");
+					pick_POSE = createPose((buffer[1]) * 1000, (buffer[2]) * 1000, (buffer[3]) * 1000, Math.r2d(buffer[4]), Math.r2d(buffer[5]), Math.r2d(buffer[6]));
+					m_v = buffer[buffer.length - 3];
+					m_a = buffer[buffer.length - 2];
+					opts = buffer[buffer.length - 1];
+					
+					var pre_pick_POSE= getCurrentPose('tcp');
+					
+					theta=Math.d2r(180-pre_pick_POSE.rz);//change from degrees to radians for calculations
+
+					//Align rx, ry,rz
+					pre_pick_POSE.rx=pick_POSE.rx;
+					pre_pick_POSE.ry=pick_POSE.ry;
+					pre_pick_POSE.rz=pick_POSE.rz;
+					moveJoint(convertPoseToJoint('tcp',pre_pick_POSE), m_v*0.7, m_a*0.5, opts);
+										
+					//Align height
+					pre_pick_POSE.z= pick_POSE.z +offsets.vert;
+					moveLinear('tcp', pre_pick_POSE, m_v*0.7, m_a*0.5, opts);
+					
+					return_POSE = getCurrentPose('flange');
+
+					//Align along x axis
+					var x_offset=(-50) * Math.sin(-theta); 
+					pre_pick_POSE.x=pick_POSE.x + x_offset;
+				
+					//Insert along y axis
+					var y_offset=(50) * Math.cos(-theta); 
+					pre_pick_POSE.y=pick_POSE.y + y_offset;
+					moveLinear('flange', pre_pick_POSE, m_v*0.7, m_a*0.5, opts);
+
+					//Lift
+					pre_pick_POSE.z+=offsets.vert;
+					setPayload(6.5, { "x": 0, "y": -43.41, "z": 70 });
+					moveLinear('flange', pre_pick_POSE, m_v*0.7, m_a*0.7, opts);
+
+					//Return to pre-insert pose
+					return_POSE.z=pre_pick_POSE.z
+					moveLinear('flange', return_POSE,m_v*0.7, m_a*0.7, opts);
+
+					//Return to OT Home
+					moveTo("OT_Home");
+
+					//Feedback to server
+					socket_Feedback(1);
+					
+					break;
+
+					case 3://movetoScanPose command 
+					message("movetoScanPose command received");
+					scanPosename = bufferString.split(",")[1];
+
+					//Move to scanPose
+					moveTo(scanPosename);
+
+					//Feedback to server
+					socket_Feedback(1);
+					scanPosename = "";
+					break;
+
+				case 4:// moveJ command
+					message("moveJ command received");
+					socketFlush(SERVER_INFO.NAME);
+					message("moveJoint");
+					var joints = buffer.slice(1, 7);
+					for (var i in joints) {
+						joints[i] * 57.2958;
+					}
+					moveJoint(joints, m_v, m_a, opt);
+					waitForMoveEnd();
+					socket_Feedback(1);
+					break;
+
+				case 5://push_tf_update command
+					buffer = "";
+					//Push tf_flange update
+					var tf_flange = getCurrentPose('flange').x / 1000 + "," + getCurrentPose('flange').y / 1000 + "," + getCurrentPose('flange').z / 1000 + "," + getCurrentPose('flange').rx*0.0174533+ "," + (getCurrentPose('flange').ry)*0.0174533 + "," +(getCurrentPose('flange').rz)*0.0174533+ "\n";
+					message(tf_flange);
+					socketSendString(SERVER_INFO.NAME, tf_flange);
+					break;
+					
+				default://When robot is idle(i.e. receieves no command aftewr 15 loops), move to OT_Home
+					if(idleFlag==true)
+					{
+						var loopCount=1;
+						idleFlag=false;
+					}
+					
+					if (loopCount>0)
+					{
+						loopCount++;
+					}
+					
+					if (loopCount>15)
+					{
+						moveTo("OT_Home");
+						loopCount=0;
+					}
+					
+			}
+			
+    }
+
+    ////Main Loop
+
+    ([0]);
+    var initLoop = true;
+    do {
+      /* _CMD[Initialize] _KEY[a08d1478-3] */
+      ([0, 0]);
+      if (initRepeatFlag) beforeStart();				
+      /* _CMD[Main] _KEY[00796f34-f] */
+      ([0, 1]);
+      (function Main() {
+				moveTo("OT_Home");
+				do {
+          socket_Listen();
+        } while (1);
+
+      })();
+
+    } while (getProgramRepeatFlag());
+    sleep(100);
+
+
+  })();
+  /* $(FIN_ROOT) */
+  if (initLoop) initLoop = false;
+  increaseProgramRepeatCount();
+} while (getProgramRepeatFlag());
+sleep(100);
+
