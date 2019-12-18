@@ -42,9 +42,13 @@ class RobotArmController{
 
         bool moveToNamedTarget(const std::string& _target_name);
 
-        bool moveToJointsTarget(const std::vector<double>& joints_target_values, double vel_factor);
+        bool moveToJointsTarget(const std::vector<double>& joints_target_values,
+                                const double& vel_factor,
+                                const double& acc_factor = 1.0 );
 
-        bool moveToEefTarget(const geometry_msgs::Pose _eef_target_pose, double vel_factor);
+        bool moveToEefTarget(const geometry_msgs::Pose _eef_target_pose,
+                             const double& vel_factor,
+                             const double& acc_factor = 1.0 );
 
         bool setPlanningConstraints(const moveit_msgs::Constraints& constraints );
 

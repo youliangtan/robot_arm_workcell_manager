@@ -194,7 +194,7 @@ bool RobotArmController::moveToNamedTarget(const std::string& _target_name){
         std::vector<double> joints_target = {
             goal_values[0], goal_values[1], goal_values[2], goal_values[3], goal_values[4], goal_values[5]
         };
-        return moveToJointsTarget(joints_target, vel_factor );
+        return moveToJointsTarget(joints_target, vel_factor);
     }
 
     // Eef Pose Goal Mode
@@ -214,9 +214,12 @@ bool RobotArmController::moveToNamedTarget(const std::string& _target_name){
 }
 
 
-bool RobotArmController::moveToJointsTarget(const std::vector<double>& joints_target_values, double vel_factor){
+bool RobotArmController::moveToJointsTarget(const std::vector<double>& joints_target_values, 
+                                            const double& vel_factor,
+                                            const double& acc_factor){
     
     move_group_->setMaxVelocityScalingFactor(vel_factor);
+    move_group_->setMaxAccelerationScalingFactor(acc_factor);
     move_group_->setStartStateToCurrentState();
     move_group_->setJointValueTarget(joints_target_values);
     
@@ -236,14 +239,17 @@ bool RobotArmController::moveToJointsTarget(const std::vector<double>& joints_ta
 }
 
 
-bool RobotArmController::moveToEefTarget(const geometry_msgs::Pose _eef_target_pose, double vel_factor ){
+bool RobotArmController::moveToEefTarget(const geometry_msgs::Pose _eef_target_pose,
+                                        const double& vel_factor,
+                                        const double& acc_factor){
 
     const double jump_threshold = 0.0; //2.0, TODO
-    const double eef_step = 0.02;
+    const double eef_step = 0.005;
     const int attempts_thresh = 3;
 
-    move_group_->setMaxVelocityScalingFactor(vel_factor);
     move_group_->setStartStateToCurrentState();
+    move_group_->setMaxVelocityScalingFactor(vel_factor);
+    move_group_->setMaxAccelerationScalingFactor(acc_factor);
     
     // nonworking due to flipping ='(
     if (false){
