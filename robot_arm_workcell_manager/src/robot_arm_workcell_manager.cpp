@@ -121,7 +121,7 @@ bool RobotArmWorkcellManager::executePickPlaceMotion( std::vector<std::string> f
     if (! markers_detector_.getTransformPose( "base_link", "rescan_pos", target_tf ) ) return false;
     fixPitchRoll(*target_tf, -3.14, 0.0);
     tf::poseTFToMsg(*target_tf, *_eef_target_pose);
-    if (! arm_controller_.moveToEefTarget(*_eef_target_pose, 0.1,0.1) ) return false;
+    if (! arm_controller_.moveToEefTarget(*_eef_target_pose, 0.05,0.05) ) return false;
  
     // Get transform from tf detection, and store in local var
     for (std::string frame : frame_array){
@@ -138,7 +138,7 @@ bool RobotArmWorkcellManager::executePickPlaceMotion( std::vector<std::string> f
         _eef_target_pose = new geometry_msgs::Pose;
         tf::poseTFToMsg(*tf, *_eef_target_pose);
         ROS_INFO(" **Executing Pick Place Motion**  tf_frame: %s ", frame_array.at(idx).c_str());
-        if (! arm_controller_.moveToEefTarget(*_eef_target_pose, 0.1, 0.1) ) 
+        if (! arm_controller_.moveToEefTarget(*_eef_target_pose, 0.05, 0.05) ) 
             return false;
         std::this_thread::sleep_for (std::chrono::milliseconds(motion_pause_time_ms_));
         idx++;
