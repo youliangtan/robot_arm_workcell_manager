@@ -23,8 +23,9 @@
 #include <moveit_msgs/AttachedCollisionObject.h>
 #include <moveit_msgs/CollisionObject.h>
 #include <control_msgs/FollowJointTrajectoryAction.h>
-
 #include <moveit_visual_tools/moveit_visual_tools.h>
+#include <moveit/trajectory_processing/iterative_time_parameterization.h>
+
 #include "geometric_shapes/shapes.h"
 #include "geometric_shapes/mesh_operations.h"
 #include "geometric_shapes/shape_operations.h"
