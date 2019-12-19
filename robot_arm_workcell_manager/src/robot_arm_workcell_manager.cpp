@@ -45,11 +45,11 @@ bool RobotArmWorkcellManager::loadParameters(){
         return false;
     }
 
-    if (nh_.getParam("motion_pause_time", motion_pause_time_)){
-        ROS_INFO(" [PARAM] Got Motion Pause Time param: %d", motion_pause_time_);
+    if (nh_.getParam("motion_pause_time_ms", motion_pause_time_ms_)){
+        ROS_INFO(" [PARAM] Got Motion Pause Time param: %d", motion_pause_time_ms_);
     }
     else{
-        ROS_ERROR(" [PARAM] Failed to get param 'motion_pause_time'");
+        ROS_ERROR(" [PARAM] Failed to get param 'motion_pause_time_ms'");
         return false;
     }
 
@@ -115,13 +115,13 @@ bool RobotArmWorkcellManager::executePickPlaceMotion( std::vector<std::string> f
     if (! markers_detector_.getTransformPose( "base_link", marker_frame_id ) ) return false;
 
     markers_detector_.setTargetMarker(marker_frame_id);
-    std::this_thread::sleep_for (std::chrono::seconds(motion_pause_time_));
+    std::this_thread::sleep_for(std::chrono::milliseconds(motion_pause_time_ms_));
 
     // Reposition to 'rescan_pos' (front of marker), and reupdate  fiducial marker positon, ensures low deviation
     if (! markers_detector_.getTransformPose( "base_link", "rescan_pos", target_tf ) ) return false;
     fixPitchRoll(*target_tf, -3.14, 0.0);
     tf::poseTFToMsg(*target_tf, *_eef_target_pose);
-    if (! arm_controller_.moveToEefTarget(*_eef_target_pose, 0.2) ) return false;
+    if (! arm_controller_.moveToEefTarget(*_eef_target_pose, 1.0) ) return false;
  
     // Get transform from tf detection, and store in local var
     for (std::string frame : frame_array){
@@ -133,14 +133,24 @@ bool RobotArmWorkcellManager::executePickPlaceMotion( std::vector<std::string> f
     markers_detector_.removeTargetMarker();
 
     // Execute all motions in 'frame_array'
-    int idx = 0;
+    int frame_idx = 0;
     for (const auto& tf : _tf_array){
         _eef_target_pose = new geometry_msgs::Pose;
         tf::poseTFToMsg(*tf, *_eef_target_pose);
-        ROS_INFO(" **Executing Pick Place Motion**  tf_frame: %s ", frame_array.at(idx).c_str());
-        if (! arm_controller_.moveToEefTarget(*_eef_target_pose, 0.1) ) return false;  //TODO: all vel factor is in config file, or rosparam
-        std::this_thread::sleep_for (std::chrono::seconds(motion_pause_time_));
-        idx++;
+        ROS_INFO(" **Executing Pick Place Motion**  tf_frame: %s ", frame_array.at(frame_idx).c_str());
+        
+        // When lifting or placing
+        if (frame_idx == 2){
+            if (! arm_controller_.moveToEefTarget(*_eef_target_pose, 0.3) ) 
+                return false;
+        }
+        else{
+            if (! arm_controller_.moveToEefTarget(*_eef_target_pose, 0.8) ) 
+                return false;
+        }
+        
+        std::this_thread::sleep_for (std::chrono::milliseconds(motion_pause_time_ms_));
+        frame_idx++;
     }
 
     return true;

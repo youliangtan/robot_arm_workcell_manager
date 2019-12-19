@@ -194,7 +194,7 @@ bool RobotArmController::moveToNamedTarget(const std::string& _target_name){
         std::vector<double> joints_target = {
             goal_values[0], goal_values[1], goal_values[2], goal_values[3], goal_values[4], goal_values[5]
         };
-        return moveToJointsTarget(joints_target, vel_factor );
+        return moveToJointsTarget(joints_target, vel_factor);
     }
 
     // Eef Pose Goal Mode
@@ -214,9 +214,12 @@ bool RobotArmController::moveToNamedTarget(const std::string& _target_name){
 }
 
 
-bool RobotArmController::moveToJointsTarget(const std::vector<double>& joints_target_values, double vel_factor){
+bool RobotArmController::moveToJointsTarget(const std::vector<double>& joints_target_values, 
+                                            const double& vel_factor,
+                                            const double& acc_factor){
     
     move_group_->setMaxVelocityScalingFactor(vel_factor);
+    move_group_->setMaxAccelerationScalingFactor(acc_factor);
     move_group_->setStartStateToCurrentState();
     move_group_->setJointValueTarget(joints_target_values);
     
@@ -236,16 +239,19 @@ bool RobotArmController::moveToJointsTarget(const std::vector<double>& joints_ta
 }
 
 
-bool RobotArmController::moveToEefTarget(const geometry_msgs::Pose _eef_target_pose, double vel_factor ){
+bool RobotArmController::moveToEefTarget(const geometry_msgs::Pose _eef_target_pose,
+                                        const double& vel_factor,
+                                        const double& acc_factor){
 
     const double jump_threshold = 0.0; //2.0, TODO
-    const double eef_step = 0.02;
+    const double eef_step = 0.005;
     const int attempts_thresh = 3;
 
-    move_group_->setMaxVelocityScalingFactor(vel_factor);
     move_group_->setStartStateToCurrentState();
+    // move_group_->setMaxVelocityScalingFactor(vel_factor);
+    // move_group_->setMaxAccelerationScalingFactor(acc_factor);
     
-    // nonworking due to flipping ='(
+    // TODO: FOR TESTING.... THIS IS NOT IN USED, FOR NOW
     if (false){
         move_group_->setJointValueTarget(_eef_target_pose);
 
@@ -267,17 +273,17 @@ bool RobotArmController::moveToEefTarget(const geometry_msgs::Pose _eef_target_p
         // TODO: now only support cartesian, assume only one waypoint
         std::vector<geometry_msgs::Pose> waypoints;
         waypoints.push_back(_eef_target_pose);
-        moveit_msgs::RobotTrajectory trajectory;
+        moveit_msgs::RobotTrajectory *trajectory (new moveit_msgs::RobotTrajectory);;
 
         double fraction = move_group_->computeCartesianPath(
-            waypoints, eef_step, jump_threshold, trajectory, planning_constraints_);
+            waypoints, eef_step, jump_threshold, *trajectory, planning_constraints_);
         int attempt = 0;
         
         while (fraction != 1.0  ){
             if (attempt < attempts_thresh){
                 ROS_WARN("Planning failed with factor: %f, replanning...", fraction);
                 fraction = move_group_->computeCartesianPath(
-                    waypoints, eef_step, jump_threshold, trajectory, planning_constraints_);
+                    waypoints, eef_step, jump_threshold, *trajectory, planning_constraints_);
                 attempt++;
             }
             else{
@@ -286,7 +292,28 @@ bool RobotArmController::moveToEefTarget(const geometry_msgs::Pose _eef_target_p
             }
         }
 
-        motion_plan_.trajectory_ = trajectory;
+        // time parameterization of traj        
+        for ( int i=0 ; i < ( trajectory->joint_trajectory.points.size() ); i++){
+            
+            // std::cout<< "\n [IN] PREVIOUS TIME : " << trajectory->joint_trajectory.points[3].time_from_start.toSec() << std::endl;
+            double factored_time = trajectory->joint_trajectory.points[i].time_from_start.toSec() / vel_factor;
+            trajectory->joint_trajectory.points[i].time_from_start.fromSec( factored_time) ;
+            // std::cout<< "\n [IN] After Time : " << trajectory->joint_trajectory.points[3].time_from_start.toSec() << std::endl;
+
+            // divide vel with factor
+            for( int j=0; j < trajectory->joint_trajectory.points[i].velocities.size() ; j++ ){
+                trajectory->joint_trajectory.points[i].velocities[j] *= vel_factor;
+            }
+            for( int j=0; j < trajectory->joint_trajectory.points[i].accelerations.size() ; j++ ){
+                trajectory->joint_trajectory.points[i].accelerations[j] *= vel_factor;
+                trajectory->joint_trajectory.points[i].accelerations[j] *= vel_factor;
+            }
+        }
+
+        // TODO: proper time parameterization of traj        
+        // trajectory_processing::IterativeParabolicTimeParameterization::computeTimeStamps( trajectory, 0.3, 0.3)
+
+        motion_plan_.trajectory_ = *trajectory;
         ROS_INFO(" [Arm Controller: %s] Executing Stepped Cartesian path Motion...", arm_namespace_.c_str() );
         // moveArm(motion_plan_);
 

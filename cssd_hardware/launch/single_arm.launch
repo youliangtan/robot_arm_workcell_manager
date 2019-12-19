@@ -2,7 +2,7 @@
 <launch>
    
   <arg name="arm_ns"              default="/" />
-  <arg name="robot_ip"            default="169.254.130.33"/>
+  <arg name="robot_ip"            default="10.233.29.33"/>
   <arg name="arm_type"            default="ur10e"/>
   <arg name="dispenser_name"      default="ur10e_001"/>
 

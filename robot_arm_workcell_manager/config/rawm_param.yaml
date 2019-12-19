@@ -10,4 +10,4 @@ group_name: "manipulator"
 camera_frame_id: "camera" 
 flip_marker: true 
 dispenser_state_pub_rate: 0.5
-motion_pause_time: 1
+motion_pause_time_ms: 100

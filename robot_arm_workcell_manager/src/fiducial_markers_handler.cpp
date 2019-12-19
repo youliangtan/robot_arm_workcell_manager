@@ -128,7 +128,10 @@ bool FiducialMarkersHandler::getTransformPose(std::string target_frame_id, std::
 
     // Check Expiry time, currently 2s 
     ros::Duration diff = ros::Time::now()-stamped_transform.stamp_;
-    if (diff.toSec() > 2 ) return false;   // TODO: ROSParam for this thresh
+    if (diff.toSec() > 3.0 ){
+        ROS_ERROR(" Transform is found, but it's too long before.. time diff is %f ... =(", diff.toSec());
+        return false;   // TODO: ROSParam for this thresh
+    }
 
   	target_transform->setRotation(stamped_transform.getRotation());
   	target_transform->setOrigin(stamped_transform.getOrigin());
