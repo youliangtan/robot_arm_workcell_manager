@@ -37,11 +37,11 @@ var theta, m_v, m_a, opts = 0;
 var initRepeatFlag = true;
 var idleFlag = true;
 
-var EXECUTE_PLACEPOSE_MODE	= 1
-var EXECUTE_PICKPOSE_MODE 	= 2
-var MOVETO_SCANPOSE_MODE 	= 3
-var EXECUTE_MOVEJOINT_MODE 	= 4
-var SEND_TF_UPDATE_MODE 	= 5
+var EXECUTE_PLACEPOSE_MODE	= 1;
+var EXECUTE_PICKPOSE_MODE 	= 2;
+var MOVETO_SCANPOSE_MODE 	= 3;
+var EXECUTE_MOVEJOINT_MODE 	= 4;
+var SEND_TF_UPDATE_MODE 	= 5;
 
 ([0]);
 var initLoop = true;
@@ -203,8 +203,8 @@ do {
 					moveLinear('flange', raise_POSE, m_v, m_a, opts);//Move to above placing target
 
 					var above_POSE = getCurrentPose('flange');
-					above_POSE.z -= 35;	//Vetical Offset	
-					moveLinear('flange', above_POSE, m_v * 0.7, m_a * 0.7, opts);	//Lower
+					above_POSE.z -= 37;	//Vetical Offset	
+					moveLinear('flange', above_POSE, m_v * 0.7, m_a * 0.5, opts);	//Lower
 					waitForMoveEnd();
 					setPayload(1.5, { "x": 0, "y": -43.41, "z": 70 });
 
@@ -247,12 +247,12 @@ do {
 					//Align height
 					pre_pick_POSE.z = pick_POSE.z + offsets.vert;
 					moveLinear('tcp', pre_pick_POSE, m_v * 0.7, m_a * 0.5, opts);
-
 					return_POSE = getCurrentPose('flange');
 
 					//Align along x axis
 					var x_offset = (-50) * Math.sin(-theta);
 					pre_pick_POSE.x = pick_POSE.x + x_offset;
+					moveLinear('flange', pre_pick_POSE, m_v * 0.7, m_a * 0.5, opts);
 
 					//Insert along y axis
 					var y_offset = (50) * Math.cos(-theta);
@@ -262,11 +262,11 @@ do {
 					//Lift
 					pre_pick_POSE.z += offsets.vert;
 					setPayload(6.5, { "x": 0, "y": -43.41, "z": 70 });
-					moveLinear('flange', pre_pick_POSE, m_v * 0.7, m_a * 0.7, opts);
+					moveLinear('flange', pre_pick_POSE, m_v * 0.7, m_a * 0.5, opts);
 
 					//Return to pre-insert pose
 					return_POSE.z = pre_pick_POSE.z
-					moveLinear('flange', return_POSE, m_v * 0.7, m_a * 0.7, opts);
+					moveLinear('flange', return_POSE, m_v * 0.7, m_a * 0.5, opts);
 
 					//Return to OT Home
 					moveTo("OT_Home");
@@ -308,11 +308,11 @@ do {
 					buffer = "";
 					//Push tf_flange update, Degree to Rad
 					var tf_flange = getCurrentPose('flange').x / 1000 + ","
-						+ getCurrentPose('flange').y / 1000 + ","
-						+ getCurrentPose('flange').z / 1000 + ","
-						+ getCurrentPose('flange').rx * 0.0174533 + ","
-						+ (getCurrentPose('flange').ry) * 0.0174533 + ","
-						+ (getCurrentPose('flange').rz) * 0.0174533 + "\n";
+					+ getCurrentPose('flange').y / 1000 + ","
+					+ getCurrentPose('flange').z / 1000 + ","
+					+ Math.d2r(getCurrentPose('flange').rx) + ","
+					+ Math.d2r(getCurrentPose('flange').ry) + ","
+					+ Math.d2r(getCurrentPose('flange').rz) + "\n";
 					message(tf_flange);
 					socketSendString(SERVER_INFO.NAME, tf_flange);
 					break;
@@ -328,7 +328,7 @@ do {
 						loopCount++;
 					}
 
-					if (loopCount > 15) {
+					if (loopCount > 10) {
 						moveTo("OT_Home");
 						loopCount = 0;
 					}
@@ -354,7 +354,7 @@ do {
 			})();
 
 		} while (getProgramRepeatFlag());
-		sleep(100);
+		sleep(10);
 
 
 	})();
@@ -362,4 +362,4 @@ do {
 	if (initLoop) initLoop = false;
 	increaseProgramRepeatCount();
 } while (getProgramRepeatFlag());
-sleep(100);
+sleep(10);
