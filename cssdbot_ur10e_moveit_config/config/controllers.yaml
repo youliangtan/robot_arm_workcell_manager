@@ -1,8 +1,9 @@
 controller_list:
   - name: ""
-    action_ns: follow_joint_trajectory 
-    # ur_robot_driver
-    ## action_ns: scaled_pos_traj_controller/follow_joint_trajectory
+    ## when running: 'ur_modern_driver'
+    # action_ns: follow_joint_trajectory 
+    ## when running: 'ur_robot_driver'
+    action_ns: scaled_pos_traj_controller/follow_joint_trajectory
     type: FollowJointTrajectory
     joints:
       - shoulder_pan_joint

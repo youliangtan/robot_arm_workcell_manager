@@ -25,7 +25,7 @@ find_package(catkin REQUIRED COMPONENTS
   moveit_ros_move_group
   fiducial_msgs
   aruco_detect
-  rmf_msgs
+  rmf_dispenser_msgs
   hanwha_controller
 )
 
@@ -47,6 +47,7 @@ catkin_package(
     tf2_geometry_msgs
     gazebo_ros
     geometry_msgs
+    rmf_dispenser_msgs
   DEPENDS
     EIGEN3
     gazebo

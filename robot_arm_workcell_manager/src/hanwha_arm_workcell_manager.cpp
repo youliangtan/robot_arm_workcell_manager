@@ -20,10 +20,6 @@ HanWhaArmWorkcellManager::HanWhaArmWorkcellManager(): nh_("~"){
 
     dispenser_task_execution_thread_ = std::thread( 
         std::bind(&cssd_workcell::HanWhaArmWorkcellManager::dispenserTaskExecutionThread, this));
-    
-    // TODO: now is Hardcoded! to map picking `request_item_id` to `hanwha_item_id`
-    map_req_hanwha_itemid_["marker_1"] = "item_1";
-    map_req_hanwha_itemid_["marker_2"] = "item_2";
 
     ROS_INFO("HanWhaArmWorkcellManager::HanWhaArmWorkcellManager() completed!! \n");
 }

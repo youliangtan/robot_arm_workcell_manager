@@ -3,8 +3,6 @@
 This package is to bring up all dependent codes/packages to spawn up the hardware. (RAWM, robot arm, camera....). The test here is mainly on UR10e.  
 PLEASE KEEP YOUR HANDS ON THE BIG RED BUTTON!
 
-**For now, to test on hardware, user will need to switch the topic in `` **
-
 ## Prerequisites
  * Intel Realsense, install from [here](https://github.com/IntelRealSense/realsense-ros)
  * UR Robot Driver
@@ -20,7 +18,7 @@ catkin_make --pkg cssd_hardware -j4
 ---
 
 ## Launching single UR10e arm
-The Current UR10e robor IP is: `172.16.17.2`. Remember to switch the UR10e pendant to "remote" in order to control the arm via ROS. 
+The Current UR10e robor IP is: `10.233.29.33`. Remember to switch the UR10e pendant to "remote" in order to control the arm via ROS. 
 
 Then launch 'single_arm launch'. This bringup will spawn all required nodes: driver, RAWM, MoveIt, RVIZ, realsense cam:
 ```
@@ -33,11 +31,11 @@ roslaunch cssd_hardware single_arm_new.launch
 
 After bringup, send a `dispenserRequest` to move the arm
 ```bash
-rostopic pub /cssd_workcell/dispenser_request rmf_msgs/DispenserRequest \
-'{request_guid: 0xx03, target_guid: ur10e_001, items:[{item_type: marker_1, quantity: 1, compartment_name: 'marker_102'}] }' --once
+rostopic pub /cssd_workcell/dispenser_requests rmf_dispenser_msgs/DispenserRequest \
+'{request_guid: 0xx03, target_guid: ur10e_001, items:[{type_guid: marker_1, quantity: 1, compartment_name: 'marker_102'}] }' --once
 # second request
-rostopic pub /cssd_workcell/dispenser_request rmf_msgs/DispenserRequest \
-'{request_guid: 0xx03, target_guid: ur10e_001, items:[{item_type: marker_3, quantity: 1, compartment_name: 'marker_103'}] }' --once
+rostopic pub /cssd_workcell/dispenser_requests rmf_dispenser_msgs/DispenserRequest \
+'{request_guid: 0xx03, target_guid: ur10e_001, items:[{type_guid: marker_3, quantity: 1, compartment_name: 'marker_103'}] }' --once
 ```
 
 Again, PLEASE KEEP YOUR HANDS ON THE BIG RED BUTTON! :fire:
@@ -65,7 +63,7 @@ rviz -f base_link
 
 Publish sample `DispenserRequest`...
 ```bash
-rostopic pub /cssd_workcell/dispenser_request rmf_msgs/DispenserRequest '{request_guid: 0xx01, target_guid: hanwha_001 }' --once
+rostopic pub /cssd_workcell/dispenser_requests rmf_dispenser_msgs/DispenserRequest '{request_guid: 0xx01, target_guid: hanwha_001 }' --once
 ```
 
 ---

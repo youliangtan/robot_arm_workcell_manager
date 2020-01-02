@@ -43,7 +43,7 @@ class RobotArmWorkcellManager{
 
         ~RobotArmWorkcellManager();
 
-        void dispenserRequestCallback(const rmf_msgs::DispenserRequestConstPtr& msg);
+        void dispenserRequestCallback(const rmf_dispenser_msgs::DispenserRequestConstPtr& msg);
 
         // main execution of robot arm motion 
         bool executeRobotArmMission();
@@ -64,11 +64,11 @@ class RobotArmWorkcellManager{
         // ros param
         std::string dispenser_name_;
         double dispenser_pub_rate_;
-        int motion_pause_time_;
+        int motion_pause_time_ms_;
 
         // Task Stuffs
         std::thread dispenser_task_execution_thread_;
-        rmf_msgs::DispenserRequest dispenser_curr_task_;
+        rmf_dispenser_msgs::DispenserRequest dispenser_curr_task_;
 
         // local lib stuffs
         RobotArmController arm_controller_;

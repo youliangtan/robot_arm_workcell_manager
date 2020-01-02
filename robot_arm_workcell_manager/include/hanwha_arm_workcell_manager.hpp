@@ -43,7 +43,7 @@ class HanWhaArmWorkcellManager{
 
         ~HanWhaArmWorkcellManager();
 
-        void dispenserRequestCallback(const rmf_msgs::DispenserRequestConstPtr& msg);
+        void dispenserRequestCallback(const rmf_dispenser_msgs::DispenserRequestConstPtr& msg);
 
         // main execution of robot arm motion 
         bool executeRobotArmMission();
@@ -73,8 +73,7 @@ class HanWhaArmWorkcellManager{
         // Task Stuffs
         std::thread dispenser_task_execution_thread_;
         std::thread robot_state_pub_thread_;
-        rmf_msgs::DispenserRequest dispenser_curr_task_;
-        std::map<std::string, std::string> map_req_hanwha_itemid_;
+        rmf_dispenser_msgs::DispenserRequest dispenser_curr_task_;
 
         // local lib stuffs
         HanWhaArmController arm_controller_;
