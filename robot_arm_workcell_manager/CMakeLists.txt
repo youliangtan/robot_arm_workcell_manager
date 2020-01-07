@@ -64,18 +64,21 @@ include_directories(
 
 add_library( robot_arm_controller src/robot_arm_controller.cpp )
 target_link_libraries(  robot_arm_controller  ${catkin_LIBRARIES} ${YAML_CPP_LIBRARIES} )
+add_dependencies(robot_arm_controller ${catkin_EXPORTED_TARGETS})
 
 add_executable( robot_arm_controller_node src/robot_arm_controller.cpp )
 target_link_libraries(  robot_arm_controller_node  ${catkin_LIBRARIES} ${YAML_CPP_LIBRARIES} )
 
 add_library( fiducial_markers_handler src/fiducial_markers_handler.cpp )
 target_link_libraries( fiducial_markers_handler  ${catkin_LIBRARIES}  ${YAML_CPP_LIBRARIES}  )
+add_dependencies(fiducial_markers_handler ${catkin_EXPORTED_TARGETS})
 
 add_executable( fiducial_markers_handler_node src/fiducial_markers_handler.cpp )
 target_link_libraries( fiducial_markers_handler_node  ${catkin_LIBRARIES}  ${YAML_CPP_LIBRARIES}  )
 
 add_library( dispenser_workcell_adapter src/dispenser_workcell_adapter.cpp )
 target_link_libraries(  dispenser_workcell_adapter  ${catkin_LIBRARIES} )
+add_dependencies(dispenser_workcell_adapter ${catkin_EXPORTED_TARGETS})
 
 add_executable( dispenser_workcell_test src/dispenser_workcell_adapter.cpp )
 target_link_libraries(  dispenser_workcell_test  ${catkin_LIBRARIES} )

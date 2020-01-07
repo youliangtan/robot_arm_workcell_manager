@@ -85,3 +85,12 @@ To purely tryout using moveit on rviz, remember:
 - !!!PLAN BEFORE EXECUTING. SCALE YOUR VELOCITY!!!!
 - Remember `CURRENT STATE` should always be :`<current_state>`, `GROUP` should be: `MANIPULATOR`
 - Joint states can be altered in `cssdbot_urxx_moveit_config/config/urxx.srdf`
+- remember to switch the `controller_action_ns` in `cssdbot_urxx_moveit_config/config/controllers.yaml` according to the type of UR driver
+  ```yaml
+  controller_list:
+    - name: ""
+      ## when running: 'ur_modern_driver'
+      action_ns: follow_joint_trajectory 
+      ## when running: 'ur_robot_driver'
+      action_ns: scaled_pos_traj_controller/follow_joint_trajectory
+  ```
