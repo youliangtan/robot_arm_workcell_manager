@@ -54,13 +54,18 @@ sudo apt-get upgrade gazebo9*
 
 - Universal Robot: [here](https://github.com/ros-industrial/universal_robot), **Remember to switch branch
 - Fiducial Marker Detector and ROS Controller
-```bash
-sudo apt-get install ros-melodic-aruco-detect ros-melodic-fiducial-msgs ros-melodic-ros-control ros-melodic-ros-controllers
-```
+    ```bash
+    sudo apt-get install ros-melodic-aruco-detect ros-melodic-fiducial-msgs ros-melodic-ros-control ros-melodic-ros-controllers
+    ```
 - realsense_gazebo_plugin
-- realsense-ros (for hardware)  
+- [realsense-ros](https://github.com/IntelRealSense/realsense-ros) (for hardware)  
+  - [realsesnse sdk](https://github.com/IntelRealSense/librealsense/blob/master/doc/distribution_linux.md#installing-the-packages)
+- rmf_msgs_ros1: [here](https://github.com/sharp-rmf/rmf_msgs_ros1)
+
+Complementary Packages 
 - rmf_core: [here](https://github.com/osrf/rmf_core) **(specifically: `rmf_dispenser_msgs`)
 - cssd_workcell_manager (ROS2): [Here](https://github.com/sharp-rmf/rmf-workcell/tree/cssd_workcell/cssd_workcell_manager) Not Necessary
+
 
 ### Make and Build
 ```bash

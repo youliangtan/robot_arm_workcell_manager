@@ -35,10 +35,10 @@
   <depend>aruco_detect</depend>
   <depend>fiducial_msgs</depend>
 
-  <build_depend>message_runtime</build_depend>
   <build_depend>hanwha_controller</build_depend>
   <build_depend>rmf_dispenser_msgs</build_depend>
-
+  <build_depend>message_runtime</build_depend>
+  
   <exec_depend>rmf_dispenser_msgs</exec_depend>
   <exec_depend>hanwha_controller</exec_depend>
   <exec_depend>message_runtime</exec_depend>
