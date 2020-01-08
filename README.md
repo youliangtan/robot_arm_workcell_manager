@@ -64,7 +64,7 @@ sudo apt-get upgrade gazebo9*
 
 Complementary Packages 
 - rmf_core: [here](https://github.com/osrf/rmf_core) **(specifically: `rmf_dispenser_msgs`)
-- cssd_workcell_manager (ROS2): [Here](https://github.com/sharp-rmf/rmf-workcell/tree/cssd_workcell/cssd_workcell_manager) Not Necessary
+- cssd_workcell_manager (ROS2): [Here](https://github.com/sharp-rmf/rmf-workcell/)
 
 
 ### Make and Build
